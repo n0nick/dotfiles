@@ -1,5 +1,5 @@
-set fish_greeting "
-]>--------------------------------<[
-]> ALL YOUR BASE ARE BELONG TO US <[
-]>--------------------------------<[
-"
+function fish_greeting
+  echo "]>--------------------------------<["
+  echo "]> ALL YOUR BASE ARE BELONG TO US <["
+  echo "]>--------------------------------<["
+end
