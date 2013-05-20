@@ -8,4 +8,3 @@
 * `.rvmrc`
 * Vim stuff: `.vimrc`, `vundles.vim`
 * `.pryrc`
-* `.gist-vim`, `.jist`
