@@ -1,0 +1,7 @@
+set PATH $PATH /Users/sagie/.rvm/gems/ruby-1.9.3-p0@rails3/bin
+set PATH $PATH /Users/sagie/.rvm/gems/ruby-1.9.3-p0@global/bin
+set PATH $PATH /Users/sagie/.rvm/rubies/ruby-1.9.3-p0/bin
+set PATH $PATH /Users/sagie/.rvm/bin
+set PATH $PATH /usr/local/bin
+set PATH $PATH /usr/local/sbin
+set PATH $PATH /usr/local/share/npm/bin

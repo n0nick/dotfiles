@@ -1,0 +1,172 @@
+# Most of these were inspired by YADR
+# https://github.com/skwp/dotfiles
+
+# PS
+alias psa="ps aux"
+alias psg="ps aux | grep "
+alias psr='ps aux | grep ruby'
+
+# Moving around
+alias cdb='cd -'
+
+# Show human friendly numbers and colors
+alias df='df -h'
+alias ll='ls -alGh'
+alias ls='ls -Gh'
+alias du='du -h -d 2'
+
+# show me files matching "ls grep"
+alias lsg='ll | grep'
+
+# Alias Editing
+alias ae='vim ~/.oh-my-fish/custom/aliases.load' #alias edit
+alias ar='. ~/.oh-my-fish/custom/aliases.load' #alias reload
+
+# vim using
+#TODO check for mvim
+alias vim="mvim -v"
+
+# Some fasd aliases
+#alias j="fasd_cd -d" # 'j'ump makes more sense than 'z'
+#alias o='a -e open'
+
+# Vi/vim stickiness
+alias vi=vim
+
+# t Task manager
+#alias t="~/.t --task-dir ~/tasks --list tasks"
+#alias tg='~/.t --task-dir $(git rev-parse --show-toplevel 2>/dev/null || echo ".") --list TODO'
+
+# Git Aliases
+alias gs='git status'
+alias gstsh='git stash'
+alias gst='git stash'
+alias gsp='git stash pop'
+alias gsa='git stash apply'
+alias gsh='git show'
+alias gshw='git show'
+alias gshow='git show'
+alias gi='vim .gitignore'
+alias gcm='git ci -m'
+alias gcim='git ci -m'
+alias gci='git ci'
+alias gco='git co'
+alias gcp='git cp'
+alias ga='git add -A'
+alias guns='git unstage'
+alias gunc='git uncommit'
+alias gm='git merge'
+alias gms='git merge --squash'
+alias gam='git amend --reset-author'
+alias grv='git remote -v'
+alias grr='git remote rm'
+alias grad='git remote add'
+alias gr='git rebase'
+alias gra='git rebase --abort'
+alias ggrc='git rebase --continue'
+alias gbi='git rebase --interactive'
+alias gl='git l'
+alias glg='git l'
+alias glog='git l'
+alias co='git co'
+alias gf='git fetch'
+alias gfch='git fetch'
+alias gd='git diff'
+alias gb='git b'
+alias gbd='git b -D -w'
+alias gdc='git diff --cached -w'
+alias gpub='grb publish'
+alias gtr='grb track'
+alias gpl='git pull'
+alias gplr='git pull --rebase'
+alias gps='git push'
+alias gpsh='git push'
+alias gnb='git nb' # new branch aka checkout -b
+alias grs='git reset'
+alias grsh='git reset --hard'
+alias gcln='git clean'
+alias gclndf='git clean -df'
+alias gclndfx='git clean -dfx'
+alias gsm='git submodule'
+alias gsmi='git submodule init'
+alias gsmu='git submodule update'
+alias gt='git t'
+alias gbg='git bisect good'
+alias gbb='git bisect bad'
+
+alias gg="git grep"
+alias grm="git rm"
+alias gmv="git mv"
+alias gcl="git clone"
+alias gcb="git checkout -b"
+alias gbr="git branch -r"
+alias gbd="git branch -D"
+alias gpst="git push --tags"
+alias gcom="git checkout master"
+alias gap="git add -p"
+alias gcia="git commit --amend"
+alias gcf="git commit --amend --no-edit"
+
+# Common shell functions
+alias less='less -r'
+alias tf='tail -f'
+alias l='less'
+alias lh='ls -alt | head' # see the last modified files
+alias screen='TERM=screen screen'
+alias cl='clear'
+
+# Some powder aliases
+alias pd="powder"
+alias pdr="powder restart"
+alias pdu="powder up"
+alias pdd="powder down"
+alias pdo="powder open"
+alias pdl="powder link"
+
+# Gist is jist
+alias gist="jist"
+
+# Some tmux shortcuts
+alias tmux="tmux -u"
+alias tn="tmux new-window"
+alias ta="tmux attach"
+alias td="tmux detach"
+alias tl="tmux list-sessions"
+
+# Bundler shortcuts
+alias bdi="bundle install"
+
+# Open file with Mou
+function mou
+  touch $argv; and open -a Mou $argv
+end
+
+# Shaft
+function ss
+  shaft stop --all
+  if count $argv >/dev/null
+    shaft start $argv
+  end
+end
+
+# Zeus
+alias zs='zeus server'
+alias zc='zeus console'
+
+# Rspec
+alias rs='rspec spec'
+
+# Rails tasks
+alias rdm='rake db:migrate'
+alias rdmr='rake db:migrate:redo'
+alias rc="rails console"
+alias rac="rake assets:clean"
+alias r18="rake i18n:js:export"
+alias rds="rake debug:start"
+alias rdc="rake debug:connect"
+
+# Mkdir and chdir
+function mkdcd
+  mkdir $argv
+  cd $argv
+end
