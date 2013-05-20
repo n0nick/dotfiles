@@ -18,6 +18,8 @@ Also important -- most of what's here is based on learning and stealing from Yan
 
 You're free of course to look around, borrow and suggest stuff as you wish. I've attached a copy of the WTF-PL.
 
+![image](http://s22.postimg.org/w2lm7lvyp/Awesome_Bob_yafgc_by_Hyshinara.png)
+
 [Fish shell]: http://fishshell.com
 [Vim]: http://vim.org
 [Vundle]: http://github.com/gmarik/vundle
