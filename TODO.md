@@ -9,3 +9,6 @@ Check out YADR's
 * OSX script
 * iTerm2 color schemes
 * Fonts (incl. Powerline)
+
+Issues
+* Git doesn't remember my github creds
