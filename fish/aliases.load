@@ -57,7 +57,6 @@ alias gam='git amend --reset-author'
 alias grv='git remote -v'
 alias grr='git remote rm'
 alias grad='git remote add'
-alias gr='git rebase'
 alias gra='git rebase --abort'
 alias ggrc='git rebase --continue'
 alias gbi='git rebase --interactive'
@@ -102,6 +101,7 @@ alias gcom="git checkout master"
 alias gap="git add -p"
 alias gcia="git commit --amend"
 alias gcf="git commit --amend --no-edit"
+alias grb='git rebase'
 
 # Common shell functions
 alias less='less -r'
@@ -166,3 +166,6 @@ function mkdcd
   mkdir $argv
   cd $argv
 end
+
+# Goreplace
+alias gr=goreplace
