@@ -11,8 +11,5 @@
   * iTerm2 color schemes
   * Fonts (incl. Powerline)
 
-Issues
-* Git doesn't remember my github creds
-
 [fish-nuggets]: https://github.com/zmalltalker/fish-nuggets
 [YADR]: https://github.com/skwp/dotfiles
