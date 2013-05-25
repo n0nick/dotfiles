@@ -2,135 +2,135 @@
 # https://github.com/skwp/dotfiles
 
 # PS
-alias psa="ps aux"
-alias psg="ps aux | grep "
-alias psr='ps aux | grep ruby'
+function psa; ps aux; end
+function psg; ps aux | grep ; end
+function psr; ps aux | grep ruby; end
 
 # Moving around
-alias cdb='cd -'
+function cdb; cd -; end
 
 # Show human friendly numbers and colors
-alias df='df -h'
-alias ll='ls -alGh'
-alias ls='ls -Gh'
-alias du='du -h -d 2'
+function df; df -h; end
+function ll; ls -alGh; end
+function ls; ls -Gh; end
+function du; du -h -d 2; end
 
-# show me files matching "ls grep"
-alias lsg='ll | grep'
+# show me files matching "ls grep; end
+function lsg; ll | grep; end
 
 # Alias Editing
-alias ae='vim ~/.oh-my-fish/custom/aliases.load' #alias edit
-alias ar='. ~/.oh-my-fish/custom/aliases.load' #alias reload
+function ae; vim ~/.oh-my-fish/custom/aliases.load; end #alias edit
+function ar; . ~/.oh-my-fish/custom/aliases.load; end #alias reload
 
 # vim using
 #TODO check for mvim
-alias vim="mvim -v"
+function vim; mvim -v; end
 
 # Vi/vim stickiness
-alias vi=vim
+function vi; vim; end
 
 # t Task manager
-#alias t="~/.t --task-dir ~/tasks --list tasks"
-#alias tg='~/.t --task-dir $(git rev-parse --show-toplevel 2>/dev/null || echo ".") --list TODO'
+#alias t; ~/.t --task-dir ~/tasks --list tasks; end
+#alias tg; ~/.t --task-dir $(git rev-parse --show-toplevel 2>/dev/null || echo ".") --list TODO; end
 
 # Git Aliases
-alias gs='git status'
-alias gstsh='git stash'
-alias gst='git stash'
-alias gsp='git stash pop'
-alias gsa='git stash apply'
-alias gsh='git show'
-alias gshw='git show'
-alias gshow='git show'
-alias gi='vim .gitignore'
-alias gcm='git ci -m'
-alias gcim='git ci -m'
-alias gci='git ci'
-alias gco='git co'
-alias gcp='git cp'
-alias ga='git add -A'
-alias guns='git unstage'
-alias gunc='git uncommit'
-alias gm='git merge'
-alias gms='git merge --squash'
-alias gam='git amend --reset-author'
-alias grv='git remote -v'
-alias grr='git remote rm'
-alias grad='git remote add'
-alias gra='git rebase --abort'
-alias ggrc='git rebase --continue'
-alias gbi='git rebase --interactive'
-alias gl='git l'
-alias glg='git l'
-alias glog='git l'
-alias co='git co'
-alias gf='git fetch'
-alias gfch='git fetch'
-alias gd='git diff'
-alias gb='git b'
-alias gbd='git b -D -w'
-alias gdc='git diff --cached -w'
-alias gpub='grb publish'
-alias gtr='grb track'
-alias gpl='git pull'
-alias gplr='git pull --rebase'
-alias gps='git push'
-alias gpsh='git push'
-alias gnb='git nb' # new branch aka checkout -b
-alias grs='git reset'
-alias grsh='git reset --hard'
-alias gcln='git clean'
-alias gclndf='git clean -df'
-alias gclndfx='git clean -dfx'
-alias gsm='git submodule'
-alias gsmi='git submodule init'
-alias gsmu='git submodule update'
-alias gt='git t'
-alias gbg='git bisect good'
-alias gbb='git bisect bad'
+function gs; git status; end
+function gstsh; git stash; end
+function gst; git stash; end
+function gsp; git stash pop; end
+function gsa; git stash apply; end
+function gsh; git show; end
+function gshw; git show; end
+function gshow; git show; end
+function gi; vim .gitignore; end
+function gcm; git ci -m; end
+function gcim; git ci -m; end
+function gci; git ci; end
+function gco; git co; end
+function gcp; git cp; end
+function ga; git add -A; end
+function guns; git unstage; end
+function gunc; git uncommit; end
+function gm; git merge; end
+function gms; git merge --squash; end
+function gam; git amend --reset-author; end
+function grv; git remote -v; end
+function grr; git remote rm; end
+function grad; git remote add; end
+function gra; git rebase --abort; end
+function ggrc; git rebase --continue; end
+function gbi; git rebase --interactive; end
+function gl; git l; end
+function glg; git l; end
+function glog; git l; end
+function co; git co; end
+function gf; git fetch; end
+function gfch; git fetch; end
+function gd; git diff; end
+function gb; git b; end
+function gbd; git b -D -w; end
+function gdc; git diff --cached -w; end
+function gpub; grb publish; end
+function gtr; grb track; end
+function gpl; git pull; end
+function gplr; git pull --rebase; end
+function gps; git push; end
+function gpsh; git push; end
+function gnb; git nb; end # new branch aka checkout -b
+function grs; git reset; end
+function grsh; git reset --hard; end
+function gcln; git clean; end
+function gclndf; git clean -df; end
+function gclndfx; git clean -dfx; end
+function gsm; git submodule; end
+function gsmi; git submodule init; end
+function gsmu; git submodule update; end
+function gt; git t; end
+function gbg; git bisect good; end
+function gbb; git bisect bad; end
 
-alias gg="git grep"
-alias grm="git rm"
-alias gmv="git mv"
-alias gcl="git clone"
-alias gcb="git checkout -b"
-alias gbr="git branch -r"
-alias gbd="git branch -D"
-alias gpst="git push --tags"
-alias gcom="git checkout master"
-alias gap="git add -p"
-alias gcia="git commit --amend"
-alias gcf="git commit --amend --no-edit"
-alias grb='git rebase'
+function gg; git grep; end
+function grm; git rm; end
+function gmv; git mv; end
+function gcl; git clone; end
+function gcb; git checkout -b; end
+function gbr; git branch -r; end
+function gbd; git branch -D; end
+function gpst; git push --tags; end
+function gcom; git checkout master; end
+function gap; git add -p; end
+function gcia; git commit --amend; end
+function gcf; git commit --amend --no-edit; end
+function grb; git rebase; end
 
 # Common shell functions
-alias less='less -r'
-alias tf='tail -f'
-alias l='ls'
-alias lh='ls -alt | head' # see the last modified files
-alias screen='TERM=screen screen'
-alias cl='clear'
+function less; less -r; end
+function tf; tail -f; end
+function l; ls; end
+function lh; ls -alt | head; end # see the last modified files
+function screen; TERM=screen screen; end
+function cl; clear; end
 
 # Some powder aliases
-alias pd="powder"
-alias pdr="powder restart"
-alias pdu="powder up"
-alias pdd="powder down"
-alias pdo="powder open"
-alias pdl="powder link"
+function pd; powder; end
+function pdr; powder restart; end
+function pdu; powder up; end
+function pdd; powder down; end
+function pdo; powder open; end
+function pdl; powder link; end
 
 # Gist is jist
-alias gist="jist"
+function gist; jist; end
 
 # Some tmux shortcuts
-alias tmux="tmux -u"
-alias tn="tmux new-window"
-alias ta="tmux attach"
-alias td="tmux detach"
-alias tl="tmux list-sessions"
+function tmux; tmux -u; end
+function tn; tmux new-window; end
+function ta; tmux attach; end
+function td; tmux detach; end
+function tl; tmux list-sessions; end
 
 # Bundler shortcuts
-alias bdi="bundle install"
+function bdi; bundle install; end
 
 # Open file with Mou
 function mou
@@ -146,20 +146,20 @@ function ss
 end
 
 # Zeus
-alias zs='zeus server'
-alias zc='zeus console'
+function zs; zeus server; end
+function zc; zeus console; end
 
 # Rspec
-alias rs='rspec spec'
+function rs; rspec spec; end
 
 # Rails tasks
-alias rdm='rake db:migrate'
-alias rdmr='rake db:migrate:redo'
-alias rc="rails console"
-alias rac="rake assets:clean"
-alias r18="rake i18n:js:export"
-alias rds="rake debug:start"
-alias rdc="rake debug:connect"
+function rdm; rake db:migrate; end
+function rdmr; rake db:migrate:redo; end
+function rc; rails console; end
+function rac; rake assets:clean; end
+function r18; rake i18n:js:export; end
+function rds; rake debug:start; end
+function rdc; rake debug:connect; end
 
 # Mkdir and chdir
 function mkdcd
@@ -168,4 +168,4 @@ function mkdcd
 end
 
 # Goreplace
-alias gr=goreplace
+function gr; goreplace; end
