@@ -10,10 +10,10 @@ function psr; ps aux | grep ruby $argv; end
 function cdb; cd - $argv; end
 
 # Show human friendly numbers and colors
-function df; df -h $argv; end
-function ll; ls -alGh $argv; end
-function ls; ls -Gh $argv; end
-function du; du -h -d 2 $argv; end
+function df; command df -h $argv; end
+function ll; command ls -alGh $argv; end
+function ls; command ls -Gh $argv; end
+function du; command du -h -d 2 $argv; end
 
 # show me files matching 'ls grep'
 function lsg; ll | grep $argv; end
@@ -100,7 +100,7 @@ function gcf; git commit --amend --no-edit $argv; end
 function grb; git rebase $argv; end
 
 # Common shell functions
-function less; less -r $argv; end
+function less; command less -r $argv; end
 function tf; tail -f $argv; end
 function l; ls $argv; end
 function lh; ls -alt | head $argv; end # see the last modified files
@@ -118,7 +118,7 @@ function pdl; powder link $argv; end
 function gist; jist $argv; end
 
 # Some tmux shortcuts
-function tmux; tmux -u $argv; end
+function tmux; command tmux -u $argv; end
 function tn; tmux new-window $argv; end
 function ta; tmux attach $argv; end
 function td; tmux detach $argv; end
