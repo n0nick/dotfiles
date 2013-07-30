@@ -13,3 +13,4 @@ $cli set parameter.keyoverlaidmodifier_timeout 300
 $cli set remap.controlL2controlL_escape 1
 /bin/echo -n .
 /bin/echo
+echo 'Remember to set "Caps Lock (⇪)" to be "^ Control" in Keyboard.prefPane.'
