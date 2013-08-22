@@ -10,7 +10,9 @@ $cli set repeat.initial_wait 300
 /bin/echo -n .
 $cli set parameter.keyoverlaidmodifier_timeout 300
 /bin/echo -n .
-$cli set remap.controlL2controlL_escape 1
+$cli set f19_to_hyper_and_escape 1
 /bin/echo -n .
 /bin/echo
-echo 'Remember to set "Caps Lock (⇪)" to be "^ Control" in Keyboard.prefPane.'
+mkdir -p ~/Library/Application\ Support/KeyRemap4MacBook
+cp ./private.xml ~/Library/Application\ Support/KeyRemap4MacBook/
+echo 'Remember to set "Caps Lock (⇪)" to be "No Action" in Keyboard.prefPane, and then map it to code 80 in PCKeyboardHack.'
