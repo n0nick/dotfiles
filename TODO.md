@@ -1,6 +1,5 @@
 # Dotfiles: TODO
 
-* Tmux config
 * Vim stuff: `.vimrc`, `vundles.vim`
 * Take a look at [fish-nuggets]
 * Take a look at [tmux-config]

@@ -25,7 +25,7 @@ ln -s $PWD/fish ~/.oh-my-fish/custom
 echo "Done."
 
 ### Regular dotfiles to symlink
-set stuff ctags git ruby shell
+set stuff ctags git ruby shell tmux
 for thing in $stuff
   echo "=> Installing: $thing configuration"
   for file in (ls $thing)
