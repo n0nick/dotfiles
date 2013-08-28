@@ -62,7 +62,13 @@ slate.bindAll({
             f: [$('divResize', 1, 1), $('center', 'center')],
             e: [$('resize', {width: 1600, height: 1000}), $('center', 'center')],
             d: [$('resize', {width: 1280, height: 800}), $('center', 'center')],
-            c: [$('resize', {width: 1024, height: 640}), $('center', 'center')]
+            c: [$('resize', {width: 1024, height: 640}), $('center', 'center')],
+
+            // resize window
+            right: 'resize +10% 0',
+            left: 'resize -10% 0',
+            up: 'resize 0 -10%',
+            down: 'resize 0 +10%'
         },
         // bars
         h: [$('barResize', 'left',  2),
@@ -102,6 +108,11 @@ slate.bindAll({
         // utility functions
         f1: 'relaunch',
         z: 'undo',
-        tab: 'hint'
+        tab: 'hint',
+        // nudge window
+        right: 'nudge +5% +0',
+        left: 'nudge -5% +0',
+        up: 'nudge +0 -5%',
+        down: 'nudge +0 +5%'
     }
 });
