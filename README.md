@@ -1,31 +1,33 @@
-# Deprecated, sorry :(
+# n0nick's dotfiles
 
-## <s>n0nick's dotfiles</s>
+What I'm using:
 
-I've been switching over to a new setup, so these are the dotfiles that make it.
+* Zsh is awesome
+* [Prezto] makes my Zsh more awesome
+  ([my fork](https://github.com/n0nick/prezto))
+* [Vim] for text editing ([my vimrc](https://github.com/n0nick/vimrc))
+* [Tmux] for managing sessions, windows and collaboration
+* [Chrome] and its DevTools for web work
+* [Git] for source control
+* Miscellaneous config files (ruby, etc.)
 
-Generally it's:
+I should state that for now, these files are custom sewn for my own computers
+and usage. That is, it's all for OS X (latest version), and used for high-level
+programming (mostly Web) and academic study.
 
-* [Fish shell] for shell and scripting needs.
-* [Vim] for text editing (and more).
-* [Vundle] for Vim plugins.
-* [Tmux] for managing sessions, windows and collaboration.
-* [iTerm2] for a terminal window.
-* [Chrome] and its Developer Tools for web work.
-* Miscellaneous config files (git, ruby, etc.)
+Also important -- most of what's here is based on learning and stealing from Yan
+Pritzker's [YADR], which is the inspiration for my setup.
 
-I should state that for now, these files are custom sewn for my own computers and usage. That is, it's all for OS X (latest version), and used for high-level programming (mostly Web) and academic study.
-
-Also important -- most of what's here is based on learning and stealing from Yan Pritzker's [YADR], which is the inspiration for my setup. I only switched away from using YADR because I wanted to experiment with Fish shell.
-
-You're free of course to look around, borrow and suggest stuff as you wish. I've attached a copy of the WTF-PL.
+You're free of course to look around, borrow and suggest stuff as you wish. I've
+attached a copy of the WTF-PL.
 
 ![image](http://s22.postimg.org/w2lm7lvyp/Awesome_Bob_yafgc_by_Hyshinara.png)
 
-[Fish shell]: http://fishshell.com
+[Prezto]: https://github.com/sorin-ionescu/prezto
 [Vim]: http://vim.org
 [Vundle]: http://github.com/gmarik/vundle
 [Tmux]: http://tmux.sourceforge.net/
 [iTerm2]: http://iterm2.com/
 [Chrome]: http://google.com/chrome
+[Git]: http://git-scm.com/
 [YADR]: http://github.com/skwp/dotfiles
