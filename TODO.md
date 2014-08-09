@@ -1,6 +1,7 @@
 # Dotfiles: TODO
 
-* Take a look at [tmux-config]
+* Move vimrc stuff here?
+* Move Prezto stuff here?
 
 * Check out [YADR]'s
   * Chrome DevTools CSS
@@ -10,4 +11,3 @@
   * Fonts (incl. Powerline)
 
 [YADR]: https://github.com/skwp/dotfiles
-[tmux-config]: https://github.com/nviennot/tmux-config
