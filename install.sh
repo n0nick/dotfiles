@@ -2,28 +2,21 @@
 
 export DOTF="$( cd "$( dirname "$0" )" && pwd )"
 
-export BLACK="\033[30m"
-export GRAY="\033[1;30m"
-export RED="\033[31m"
 export GREEN="\033[32m"
 export YELLOW="\033[33m"
 export BLUE="\033[34m"
-export CYAN="\033[36m"
-export UNDERLINE="\033[4m"
+export PURPLE="\033[35m"
 export RESET="\033[0m"
 
-export ARROW="⇒"
-export SMILEY="☺"
-
 main() {
-  echo "${CYAN}Let's go let's go let's go!$RESET"
+  echo "${PURPLE}Let's do this!$RESET"
   install_prezto $*
   install_dotfiles $*
   install_vim $*
   install_karabiner $*
   install_hydra $*
   echo -n "\n\n"
-  echo "${GREEN}Yay! That's all! $SMILEY$RESET"
+  echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
 }
 
 run() {
@@ -50,8 +43,11 @@ symlink_dir() {
 }
 
 chapter() {
-  echo
-  echo "${BLUE}$ARROW $1$RESET"
+  echo "\n${BLUE}⇒ $1$RESET"
+}
+
+notice() {
+  echo "\n${YELLOW}• $*"
 }
 
 greendot() {
@@ -118,9 +114,8 @@ install_karabiner() {
   run "mkdir" "-p" "$support"
   symlink "$DOTF/karabiner/private.xml" "$support/"
   greendot
-  echo -n "\n${YELLOW}* Remember to set \"Caps Lock (⇪)\" to be \"No Action\" "
-  echo -n "in Keyboard.prefPane, and then map it to code 80 "
-  echo "in PCKeyboardHack.$RESET"
+  notice "Remember to set \"Caps Lock (⇪)\" to be \"No Action\" in" \
+    "Keyboard.prefPane, and then map it to code 80 in PCKeyboardHack.$RESET"
 }
 
 install_hydra() {
