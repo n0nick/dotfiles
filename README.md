@@ -5,7 +5,7 @@ What I'm using:
 * [Zsh] is awesome
 * [Prezto] makes my Zsh more awesome
   ([my fork](https://github.com/n0nick/prezto))
-* [Vim] for text editing ([my vimrc](https://github.com/n0nick/vimrc))
+* [Vim] for text editing
 * [Tmux] for managing sessions, windows and collaboration
 * [Chrome] and its DevTools for web work
 * [Git] for source control

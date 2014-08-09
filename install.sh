@@ -77,8 +77,17 @@ install_dotfiles() {
 
 install_vim() {
   chapter "Installing Vim plugins and configuration"
-  run "git clone https://github.com/n0nick/vimrc.git ~/.vim"
-  run ~/.vim/install.sh
+  symlink_dir "vim"
+  greendot
+  # Install Vundle.vim if not found
+  if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
+    git clone https://github.com/gmarik/Vundle.vim.git \
+      $HOME/.vim/bundle/Vundle.vim
+    greendot
+  fi
+  # Install Vim plugins (via Vundle.vim)
+  run "vim +PluginInstall +qall"
+  greendot
 }
 
 install_karabiner() {

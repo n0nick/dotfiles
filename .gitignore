@@ -1,1 +1,6 @@
 _old/
+
+vim/bundle/
+vim/tmp/
+vim/spell/
+vim/.netrwhist
