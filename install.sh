@@ -92,7 +92,15 @@ install_vim() {
 
 install_karabiner() {
   chapter "Configuring Karabiner"
-  run "source" "$DOTF/karabiner/settings.sh"
+  run "source" "$DOTF/karabiner/settings.sh" >& /dev/null
+  greendot
+  support="$HOME/Library/Application\ Support/Karabiner"
+  run "mkdir" "-p" "$support"
+  symlink "$DOTF/karabiner/private.xml" "$support/"
+  greendot
+  echo -n "\n${YELLOW}* Remember to set \"Caps Lock (⇪)\" to be \"No Action\" "
+  echo -n "in Keyboard.prefPane, and then map it to code 80 "
+  echo "in PCKeyboardHack.$RESET"
 }
 
 install_hydra() {
