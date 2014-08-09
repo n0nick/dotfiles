@@ -13,6 +13,7 @@ export UNDERLINE="\033[4m"
 export RESET="\033[0m"
 
 export ARROW="⇒"
+export SMILEY="☺"
 
 run() {
   if [ $DEBUG ]; then
@@ -64,6 +65,12 @@ run "source" "$DOTF/karabiner/settings.sh"
 
 # Hydra
 chapter "Configuring Hydra"
+if [ -L "$HOME/.hydra" ]; then
+  rm ~/.hydra
+fi
 symlink "$DOTF/hydra" "$HOME/.hydra"
+echo "Done."
 
 # That's all
+echo
+echo "${GREEN}Yay! That's all! $SMILEY$RESET"
