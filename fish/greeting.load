@@ -1,5 +1,0 @@
-function fish_greeting
-  echo "]>--------------------------------<["
-  echo "]> ALL YOUR BASE ARE BELONG TO US <["
-  echo "]>--------------------------------<["
-end
