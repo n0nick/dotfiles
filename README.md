@@ -1,4 +1,6 @@
-# n0nick's dotfiles
+# Deprecated, sorry :(
+
+## <s>n0nick's dotfiles</s>
 
 I've been switching over to a new setup, so these are the dotfiles that make it.
 
