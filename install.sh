@@ -15,6 +15,17 @@ export RESET="\033[0m"
 export ARROW="⇒"
 export SMILEY="☺"
 
+main() {
+  echo "${CYAN}Let's go let's go let's go!$RESET"
+  install_prezto $*
+  install_dotfiles $*
+  install_vim $*
+  install_karabiner $*
+  install_hydra $*
+  echo -n "\n\n"
+  echo "${GREEN}Yay! That's all! $SMILEY$RESET"
+}
+
 run() {
   if [ $DEBUG ]; then
     echo "$ $*"
@@ -30,6 +41,14 @@ symlink() {
   run "ln -sf" $source $target
 }
 
+symlink_dir() {
+  dirname=$1
+  if [ -L "$HOME/.$dirname" ]; then
+    rm "$HOME/.$dirname"
+  fi
+  symlink "$DOTF/$dirname" "$HOME/.$dirname"
+}
+
 chapter() {
   echo
   echo "${BLUE}$ARROW $1$RESET"
@@ -39,38 +58,38 @@ greendot() {
   echo -n "${GREEN}.$RESET"
 }
 
-# Prezto
-chapter "Installing and configuring Prezto"
-echo "(TODO)"
+#### Steps
+install_prezto() {
+  chapter "Installing and configuring Prezto"
+  echo "(TODO)"
+}
 
-# Symlink dotfiles
-dirs=('ctags' 'git' 'ruby' 'shell' 'tmux')
-for dir in $dirs; do
-  chapter "Linking ${(C)dir} configuration files"
-  for file ($dir/*); do
-    symlink "$DOTF/$file" "$HOME/.${file:t}"
-    greendot
+install_dotfiles() {
+  dirs=('ctags' 'git' 'ruby' 'shell' 'tmux')
+  for dir in $dirs; do
+    chapter "Linking ${(C)dir} configuration files"
+    for file ($dir/*); do
+      symlink "$DOTF/$file" "$HOME/.${file:t}"
+      greendot
+    done
   done
-  echo " Done."
-done
+}
 
-# Vim
-chapter "Configuring Vim"
-run "git clone https://github.com/n0nick/vimrc.git ~/.vim"
-run ~/.vim/install.sh
+install_vim() {
+  chapter "Installing Vim plugins and configuration"
+  run "git clone https://github.com/n0nick/vimrc.git ~/.vim"
+  run ~/.vim/install.sh
+}
 
-# Karabiner
-chapter "Configuring Karabiner"
-run "source" "$DOTF/karabiner/settings.sh"
+install_karabiner() {
+  chapter "Configuring Karabiner"
+  run "source" "$DOTF/karabiner/settings.sh"
+}
 
-# Hydra
-chapter "Configuring Hydra"
-if [ -L "$HOME/.hydra" ]; then
-  rm ~/.hydra
-fi
-symlink "$DOTF/hydra" "$HOME/.hydra"
-echo "Done."
+install_hydra() {
+  chapter "Configuring Hydra"
+  symlink_dir "hydra"
+  greendot
+}
 
-# That's all
-echo
-echo "${GREEN}Yay! That's all! $SMILEY$RESET"
+main $*
