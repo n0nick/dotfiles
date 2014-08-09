@@ -2,14 +2,14 @@
 
 What I'm using:
 
-* Zsh is awesome
+* [Zsh] is awesome
 * [Prezto] makes my Zsh more awesome
   ([my fork](https://github.com/n0nick/prezto))
 * [Vim] for text editing ([my vimrc](https://github.com/n0nick/vimrc))
 * [Tmux] for managing sessions, windows and collaboration
 * [Chrome] and its DevTools for web work
 * [Git] for source control
-* Miscellaneous config files (ruby, etc.)
+* Miscellaneous config files (Ctags, Ruby, Hydra, etc.)
 
 I should state that for now, these files are custom sewn for my own computers
 and usage. That is, it's all for OS X (latest version), and used for high-level
@@ -23,6 +23,7 @@ attached a copy of the WTF-PL.
 
 ![image](http://s22.postimg.org/w2lm7lvyp/Awesome_Bob_yafgc_by_Hyshinara.png)
 
+[Zsh]: http://www.zsh.org/
 [Prezto]: https://github.com/sorin-ionescu/prezto
 [Vim]: http://vim.org
 [Vundle]: http://github.com/gmarik/vundle
