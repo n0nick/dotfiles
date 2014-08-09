@@ -1,6 +1,5 @@
 # Dotfiles: TODO
 
-* Vim stuff: `.vimrc`, `vundles.vim`
 * Take a look at [tmux-config]
 
 * Check out [YADR]'s
