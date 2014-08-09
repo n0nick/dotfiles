@@ -61,4 +61,9 @@ run ~/.vim/install.sh
 # Karabiner
 chapter "Configuring Karabiner"
 run "source" "$DOTF/karabiner/settings.sh"
+
+# Hydra
+chapter "Configuring Hydra"
+symlink "$DOTF/hydra" "$HOME/.hydra"
+
 # That's all
