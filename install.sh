@@ -14,7 +14,7 @@ main() {
   install_dotfiles $*
   install_vim $*
   install_karabiner $*
-  install_hydra $*
+  install_slate $*
   echo -n "\n\n"
   echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
 }
@@ -118,9 +118,13 @@ install_karabiner() {
     "Keyboard.prefPane, and then map it to code 80 in PCKeyboardHack.$RESET"
 }
 
-install_hydra() {
-  chapter "Configuring Hydra"
-  symlink_dir "hydra"
+install_slate() {
+  chapter "Configuring Slate"
+  run "git -C \"$DOTF\" submodule update --recursive --quiet"
+  greendot
+  symlink "$DOTF/slate/reslate/reslate.js" "$HOME/.reslate.js"
+  greendot
+  symlink "$DOTF/slate/slate.js" "$HOME/.slate.js"
   greendot
 }
 
