@@ -24,18 +24,6 @@ slate.configAll({
 // bindings
 slate.bindAll({
   hyper: {
-    // bars
-    h: [
-      $('barResize', 'left',  2),
-      $('barResize', 'left',  1.5)
-    ],
-    j: $('barResize', 'bottom', 2),
-    k: $('barResize', 'top',    2),
-    l: [
-      $('barResize', 'right', 2),
-      $('barResize', 'right', 1.5)
-    ],
-
     // nudge window
     right: 'nudge +5% +0',
     left: 'nudge -5% +0',
@@ -43,6 +31,18 @@ slate.bindAll({
     down: 'nudge +0 +5%',
 
     shift: {
+      // bars
+      h: [
+        $('barResize', 'left',  2),
+        $('barResize', 'left',  1.5)
+      ],
+      j: $('barResize', 'bottom', 2),
+      k: $('barResize', 'top',    2),
+      l: [
+        $('barResize', 'right', 2),
+        $('barResize', 'right', 1.5)
+      ],
+
       // resize window
       right: 'resize +10% 0',
       left: 'resize -10% 0',
