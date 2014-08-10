@@ -11,5 +11,6 @@ if has("user_commands")
   command! -bang Qa qa<bang>
 
   command! -bang Bd bd<bang>
+  command! -bang -nargs=? -complete=option Set set<bang> <args>
 endif
 
