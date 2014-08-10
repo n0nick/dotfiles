@@ -13,7 +13,6 @@ Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/neomru.vim'
 Plugin 'Shougo/vimproc.vim'
 Plugin 'Shougo/unite-outline'
-Plugin 'altercation/vim-colors-solarized'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'duff/vim-bufonly'
 Plugin 'bling/vim-airline'
@@ -22,6 +21,9 @@ Plugin 'elentok/replace-all.vim'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'danro/rename.vim'
 Plugin 'nathanaelkane/vim-indent-guides'
+
+" Color
+Plugin 'chriskempson/vim-tomorrow-theme'
 
 " Tmux integration
 Plugin 'christoomey/vim-tmux-navigator'

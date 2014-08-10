@@ -84,6 +84,9 @@ set sidescroll=1
 " Enable mouse mode
 set mouse=a
 
+" Color scheme
+colorscheme Tomorrow-Night
+
 " Line length column
 set colorcolumn=80
 
