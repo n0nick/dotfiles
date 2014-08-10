@@ -53,5 +53,6 @@
 	ss = stash show -p
 	t = tag
 	semtag = !git tag -a $(semver tag) -m \"tagging $(semver tag)\"
+[filter "ignoreUpdateCheck"]
+	smudge = cat
 [google]
-	lastUpdateCheck = 20140807000000
