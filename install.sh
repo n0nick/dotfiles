@@ -115,7 +115,7 @@ install_karabiner() {
   symlink "$DOTF/karabiner/private.xml" "$support/"
   greendot
   notice "Remember to set \"Caps Lock (⇪)\" to be \"No Action\" in" \
-    "Keyboard.prefPane, and then map it to code 80 in PCKeyboardHack.$RESET"
+    "Keyboard.prefPane, and then map it to code 80 in Seil.$RESET"
 }
 
 install_slate() {
