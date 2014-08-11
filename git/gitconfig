@@ -1,12 +1,7 @@
-[user]
-	name = Sagie Maoz
-	email = sagie@google.com
 [rebase]
 	autosquash = true
 [push]
 	default = simple
-[github]
-	user = n0nick
 [core]
 	editor = vim -f
 [instaweb]
@@ -53,5 +48,7 @@
 	ss = stash show -p
 	t = tag
 	semtag = !git tag -a $(semver tag) -m \"tagging $(semver tag)\"
+[include]
+	path = .gitconfig.user
 [google]
 	lastUpdateCheck = 20140807000000

@@ -4,3 +4,5 @@ vim/bundle/
 vim/tmp/
 vim/spell/
 vim/.netrwhist
+
+git/gitconfig.user

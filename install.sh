@@ -15,6 +15,7 @@ main() {
   install_vim $*
   install_karabiner $*
   install_slate $*
+  install_git_userconfig $*
   echo -n "\n\n"
   echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
 }
@@ -126,6 +127,29 @@ install_slate() {
   greendot
   symlink "$DOTF/slate/slate.js" "$HOME/.slate.js"
   greendot
+}
+
+install_git_userconfig() {
+  chapter "Configuring Git user details"
+  filename="$HOME/.gitconfig.user"
+  if [ ! -r "$filename" ]; then
+    name=$(finger `whoami` | awk -F: '{ print $3 }' | head -n1 | sed 's/^ //')
+    vared -p "Name to use for Git commits? " name
+    email="`whoami`@"
+    vared -p "Email to use for Git commits? " email
+    github=`whoami`
+    vared -p "Github username? " github
+
+    touch $filename
+    echo "[user]" >> $filename
+    echo -e "\tname = $name" >> $filename
+    echo -e "\temail = $email" >> $filename
+    echo "[github]" >> $filename
+    echo -e "\tuser = $github" >> $filename
+    greendot
+  else
+    echo "${GREEN}gitconfig.user already exists :)"
+  fi
 }
 
 main $*
