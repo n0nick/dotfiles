@@ -1,34 +1,76 @@
 # n0nick's dotfiles
 
-What I'm using:
+## What it does
 
-* [Zsh] is awesome
-* [Prezto] makes my Zsh more awesome
-  ([my fork](https://github.com/n0nick/prezto))
-* [Vim] for text editing
-* [Tmux] for managing sessions, windows and collaboration
-* [Chrome] and its DevTools for web work
-* [Git] for source control
-* Miscellaneous config files (Ctags, Ruby, Hydra, etc.)
+* Installs [my Prezto fork](https://github.com/n0nick/prezto) and sets it up.
+* Adds custom configurations for Git, Tmux, Slate, Karabiner and other misc
+  tools.
+* Installs a set of Vim plugins (via [Vundle.vim]) and configuration scripts.
 
-I should state that for now, these files are custom sewn for my own computers
-and usage. That is, it's all for OS X (latest version), and used for high-level
-programming (mostly Web) and academic study.
+## Who's it for
 
-Also important -- most of what's here is based on learning and stealing from Yan
-Pritzker's [YADR], which is the inspiration for my setup.
+Oh, this one's for me.
+I'm using these customizations on my Mac machines for work, which is mostly Web
+development and some academic study.
 
-You're free of course to look around, borrow and suggest stuff as you wish. I've
-attached a copy of the WTF-PL.
+## Prerequisites
 
-![image](http://s22.postimg.org/w2lm7lvyp/Awesome_Bob_yafgc_by_Hyshinara.png)
+1. [OS X]
 
+2. [Homebrew] and [homebrew-cask](https://github.com/caskroom/homebrew-cask)
+
+        $ ruby -e "$(curl -fsSL \
+            https://raw.github.com/Homebrew/homebrew/go/install)"
+        $ brew install caskroom/cask/brew-cask
+
+2. [iTerm2]
+
+        $ brew cask install iterm2
+
+3. [Zsh]
+
+        $ brew install zsh
+        $ chsh -s $(which zsh)
+
+4. [Vim] for text editing
+
+        $ brew install macvim
+
+5. [Tmux] for managing sessions
+
+        $ brew install tmux
+
+6. [Git] for source control
+
+        $ brew install git
+
+7. [Slate] for window management
+
+        $ cd /Applications && curl \
+        http://www.ninjamonkeysoftware.com/slate/versions/slate-latest.tar.gz |
+        tar -xz
+
+8. [Karabiner] and [Seil] for keyboard customization
+
+## Installation
+
+        $ git clone https://github.com/n0nick/dotfiles
+        $ cd dotfiles
+        $ ./install.sh
+## License
+
+[Do what the hell you
+want.](https://github.com/n0nick/dotfiles/blob/master/COPYING)
+
+[OS X]: http://www.apple.com/mac/
+[Homebrew]: http://brew.sh/
 [Zsh]: http://www.zsh.org/
 [Prezto]: https://github.com/sorin-ionescu/prezto
 [Vim]: http://vim.org
-[Vundle]: http://github.com/gmarik/vundle
+[Vundle.vim]: http://github.com/gmarik/vundle
 [Tmux]: http://tmux.sourceforge.net/
+[Karabiner]: https://pqrs.org/osx/karabiner/
+[Seil]: https://pqrs.org/osx/karabiner/seil.html.en
+[Slate]: https://github.com/jigish/slate
 [iTerm2]: http://iterm2.com/
-[Chrome]: http://google.com/chrome
 [Git]: http://git-scm.com/
-[YADR]: http://github.com/skwp/dotfiles
