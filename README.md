@@ -9,7 +9,7 @@ What I'm using:
 * [Tmux] for managing sessions, windows and collaboration
 * [Chrome] and its DevTools for web work
 * [Git] for source control
-* Miscellaneous config files (Ctags, Ruby, Slate, etc.)
+* Miscellaneous config files (Ctags, Ruby, Hydra, etc.)
 
 I should state that for now, these files are custom sewn for my own computers
 and usage. That is, it's all for OS X (latest version), and used for high-level
