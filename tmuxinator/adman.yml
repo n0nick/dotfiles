@@ -1,0 +1,31 @@
+# ~/.tmuxinator/adman.yml
+
+name: adman
+root: ~/dev/waze/adman2
+
+# Optional tmux socket
+# socket_name: foo
+
+# Runs before everything. Use it to start daemons etc.
+# pre: sudo /etc/rc.d/mysqld start
+pre: gesheft start ads-staging
+
+# Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
+# pre_window: rbenv shell 2.0.0-p247
+
+# Pass command line options to tmux. Useful for specifying a different tmux.conf.
+# tmux_options: -f ~/.tmux.mac.conf
+
+# Change the command to call tmux.  This can be used by derivatives/wrappers like byobu.
+# tmux_command: byobu
+
+windows:
+  - editor:
+      # layout: main-vertical
+      layout: a0b8,318x76,0,0{202x76,0,0,185,115x76,203,0,188}
+      panes:
+        - vim .
+        - bundle exec guard
+  # - server: bundle exec rails s
+  - logs: tail -f log/development.log
+  - console:

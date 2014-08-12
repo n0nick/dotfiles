@@ -15,6 +15,7 @@ main() {
   install_vim $*
   install_karabiner $*
   install_slate $*
+  install_tmuxinator $*
   install_git_userconfig $*
   echo -n "\n\n"
   echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
@@ -126,6 +127,12 @@ install_slate() {
   symlink "$DOTF/slate/reslate/reslate.js" "$HOME/.reslate.js"
   greendot
   symlink "$DOTF/slate/slate.js" "$HOME/.slate.js"
+  greendot
+}
+
+install_tmuxinator() {
+  chapter "Configuring Tmuxinator"
+  symlink_dir "tmuxinator"
   greendot
 }
 
