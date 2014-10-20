@@ -9,7 +9,7 @@
 
 ## Who's it for
 
-Oh, this one's for me.
+Oh, this one's for [me](https://github.com/n0nick).
 I'm using these customizations on my Mac machines for work, which is mostly Web
 development and some academic study.
 
