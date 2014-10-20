@@ -53,6 +53,7 @@ Plugin 'editorconfig/editorconfig-vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'burnettk/vim-angular'
 Plugin 'vim-scripts/indentpython.vim'
+Plugin 'digitaltoad/vim-jade'
 
 " Git, Github
 Plugin 'tpope/vim-fugitive'
