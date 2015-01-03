@@ -20,6 +20,7 @@
 	br = branch -r
 	cf = commit --amend --no-edit
 	ci = commit
+	clf = clean -f
 	cp = cherry-pick
 	cm = commit -e -m
 	cia = commit --amend
