@@ -18,3 +18,7 @@ Session.vim
 
 # SASS
 .sass-cache
+
+# Zeus
+custom_plan.rb
+zeus.json
