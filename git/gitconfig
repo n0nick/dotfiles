@@ -14,7 +14,8 @@
 	ap = add -p
 	b = branch
 	bv = branch -vv
-	bd = branch -D
+	bd = branch -d
+	bdd = branch -D
 	bm = branch -m
 	br = branch -r
 	cf = commit --amend --no-edit
