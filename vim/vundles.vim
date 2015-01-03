@@ -55,6 +55,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'burnettk/vim-angular'
 Plugin 'vim-scripts/indentpython.vim'
 Plugin 'digitaltoad/vim-jade'
+Plugin 'ngmy/vim-rubocop'
 
 " Git, Github
 Plugin 'tpope/vim-fugitive'
