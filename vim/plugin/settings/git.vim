@@ -1,3 +1,5 @@
+autocmd BufRead,BufNewFile gitconfig set ft=gitconfig
+
 " Turn on spellchecker in Git commit messages
 autocmd FileType gitcommit setlocal spell
 

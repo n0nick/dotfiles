@@ -97,10 +97,6 @@ set hlsearch
 set list
 set listchars=tab:▸\ ,eol:¬,trail:·
 
-" some filetypes
-au BufRead,BufNewFile *.hamlc set ft=haml
-au BufRead,BufNewFile gitconfig set ft=gitconfig
-
 " source ~/.vimrc.after if it exists.
 if filereadable(expand("~/.vimrc.after"))
   source ~/.vimrc.after
