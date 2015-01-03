@@ -51,7 +51,11 @@
 	ss = stash show -p
 	t = tag
 	semtag = !git tag -a $(semver tag) -m \"tagging $(semver tag)\"
+	g = grep --break --heading --line-number
 [include]
 	path = .gitconfig.user
 [google]
-	lastUpdateCheck = 20140807000000
+	lastUpdateCheck = 20150101000000
+[grep]
+	extendRegexp = true
+	lineNumber = true
