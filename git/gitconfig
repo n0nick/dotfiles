@@ -4,6 +4,7 @@
 	default = simple
 [core]
 	editor = vim -f
+	excludesfile = /Users/sagie/.gitignore
 [instaweb]
 	httpd = webrick
 	port = 4000
