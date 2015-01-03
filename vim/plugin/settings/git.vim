@@ -1,14 +1,14 @@
-autocmd BufRead,BufNewFile gitconfig set ft=gitconfig
+autocmd vimrc BufRead,BufNewFile gitconfig set ft=gitconfig
 
 " Turn on spellchecker in Git commit messages
-autocmd FileType gitcommit setlocal spell
+autocmd vimrc FileType gitcommit setlocal spell
 
 " Fugitive: open parent tree
-autocmd User fugitive
+autocmd vimrc User fugitive
   \ if fugitive#buffer().type() =~# '^\%(tree\|blob\)$' |
   \   nnoremap <buffer> .. :edit %:h<CR> |
   \ endif
-autocmd BufReadPost fugitive://* set bufhidden=delete
+autocmd vimrc BufReadPost fugitive://* set bufhidden=delete
 
 " Speed up git-gutter
 let g:gitgutter_eager = 0

@@ -3,4 +3,10 @@
 nnoremap <silent> ,f <C-]>
 
 " use ,F to jump to tag in a vertical split
-nnoremap <silent> ,F :let word=expand("<cword>")<CR>:vsp<CR>:wincmd w<cr>:exec("tag ". word)<cr>
+function! VerticalSplitFindTag(word)
+  vsp
+  wincmd w
+  exec("tag ". word)
+endfunction
+
+nnoremap <silen> ,F :call VerticalSplitFindTag(expand("<cword>"))<CR>

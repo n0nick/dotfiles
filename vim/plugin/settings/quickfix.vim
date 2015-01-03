@@ -1,1 +1,1 @@
-autocmd QuickFixCmdPost *grep* cwindow
+autocmd vimrc QuickFixCmdPost *grep* cwindow

@@ -1,3 +1,6 @@
+set encoding=utf-8
+scriptencoding utf-8
+
 " no need to be Vi-compatbile
 set nocompatible
 
@@ -19,7 +22,7 @@ if &t_Co > 2 || has("gui_running")
 endif
 
 " set leader key
-let mapleader=","
+let g:mapleader=","
 
 " initialize Vundle
 if filereadable(expand("~/.vim/vundles.vim"))
@@ -96,6 +99,11 @@ set hlsearch
 " mark tabs, trailing whitespace
 set list
 set listchars=tab:▸\ ,eol:¬,trail:·
+
+" define a group `vimrc` and initialize.
+augroup vimrc
+  autocmd!
+augroup END
 
 " source ~/.vimrc.after if it exists.
 if filereadable(expand("~/.vimrc.after"))
