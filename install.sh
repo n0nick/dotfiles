@@ -8,13 +8,23 @@ export BLUE="\033[34m"
 export PURPLE="\033[35m"
 export RESET="\033[0m"
 
+if [ "`uname -s`" = "Darwin" ]; then
+  export OS=mac
+else
+  export OS=linux
+fi
+
 main() {
   echo "${PURPLE}Let's do this!$RESET"
   install_prezto $*
   install_dotfiles $*
   install_vim $*
-  install_karabiner $*
-  install_slate $*
+
+  if [ "$OS" == "mac" ]; then
+    install_karabiner $*
+    install_slate $*
+  fi
+
   install_tmuxinator $*
   install_git_userconfig $*
   echo -n "\n\n"
