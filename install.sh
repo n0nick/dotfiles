@@ -8,22 +8,11 @@ export BLUE="\033[34m"
 export PURPLE="\033[35m"
 export RESET="\033[0m"
 
-if [ "`uname -s`" = "Darwin" ]; then
-  export OS=mac
-else
-  export OS=linux
-fi
-
 main() {
   echo "${PURPLE}Let's do this!$RESET"
   install_prezto $*
   install_dotfiles $*
   install_vim $*
-
-  if [ "$OS" == "mac" ]; then
-    install_karabiner $*
-    install_slate $*
-  fi
 
   install_git_userconfig $*
   echo -n "\n\n"
@@ -114,28 +103,6 @@ install_vim() {
   fi
   # Install Vim plugins (via Vundle.vim)
   run "vim +PluginInstall +qall"
-  greendot
-}
-
-install_karabiner() {
-  chapter "Configuring Karabiner"
-  run "source" "$DOTF/karabiner/settings.sh" >& /dev/null
-  greendot
-  support="$HOME/Library/Application\ Support/Karabiner"
-  run "mkdir" "-p" "$support"
-  symlink "$DOTF/karabiner/private.xml" "$support/"
-  greendot
-  notice "Remember to set \"Caps Lock (⇪)\" to be \"No Action\" in" \
-    "Keyboard.prefPane, and then map it to code 80 in Seil.$RESET"
-}
-
-install_slate() {
-  chapter "Configuring Slate"
-  run "git -C \"$DOTF\" submodule update --recursive --quiet"
-  greendot
-  symlink "$DOTF/slate/reslate/reslate.js" "$HOME/.reslate.js"
-  greendot
-  symlink "$DOTF/slate/slate.js" "$HOME/.slate.js"
   greendot
 }
 
