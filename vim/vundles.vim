@@ -62,7 +62,6 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-git'
 Plugin 'mattn/gist-vim'
 Plugin 'mattn/webapi-vim'
-Plugin 'esneider/YUNOcommit.vim'
 
 " Misc
 Plugin 'xolox/vim-misc'
