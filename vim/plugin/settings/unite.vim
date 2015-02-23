@@ -2,6 +2,10 @@
 " https://github.com/bling/dotvim/blob/master/vimrc
 " http://www.codeography.com/2013/06/17/replacing-all-the-things-with-unite-vim.html
 
+if !exists("unite")
+  finish
+endif
+
 " Some settings
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#filters#sorter_default#use(['sorter_rank'])

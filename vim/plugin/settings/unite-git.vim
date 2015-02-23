@@ -1,3 +1,7 @@
+if !exists("unite")
+  finish
+endif
+
 let g:unite_source_menu_menus = {}
 let g:unite_source_menu_menus.git = {}
 let g:unite_source_menu_menus.git.command_candidates = [

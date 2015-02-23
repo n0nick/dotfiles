@@ -1,3 +1,7 @@
+if !exists("unite")
+  finish
+endif
+
 nnoremap <silent> [unite]rc :<C-u>Unite -no-split -buffer-name=files -start-insert file:app/controllers<cr>
 nnoremap <silent> [unite]rh :<C-u>Unite -no-split -buffer-name=files -start-insert file:app/helpers<cr>
 nnoremap <silent> [unite]rm :<C-u>Unite -no-split -buffer-name=files -start-insert file:app/models<cr>
