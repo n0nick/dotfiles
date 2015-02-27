@@ -28,7 +28,6 @@ Plugin 'chriskempson/vim-tomorrow-theme'
 
 " Tmux integration
 Plugin 'christoomey/vim-tmux-navigator'
-Plugin 'edkolev/tmuxline.vim'
 Plugin 'benmills/vimux'
 Plugin 'jgdavey/vim-turbux'
 
