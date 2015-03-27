@@ -94,15 +94,11 @@ install_vim() {
   chapter "Installing Vim plugins and configuration"
   symlink_dir "vim"
   greendot
-  # Install Vundle.vim if not found
-  if [ ! -d "$HOME/.vim/bundle/Vundle.vim" ]; then
-    run "git clone --quiet" \
-      "https://github.com/gmarik/Vundle.vim.git" \
-      "$HOME/.vim/bundle/Vundle.vim"
-    greendot
-  fi
-  # Install Vim plugins (via Vundle.vim)
-  run "vim +PluginInstall +qall"
+  # Install Vim plugins (via vim-plug)
+  curl -fLo "$DOTF/vim/autoload/plug.vim" --create-dirs \
+        "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  greendot
+  run "vim +PlugInstall +qall"
   greendot
 }
 

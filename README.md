@@ -5,7 +5,7 @@
 * Installs [my Prezto fork](https://github.com/n0nick/prezto) and sets it up.
 * Adds custom configurations for Git, Tmux, Slate, Karabiner and other misc
   tools.
-* Installs a set of Vim plugins (via [Vundle.vim]) and configuration scripts.
+* Installs a set of Vim plugins (via [vim-plug]) and configuration scripts.
 
 ## Who's it for
 
@@ -68,7 +68,7 @@ want.](https://github.com/n0nick/dotfiles/blob/master/COPYING)
 [Zsh]: http://www.zsh.org/
 [Prezto]: https://github.com/sorin-ionescu/prezto
 [Vim]: http://vim.org
-[Vundle.vim]: http://github.com/gmarik/vundle
+[vim-plug]: https://github.com/junegunn/vim-plug
 [Tmux]: http://tmux.sourceforge.net/
 [iTerm2]: http://iterm2.com/
 [Git]: http://git-scm.com/
