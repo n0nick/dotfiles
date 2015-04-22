@@ -93,6 +93,7 @@ install_dotfiles() {
 install_vim() {
   chapter "Installing Vim plugins and configuration"
   symlink_dir "vim"
+  symlink "$DOTF/vim/vimrc" "$HOME/.vimrc"
   greendot
   # Install Vim plugins (via vim-plug)
   curl -fLo "$DOTF/vim/autoload/plug.vim" --create-dirs \
