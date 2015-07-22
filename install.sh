@@ -36,10 +36,8 @@ symlink() {
 
 symlink_dir() {
   dirname=$1
-  if [ -L "$HOME/.$dirname" ]; then
-    rm "$HOME/.$dirname"
-  fi
-  symlink "$DOTF/$dirname" "$HOME/.$dirname"
+
+  run "ln -sF $DOTF/$dirname $HOME/.$dirname"
 }
 
 chapter() {
@@ -101,7 +99,7 @@ install_vim() {
   symlink "$DOTF/vim/vimrc" "$HOME/.vimrc"
   greendot
   # Install Vim plugins (via vim-plug)
-  curl -fLo "$DOTF/vim/autoload/plug.vim" --create-dirs \
+  run "curl -fLo $DOTF/vim/autoload/plug.vim --create-dirs" \
         "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
   greendot
   run "vim +PlugInstall +qall"
