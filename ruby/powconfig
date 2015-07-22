@@ -1,2 +1,2 @@
-export PATH=`brew --prefix rbenv`/shims:`brew --prefix rbenv`/bin:$PATH
+export PATH=~/.homebrew/rbenv/shims:~/.homebrew/rbenv/bin:$PATH
 export POW_DST_PORT=20561
