@@ -12,8 +12,3 @@ nnoremap <silent> <Leader>cn :let @* = expand("%:t")<CR>
 " Swap ` and ' (http://items.sjbach.com/319/configuring-vim-right)
 nnoremap ' `
 nnoremap ` '
-
-" Interact with system clipboard
-vmap <Leader>y "*y
-map <Leader>p "*p<CR>
-map <Leader>P "*P<CR>
