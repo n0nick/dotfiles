@@ -61,8 +61,13 @@ install_prezto() {
   if [ ! -d "$preztodir" ]; then
     # Clone Prezto if not found
     run "git clone --recursive --quiet" \
-      "https://github.com/n0nick/prezto.git" \
+      "git@github.com:n0nick/prezto.git" \
       "$preztodir"
+    greendot
+    run "cd $preztodir && git rename origin n0nick"
+    greendot
+    run "cd $preztodir && git remote add origin" \
+      "git@github.com:sorin-ionescu/prezto.git"
     greendot
     # Set up symlinks
     setopt EXTENDED_GLOB
