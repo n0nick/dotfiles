@@ -7,6 +7,8 @@
     "com.apple.appstore",
     "com.apple.installer",
     "com.apple.systempreferences",
+    "com.apple.Preview",
+    "com.agilebits.onepassword4",
     "com.fluidapp.FluidApp.DevDocs",
     "com.google.Chrome.app.Default-clcfogcfhcdeikbgekdjijhkmbinlmol",
     "com.google.Chrome.app.Default-knipolnnllmklapflnccelgolnpehhpl",
