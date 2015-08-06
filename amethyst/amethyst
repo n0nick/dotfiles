@@ -1,13 +1,16 @@
 {
   "floating": [
-    "com.apple.systempreferences",
-    "com.apple.TextEdit",
-    "com.apple.AddressBook",
-    "com.apple.appstore",
+    "com.adobe.Photoshop",
     "com.agilebits.onepassword4",
+    "com.apple.AddressBook",
+    "com.apple.TextEdit",
+    "com.apple.appstore",
+    "com.apple.installer",
+    "com.apple.systempreferences",
     "com.fluidapp.FluidApp.DevDocs",
-    "com.google.android.mtpviewer",
     "com.google.Chrome.app.Default-clcfogcfhcdeikbgekdjijhkmbinlmol",
-    "com.google.Chrome.app.Default-knipolnnllmklapflnccelgolnpehhpl"
+    "com.google.Chrome.app.Default-knipolnnllmklapflnccelgolnpehhpl",
+    "com.google.android.mtpviewer",
+    "com.pixelmatorteam.pixelmator"
   ]
 }
