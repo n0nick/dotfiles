@@ -3,21 +3,17 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-alias pdr="powder restart"
-alias pdo="powder open"
+unsetopt autocd # turn off changing directory without "cd"
 
-alias r18="spring rake i18n:js:export"
+# Aliases
 alias be="bundle exec"
-
-alias ssh='TERM=xterm ssh' # Fix $TERM problem with remote servers
-
-alias lock='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
-
-alias vi="vim"
-
-alias tmux="tmux -2" # tmux with 256 colors support
-
 alias gob="rave gob"
+alias lock='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
+alias pdo="powder open"
+alias pdr="powder restart"
+alias r18="spring rake i18n:js:export"
+alias ssh='TERM=xterm ssh' # fix $TERM problem on remotes
+alias tmux="tmux -2" # tmux with 256 colors support
 
 alias 1pass-to-android="adb-sync ~/Documents/1Password /sdcard/"
 alias 1pass-to-mac="adb-sync --reverse /sdcard/1Password ~/Documents/"
