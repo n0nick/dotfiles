@@ -47,14 +47,20 @@ map <leader>et :tabe %%
 " Sudo save http://stackoverflow.com/a/7078429/107085
 cmap w!! w !sudo tee > /dev/null %
 
-" run neomake on the current file on every write
-autocmd! BufWritePost * Neomake
-
 " diff vertically
 set diffopt+=vertical
 
 " turn on spellchecker in Git commit messages
 autocmd FileType gitcommit setlocal spell
+
+" load installed plugs
+source ~/.nvim/plugs.vim
+
+" color scheme
+color Tomorrow-Night-Eighties
+
+" run neomake on the current file on every write
+autocmd! BufWritePost * Neomake
 
 " directory configuration for Notes
 let g:notes_directories = ['~/Documents/Notes']
@@ -62,5 +68,3 @@ let g:notes_directories = ['~/Documents/Notes']
 " turbux configuration
 let g:turbux_runner = 'vimux'
 let g:turbux_command_rspec  = 'bin/rspec'
-
-source ~/.nvim/plugs.vim

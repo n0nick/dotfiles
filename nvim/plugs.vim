@@ -11,6 +11,9 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'benmills/vimux'
 Plug 'jgdavey/vim-turbux'
 
+" Colors
+Plug 'chriskempson/vim-tomorrow-theme'
+
 " Editing
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
