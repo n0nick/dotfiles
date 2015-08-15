@@ -15,7 +15,7 @@ fi
 # Editors
 #
 
-export VISUAL='vi'
+export VISUAL='nvim'
 export EDITOR="${VISUAL}"
 export PAGER='less'
 

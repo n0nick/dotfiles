@@ -19,6 +19,10 @@ alias 1pass-to-android="adb-sync ~/Documents/1Password /sdcard/"
 alias 1pass-to-mac="adb-sync --reverse /sdcard/1Password ~/Documents/"
 alias 1pass-sync="1pass-to-android && 1pass-to-mac"
 
+# Experimenting with Neovim
+alias vi="nvim"
+alias vim="nvim"
+
 if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.user" ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.user"
 fi
