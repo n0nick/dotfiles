@@ -6,4 +6,8 @@ vim/tmp/
 vim/spell/
 vim/.netrwhist
 
+nvim/autoload/plug.vim
+nvim/plugged/
+nvim/.netrwhist
+
 git/gitconfig.user

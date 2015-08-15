@@ -1,0 +1,51 @@
+filetype plugin indent on
+
+" turn on line numbers
+set number
+
+" expand tabs
+set expandtab
+set tabstop=2 shiftwidth=2 smarttab
+
+" set leader key
+let g:mapleader=","
+
+" allow escaping with jk
+inoremap jk <esc>
+
+" go to last edit location
+nnoremap <Leader>. '.
+
+" easy window splits
+nnoremap <silent> vv <C-w>v
+nnoremap <silent> ss <C-w>s
+
+" fix <C-h> (https://github.com/neovim/neovim/issues/2048)
+nmap <BS> <C-h>
+
+" easy window navigation
+nnoremap <silent> <C-h> <C-w>h
+nnoremap <silent> <C-j> <C-w>j
+nnoremap <silent> <C-k> <C-w>k
+nnoremap <silent> <C-l> <C-w>l
+
+" leave current buffer only
+nnoremap <silent> <C-w>b :Bufonly<CR>
+
+" system clipboard
+vmap <Leader>y "*y
+map <Leader>p "*p<CR>
+map <Leader>P "*P<CR>
+
+" Some helpers to edit mode
+" http://vimcasts.org/e/14
+cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
+map <leader>ew :e %%
+map <leader>es :sp %%
+map <leader>ev :vsp %%
+map <leader>et :tabe %%
+
+" run neomake on the current file on every write
+autocmd! BufWritePost * Neomake
+
+source ~/.nvim/plugs.vim

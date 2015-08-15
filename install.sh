@@ -13,6 +13,7 @@ main() {
   install_prezto $*
   install_dotfiles $*
   install_vim $*
+  install_neovim $*
 
   install_git_userconfig $*
   echo -n "\n\n"
@@ -103,6 +104,19 @@ install_vim() {
         "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
   greendot
   run "vim +PlugInstall +qall"
+  greendot
+}
+
+install_neovim() {
+  chapter "Installing Neovim plugins and configuration (experimental)"
+  symlink_dir "nvim"
+  symlink "$DOTF/nvim/nvimrc" "$HOME/.nvimrc"
+  greendot
+  Install Vim plugins (via vim-plug)
+  run "curl -fLo $DOTF/nvim/autoload/plug.vim --create-dirs" \
+        "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+  greendot
+  run "nvim +PlugInstall +qall"
   greendot
 }
 
