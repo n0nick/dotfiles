@@ -23,11 +23,13 @@ zstyle ':prezto:load' pmodule \
 # Set the key mapping style to 'emacs' or 'vi'.
 zstyle ':prezto:module:editor' key-bindings 'vi'
 
+# Ignore git submodules in status
+zstyle ':prezto:module:git:status:ignore' submodules 'all'
+
 # Set the prompt theme to load.
 PURE_PROMPT_SYMBOL="$"
 zstyle ':prezto:module:prompt' theme 'pure'
 
-# Tmux integration 
+# Tmux integration
 zstyle ':prezto:module:tmux:auto-start' local 'yes'
 zstyle ':prezto:module:tmux:auto-start' remote 'yes'
-# zstyle ':prezto:module:tmux:iterm' integrate 'yes'
