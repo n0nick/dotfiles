@@ -37,15 +37,30 @@ vmap <Leader>y "*y
 map <Leader>p "*p<CR>
 map <Leader>P "*P<CR>
 
-" Some helpers to edit mode
-" http://vimcasts.org/e/14
+" easy file navigation http://vimcasts.org/e/14
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
 map <leader>ew :e %%
 map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
 
+" Sudo save http://stackoverflow.com/a/7078429/107085
+cmap w!! w !sudo tee > /dev/null %
+
 " run neomake on the current file on every write
 autocmd! BufWritePost * Neomake
+
+" diff vertically
+set diffopt+=vertical
+
+" turn on spellchecker in Git commit messages
+autocmd FileType gitcommit setlocal spell
+
+" directory configuration for Notes
+let g:notes_directories = ['~/Documents/Notes']
+
+" turbux configuration
+let g:turbux_runner = 'vimux'
+let g:turbux_command_rspec  = 'bin/rspec'
 
 source ~/.nvim/plugs.vim
