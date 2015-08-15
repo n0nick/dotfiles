@@ -73,7 +73,7 @@ autocmd! BufWritePost * Neomake
 let g:notes_directories = ['~/Documents/Notes']
 
 " vim-test configuration
-let test#strategy = 'neovim'
+let test#strategy = 'neoterm'
 let test#ruby#rspec#executable = 'spring rspec'
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
