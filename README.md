@@ -2,16 +2,16 @@
 
 ## What it does
 
-* Installs [my Prezto fork](https://github.com/n0nick/prezto) and sets it up.
-* Adds custom configurations for Git, Tmux, Slate, Karabiner and other misc
-  tools.
+* Installs [Prezto] and sets it up.
+* Adds custom configurations for Zsh, Prezto, Git, Tmux, and other misc tools.
 * Installs a set of Vim plugins (via [vim-plug]) and configuration scripts.
 
 ## Who's it for
 
 Oh, this one's for [me](https://github.com/n0nick).
-I'm using these customizations on my work MacBook and workstation, mostly for
-Web development, with a side of general code and academic playground.
+I'm using these customizations on my work laptop and workstation (A Macbook and
+a Mac Pro), mostly for Web development, with a side of general code and academic
+playground.
 
 ## Prerequisites
 
@@ -20,7 +20,7 @@ Web development, with a side of general code and academic playground.
 3. [Tmux] for terminal session management
 4. [Git] for source control
 
-## OS X instructions
+## OS X bootstrap
 
 1. [Homebrew] and [homebrew-cask](https://github.com/caskroom/homebrew-cask)
 
@@ -39,7 +39,7 @@ Web development, with a side of general code and academic playground.
 
 4. Vim
 
-        $ brew install macvim
+        $ brew install vim
 
 5. Tmux
 

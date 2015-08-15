@@ -1,0 +1,28 @@
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
+alias pdr="powder restart"
+alias pdo="powder open"
+
+alias r18="spring rake i18n:js:export"
+alias be="bundle exec"
+
+alias ssh='TERM=xterm ssh' # Fix $TERM problem with remote servers
+
+alias lock='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
+
+alias vi="vim"
+
+alias tmux="tmux -2" # tmux with 256 colors support
+
+alias gob="rave gob"
+
+alias 1pass-to-android="adb-sync ~/Documents/1Password /sdcard/"
+alias 1pass-to-mac="adb-sync --reverse /sdcard/1Password ~/Documents/"
+alias 1pass-sync="1pass-to-android && 1pass-to-mac"
+
+if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.user" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zshrc.user"
+fi

@@ -14,7 +14,6 @@ main() {
   install_dotfiles $*
   install_vim $*
   install_neovim $*
-
   install_git_userconfig $*
   echo -n "\n\n"
   echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
@@ -70,15 +69,18 @@ install_prezto() {
     greendot
   fi
 
-  setopt EXTENDED_GLOB
-  for rcfile in "$preztodir"/runcoms/^README.md(.N); do
+  for rcfile in "$preztodir"/runcoms/z*; do
+    name="${rcfile:t}"
+    [ "$name" = "zpreztorc" ] && continue;
+    [ "$name" = "zprofile" ] && continue;
+    [ "$name" = "zshrc" ] && continue;
     symlink "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
     greendot
   done
 }
 
 install_dotfiles() {
-  dirs=('ctags' 'git' 'ruby' 'shell' 'tmux' 'amethyst')
+  dirs=('zsh' 'ctags' 'git' 'ruby' 'shell' 'tmux' 'amethyst')
   for dir in $dirs; do
     chapter "Linking ${(C)dir} configuration files"
     for file ($dir/*); do

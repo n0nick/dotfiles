@@ -1,0 +1,40 @@
+# Prezto options
+
+# Color output (auto set to 'no' on dumb terminals).
+zstyle ':prezto:*:*' color 'yes'
+
+# Prezto modules to load
+zstyle ':prezto:load' pmodule \
+  'environment' \
+  'terminal' \
+  'editor' \
+  'history' \
+  'directory' \
+  'spectrum' \
+  'utility' \
+  'completion' \
+  'prompt' \
+  'git' \
+  'fasd' \
+  'tmux' \
+  'ruby' \
+  'history-substring-search'
+
+# Set the key mapping style to 'emacs' or 'vi'.
+zstyle ':prezto:module:editor' key-bindings 'vi'
+
+# Set the prompt theme to load.
+PURE_PROMPT_SYMBOL="$"
+zstyle ':prezto:module:prompt' theme 'pure'
+
+# Tmux integration 
+# TODO: experiment with these
+
+# Auto start a session when Zsh is launched in a local terminal.
+# zstyle ':prezto:module:tmux:auto-start' local 'yes'
+
+# Auto start a session when Zsh is launched in a SSH connection.
+# zstyle ':prezto:module:tmux:auto-start' remote 'yes'
+
+# Integrate with iTerm2.
+# zstyle ':prezto:module:tmux:iterm' integrate 'yes'
