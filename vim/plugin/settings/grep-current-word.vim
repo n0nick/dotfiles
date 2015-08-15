@@ -4,4 +4,4 @@ func! EscapeForQuery(text)
   return text
 endfunc
 
-noremap ff :Ggrep <c-r>=EscapeForQuery(expand("<cword>"))<cr><cr>
+noremap FF :Ggrep <c-r>=EscapeForQuery(expand("<cword>"))<cr><cr>
