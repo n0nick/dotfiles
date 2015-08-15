@@ -48,6 +48,9 @@ map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
 
+" exit terminal mode
+tnoremap <Leader>e <C-\><C-n>
+
 " Sudo save http://stackoverflow.com/a/7078429/107085
 cmap w!! w !sudo tee > /dev/null %
 
