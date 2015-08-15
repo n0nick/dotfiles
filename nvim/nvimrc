@@ -7,6 +7,10 @@ set number
 set expandtab
 set tabstop=2 shiftwidth=2 smarttab
 
+" mark tabs, trailing whitespace
+set list
+set listchars=tab:▸\ ,eol:¬,trail:·
+
 " set leader key
 let g:mapleader=","
 
