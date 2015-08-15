@@ -56,31 +56,25 @@ greendot() {
 #### Steps
 install_prezto() {
   chapter "Installing and configuring Prezto"
+
   preztodir="$HOME/.zprezto"
   if [ ! -d "$preztodir" ]; then
-    # Clone Prezto if not found
     run "git clone --recursive --quiet" \
-      "git@github.com:n0nick/prezto.git" \
+      "git@github.com:sorin-ionescu/prezto.git" \
       "$preztodir"
     greendot
-    run "cd $preztodir && git rename origin n0nick"
-    greendot
-    run "cd $preztodir && git remote add origin" \
-      "git@github.com:sorin-ionescu/prezto.git"
-    greendot
-    # Set up symlinks
-    setopt EXTENDED_GLOB
-    for rcfile in "$preztodir"/runcoms/^README.md(.N); do
-      symlink "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
-      greendot
-    done
   else
-    # Update Prezto
     run "git -C \"$preztodir\" pull --quiet"
     greendot
     run "git -C \"$preztodir\" submodule update --init --recursive --quiet"
     greendot
   fi
+
+  setopt EXTENDED_GLOB
+  for rcfile in "$preztodir"/runcoms/^README.md(.N); do
+    symlink "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+    greendot
+  done
 }
 
 install_dotfiles() {
