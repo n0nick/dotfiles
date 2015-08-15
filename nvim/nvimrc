@@ -65,6 +65,11 @@ autocmd! BufWritePost * Neomake
 " directory configuration for Notes
 let g:notes_directories = ['~/Documents/Notes']
 
-" turbux configuration
-let g:turbux_runner = 'vimux'
-let g:turbux_command_rspec  = 'bin/rspec'
+" vim-test configuration
+let test#strategy = 'neovim'
+let test#ruby#rspec#executable = 'spring rspec'
+nmap <silent> <leader>t :TestNearest<CR>
+nmap <silent> <leader>T :TestFile<CR>
+nmap <silent> <leader>a :TestSuite<CR>
+nmap <silent> <leader>l :TestLast<CR>
+nmap <silent> <leader>g :TestVisit<CR>

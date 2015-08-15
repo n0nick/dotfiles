@@ -8,8 +8,7 @@ Plug 'tpope/vim-unimpaired'
 
 " Tmux integration
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'benmills/vimux'
-Plug 'jgdavey/vim-turbux'
+" Plug 'benmills/vimux'
 
 " Colors
 Plug 'chriskempson/vim-tomorrow-theme'
@@ -29,6 +28,8 @@ Plug 'tpope/vim-rails',              { 'for': 'ruby'       }
 Plug 'kchmck/vim-coffee-script',     { 'for': 'coffee'     }
 Plug 'fatih/vim-go',                 { 'for': 'go'         }
 Plug 'digitaltoad/vim-jade',         { 'for': 'jade'       }
+
+Plug 'janko-m/vim-test'
 
 " Git, Github
 Plug 'tpope/vim-fugitive'
