@@ -18,12 +18,14 @@
 	bdd = branch -D
 	bm = branch -m
 	br = branch -r
-	cf = commit --amend --no-edit
 	ci = commit
 	clf = clean -f
 	cp = cherry-pick
 	cm = commit -e -m
-	cia = commit --amend
+	cia = !echo "use 'git ca' for amend" && exit 1
+	cf = !echo "use 'git caa' for amend with same message" && exit 1
+	ca = commit --amend
+	caa = commit --amend --no-edit
 	cb = checkout -b
 	co = checkout
 	d = diff
