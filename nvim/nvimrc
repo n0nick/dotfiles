@@ -11,6 +11,9 @@ set tabstop=2 shiftwidth=2 smarttab
 set list
 set listchars=tab:▸\ ,eol:¬,trail:·
 
+" Show 80 characters column line
+set colorcolumn=80
+
 " set leader key
 let g:mapleader=","
 
