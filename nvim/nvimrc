@@ -27,8 +27,13 @@ nnoremap <Leader>. '.
 nnoremap <silent> vv <C-w>v
 nnoremap <silent> ss <C-w>s
 
-" fix <C-h> (https://github.com/neovim/neovim/issues/2048)
-nmap <BS> <C-h>
+if has('nvim')
+  " fix <C-h> (https://github.com/neovim/neovim/issues/2048)
+  nmap <BS> <C-h>
+
+  " exit terminal mode
+  tnoremap <Leader>e <C-\><C-n>
+end
 
 " easy window navigation
 nnoremap <silent> <C-h> <C-w>h
@@ -50,9 +55,6 @@ map <leader>ew :e %%
 map <leader>es :sp %%
 map <leader>ev :vsp %%
 map <leader>et :tabe %%
-
-" exit terminal mode
-tnoremap <Leader>e <C-\><C-n>
 
 " Sudo save http://stackoverflow.com/a/7078429/107085
 cmap w!! w !sudo tee > /dev/null %
