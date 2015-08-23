@@ -23,8 +23,6 @@
 	clf = clean -f
 	cp = cherry-pick
 	cm = commit -e -m
-	cia = !echo "use 'git ca' for amend" && exit 1
-	cf = !echo "use 'git caa' for amend with same message" && exit 1
 	ca = commit --amend
 	caa = commit --amend --no-edit
 	cb = checkout -b
