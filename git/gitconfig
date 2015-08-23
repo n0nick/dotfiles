@@ -16,6 +16,7 @@
 	bv = branch -vv
 	bd = branch -d
 	bdd = branch -D
+	bdr = push origin --delete
 	bm = branch -m
 	br = branch -r
 	ci = commit
