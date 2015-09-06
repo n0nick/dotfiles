@@ -1,2 +1,4 @@
-export PATH=~/.homebrew/rbenv/shims:~/.homebrew/rbenv/bin:$PATH
+export PATH=$HOME/.rbenv/shims:$PATH
 export POW_DST_PORT=20561
+
+eval "$(rbenv init -)"
