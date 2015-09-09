@@ -62,8 +62,13 @@ cmap w!! w !sudo tee > /dev/null %
 " diff vertically
 set diffopt+=vertical
 
+" define a group `vimrc` and initialize.
+augroup vimrc
+  autocmd!
+augroup END
+
 " turn on spellchecker in Git commit messages
-autocmd FileType gitcommit setlocal spell
+autocmd vimrc FileType gitcommit setlocal spell
 
 " load installed plugs
 source ~/.nvim/plugs.vim
@@ -72,7 +77,7 @@ source ~/.nvim/plugs.vim
 color Tomorrow-Night-Eighties
 
 " run neomake on the current file on every write
-autocmd! BufWritePost * Neomake
+autocmd! vimrc BufWritePost * Neomake
 
 " directory configuration for Notes
 let g:notes_directories = ['~/Documents/Notes']
