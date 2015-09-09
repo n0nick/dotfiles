@@ -4,6 +4,7 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 unsetopt autocd # turn off changing directory without "cd"
+unsetopt nomatch # https://robots.thoughtbot.com/how-to-use-arguments-in-a-rake-task
 
 # Aliases
 alias be="bundle exec"
