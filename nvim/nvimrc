@@ -70,6 +70,9 @@ augroup END
 " turn on spellchecker in Git commit messages
 autocmd vimrc FileType gitcommit setlocal spell
 
+" automatically open quickfix window for grep results
+autocmd vimrc QuickFixCmdPost *grep* cwindow
+
 " load installed plugs
 source ~/.nvim/plugs.vim
 
