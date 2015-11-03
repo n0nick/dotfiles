@@ -74,7 +74,7 @@ autocmd vimrc FileType gitcommit setlocal spell
 autocmd vimrc QuickFixCmdPost *grep* cwindow
 
 " load installed plugs
-source ~/.nvim/plugs.vim
+source ~/.config/nvim/plugs.vim
 
 " color scheme
 color Tomorrow-Night-Eighties

@@ -1,4 +1,4 @@
-call plug#begin('~/.nvim/plugged')
+call plug#begin('~/.config/nvim/plugged')
 
 " UI, Navigation
 Plug 'airblade/vim-gitgutter'

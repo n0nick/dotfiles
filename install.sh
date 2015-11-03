@@ -105,10 +105,9 @@ install_vim() {
 
 install_neovim() {
   chapter "Installing Neovim plugins and configuration (experimental)"
-  symlink_dir "nvim"
-  symlink "$DOTF/nvim/nvimrc" "$HOME/.nvimrc"
+  symlink "$DOTF/nvim" "$HOME/.config/nvim"
   greendot
-  Install Vim plugins (via vim-plug)
+  # Install Vim plugins (via vim-plug)
   run "curl -fLo $DOTF/nvim/autoload/plug.vim --create-dirs" \
         "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
   greendot
