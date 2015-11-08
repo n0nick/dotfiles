@@ -12,24 +12,26 @@ Plug 'christoomey/vim-tmux-navigator'
 Plug 'chriskempson/vim-tomorrow-theme'
 
 " Editing
-Plug 'tpope/vim-repeat'          " Smarter repeats through '.'
-Plug 'tpope/vim-surround'        " Quoting/parenthesizing made simple
-Plug 'tpope/vim-abolish'         " Easy search, substitute, and abbreviate
-Plug 'Raimondi/delimitMate'      " Insert mode auto-completion for delimiters
-Plug 'tomtom/tcomment_vim'       " Commenting code lines
-Plug 'benekastah/neomake'        " Asynchronous :make
-Plug 'tommcdo/vim-lion'          " Simple alignment operator
+Plug 'tpope/vim-repeat'     " Smarter repeats through '.'
+Plug 'tpope/vim-surround'   " Quoting/parenthesizing made simple
+Plug 'tpope/vim-abolish'    " Easy search, substitute, and abbreviate
+Plug 'Raimondi/delimitMate' " Insert mode auto-completion for delimiters
+Plug 'tomtom/tcomment_vim'  " Commenting code lines
+Plug 'benekastah/neomake'   " Asynchronous :make
+Plug 'tommcdo/vim-lion'     " Simple alignment operator
+Plug 'tpope/vim-sleuth'     " Automatically adjust shiftwidth, expandtab
 Plug 'AndrewRadev/splitjoin.vim' " Transition between multiline and single lines
-
-Plug 'tpope/vim-sleuth' " Automatically adjust shiftwidth, expandtab
 
 " File formats
 Plug 'kchmck/vim-coffee-script', { 'for': 'coffee'   }
 Plug 'fatih/vim-go',             { 'for': 'go'       }
 Plug 'digitaltoad/vim-jade',     { 'for': 'jade'     }
+Plug 'shime/vim-livedown',       { 'for': 'markdown' } " Live Markdown preview
 Plug 'tpope/vim-rails',          { 'for': 'ruby'     } " Rails-oriented editing
 Plug 'tpope/vim-endwise',        { 'for': 'ruby'     } " Smart 'end' for Ruby
-Plug 'shime/vim-livedown',       { 'for': 'markdown' } " Live Markdown preview
+Plug 'tmhedberg/matchit' |
+  Plug 'kana/vim-textobj-user' |
+    Plug 'nelstrom/vim-textobj-rubyblock', { 'for': 'ruby' } " Ruby text objects
 
 " Running tests
 Plug 'janko-m/vim-test' " Run tests in current context
