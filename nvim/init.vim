@@ -96,3 +96,8 @@ nmap <silent> <leader>T :TestFile<CR>
 nmap <silent> <leader>a :TestSuite<CR>
 nmap <silent> <leader>l :TestLast<CR>
 nmap <silent> <leader>g :TestVisit<CR>
+
+call expand_region#custom_text_objects('ruby', {
+  \ 'ir' :0,
+  \ 'ar' :0,
+  \ })

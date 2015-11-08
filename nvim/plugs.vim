@@ -33,6 +33,8 @@ Plug 'tmhedberg/matchit' |
   Plug 'kana/vim-textobj-user' |
     Plug 'nelstrom/vim-textobj-rubyblock', { 'for': 'ruby' } " Ruby text objects
 
+Plug 'terryma/vim-expand-region'
+
 " Running tests
 Plug 'janko-m/vim-test' " Run tests in current context
 Plug 'kassio/neoterm'   " Re-usable terminal buffers
