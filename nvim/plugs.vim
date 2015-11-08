@@ -23,11 +23,13 @@ Plug 'tommcdo/vim-lion'
 Plug 'AndrewRadev/splitjoin.vim'
 
 " File formats
-Plug 'tpope/vim-rails',              { 'for': 'ruby'       }
-Plug 'kchmck/vim-coffee-script',     { 'for': 'coffee'     }
-Plug 'fatih/vim-go',                 { 'for': 'go'         }
-Plug 'digitaltoad/vim-jade',         { 'for': 'jade'       }
+Plug 'tpope/vim-rails',          { 'for': 'ruby'     }
+Plug 'kchmck/vim-coffee-script', { 'for': 'coffee'   }
+Plug 'fatih/vim-go',             { 'for': 'go'       }
+Plug 'digitaltoad/vim-jade',     { 'for': 'jade'     }
+Plug 'shime/vim-livedown',       { 'for': 'markdown' }
 
+" Running tests
 Plug 'janko-m/vim-test'
 Plug 'kassio/neoterm'
 
