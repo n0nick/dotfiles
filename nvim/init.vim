@@ -82,6 +82,9 @@ color Tomorrow-Night-Eighties
 " run neomake on the current file on every write
 autocmd! vimrc BufWritePost * Neomake
 
+" Command completion list mode
+set wildmode=list:longest
+
 " directory configuration for Notes
 let g:notes_directories = ['~/Documents/Notes']
 
