@@ -80,7 +80,7 @@ source ~/.config/nvim/plugs.vim
 color Tomorrow-Night-Eighties
 
 " run neomake on the current file on every write
-autocmd! vimrc BufWritePost * Neomake
+autocmd! vimrc BufWritePost * Neomake | lwindow
 
 " Command completion list mode
 set wildmode=list:longest
