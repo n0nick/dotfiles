@@ -16,7 +16,9 @@ alias r18="bundle exec rake i18n:js:export"
 alias ssh='TERM=xterm ssh' # fix $TERM problem on remotes
 alias tmux="tmux -2" # tmux with 256 colors support
 alias nospring="DISABLE_SPRING=1"
+alias j='fasd_cd' # No need for interactive mode
 
+# Syncing 1Password with my phone
 alias 1pass-to-android="adb-sync ~/Documents/1Password /sdcard/"
 alias 1pass-to-mac="adb-sync --reverse /sdcard/1Password ~/Documents/"
 alias 1pass-sync="1pass-to-android && 1pass-to-mac"
