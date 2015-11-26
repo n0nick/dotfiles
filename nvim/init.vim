@@ -118,3 +118,5 @@ if has("user_commands")
   command! -bang Bd bd<bang>
   command! -bang -nargs=? -complete=option Set set<bang> <args>
 endif
+
+let g:go_fmt_command = "goimports"
