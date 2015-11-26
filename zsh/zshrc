@@ -27,6 +27,8 @@ alias 1pass-sync="1pass-to-android && 1pass-to-mac"
 alias vi="nvim"
 alias vim="nvim"
 
+unalias gb
+
 if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.user" ]]; then
   source "${ZDOTDIR:-$HOME}/.zshrc.user"
 fi
