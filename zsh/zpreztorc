@@ -29,7 +29,3 @@ zstyle ':prezto:module:git:status:ignore' submodules 'all'
 # Set the prompt theme to load.
 PURE_PROMPT_SYMBOL="$"
 zstyle ':prezto:module:prompt' theme 'pure'
-
-# Tmux integration
-zstyle ':prezto:module:tmux:auto-start' local 'yes'
-zstyle ':prezto:module:tmux:auto-start' remote 'yes'
