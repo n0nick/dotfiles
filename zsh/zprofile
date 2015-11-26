@@ -48,6 +48,7 @@ path=(
   $HOME/.homebrew/bin
   $HOME/Library/Python/2.7/bin
   $GOPATH/bin
+  $HOME/dev/go_appengine
   $path
 )
 
