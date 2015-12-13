@@ -29,6 +29,6 @@ alias vim="nvim"
 
 unalias gb
 
-if [[ -s "${ZDOTDIR:-$HOME}/.zshrc.user" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zshrc.user"
-fi
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+[ -f ~/.zshrc.user ] && source ~/.zshrc.user
