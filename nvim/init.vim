@@ -119,7 +119,8 @@ if has("user_commands")
   command! -bang -nargs=? -complete=option Set set<bang> <args>
 endif
 
-let g:go_fmt_command = "goimports"
+let g:go_fmt_command="goimports"
+let g:go_autodetect_gopath="0"
 
 " vim-grepper
 nnoremap <leader>git :Grepper -tool git -open -nojump<cr>
