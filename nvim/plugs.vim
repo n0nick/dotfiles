@@ -19,8 +19,6 @@ Plug 'Raimondi/delimitMate' " Insert mode auto-completion for delimiters
 Plug 'tomtom/tcomment_vim'  " Commenting code lines
 Plug 'benekastah/neomake'   " Asynchronous :make
 Plug 'tommcdo/vim-lion'     " Simple alignment operator
-Plug 'tpope/vim-sleuth'     " Automatically adjust shiftwidth, expandtab
-Plug 'AndrewRadev/splitjoin.vim' " Transition between multiline and single lines
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 Plug 'majutsushi/tagbar'
 
