@@ -27,7 +27,6 @@ alias 1pass-sync="1pass-to-android && 1pass-to-mac"
 alias vi="nvim"
 alias vim="nvim"
 
-unalias gb
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
