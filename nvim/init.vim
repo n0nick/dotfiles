@@ -122,3 +122,4 @@ endif
 let g:go_fmt_command="goimports"
 let g:go_autodetect_gopath="0"
 
+let g:tagbar_ctags_bin="~/.homebrew/bin/ctags"

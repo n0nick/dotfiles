@@ -22,6 +22,7 @@ Plug 'tommcdo/vim-lion'     " Simple alignment operator
 Plug 'tpope/vim-sleuth'     " Automatically adjust shiftwidth, expandtab
 Plug 'AndrewRadev/splitjoin.vim' " Transition between multiline and single lines
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
+Plug 'majutsushi/tagbar'
 
 " File formats
 Plug 'kchmck/vim-coffee-script', { 'for': 'coffee'   }
