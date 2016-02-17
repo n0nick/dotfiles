@@ -122,10 +122,3 @@ endif
 let g:go_fmt_command="goimports"
 let g:go_autodetect_gopath="0"
 
-" vim-grepper
-nnoremap <leader>git :Grepper -tool git -open -nojump<cr>
-nnoremap <leader>ag :Grepper! -tool ag -open -switch<cr>
-command! -nargs=* -complete=file GG Grepper! -tool git -query <args>
-command! -nargs=* -complete=file Ag Grepper! -tool ag -query <args>
-nmap gs  <plug>(GrepperOperator)
-xmap gs  <plug>(GrepperOperator)

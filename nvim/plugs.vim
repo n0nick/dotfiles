@@ -21,7 +21,6 @@ Plug 'benekastah/neomake'   " Asynchronous :make
 Plug 'tommcdo/vim-lion'     " Simple alignment operator
 Plug 'tpope/vim-sleuth'     " Automatically adjust shiftwidth, expandtab
 Plug 'AndrewRadev/splitjoin.vim' " Transition between multiline and single lines
-Plug 'mhinz/vim-grepper', { 'on': 'Grepper' } " Project-wide grep
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 
 " File formats
