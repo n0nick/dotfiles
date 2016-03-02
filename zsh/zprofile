@@ -45,6 +45,7 @@ export GOPATH="$HOME/dev/go"
 # Set the list of directories that Zsh searches for programs.
 path=(
   /usr/local/{bin,sbin}
+  $HOME/bin
   $HOME/.homebrew/bin
   $HOME/Library/Python/2.7/bin
   $GOPATH/bin
