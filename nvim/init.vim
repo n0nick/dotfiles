@@ -127,4 +127,4 @@ let g:go_autodetect_gopath="0"
 
 let g:tagbar_ctags_bin="~/.homebrew/bin/ctags"
 
-set completeopt=menuone,noinsert
+set completeopt=menuone
