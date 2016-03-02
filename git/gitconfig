@@ -57,8 +57,14 @@
 	path = .gitconfig.user
 [google]
 	lastUpdateCheck = 20150101000000
+	uplink = true
 [grep]
 	extendRegexp = true
 	lineNumber = true
 [credential]
 	helper = cache --timeout=3600
+[pager]
+	# https://news.ycombinator.com/item?id=11068436
+	log = diff-highlight | less
+	show = diff-highlight | less
+	diff = diff-highlight | less
