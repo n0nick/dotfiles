@@ -73,6 +73,9 @@ autocmd vimrc FileType gitcommit setlocal spell
 " automatically open quickfix window for grep results
 autocmd vimrc QuickFixCmdPost *grep* cwindow
 
+" .es6 files are javascript
+autocmd BufRead,BufNewFile *.es6 setfiletype javascript
+
 " load installed plugs
 source ~/.config/nvim/plugs.vim
 
