@@ -14,7 +14,7 @@ main() {
   install_dotfiles $*
   install_vim $*
   install_neovim $*
-  install_git_userconfig $*
+  setup_git $*
   echo -n "\n\n"
   echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
 }
@@ -113,6 +113,19 @@ install_neovim() {
   greendot
   run "nvim +PlugInstall +qall"
   greendot
+}
+
+setup_git() {
+  install_git_userconfig $*
+
+  chapter "Setting up diff-highlight for Git"
+  if hash diff-highlight 2>/dev/null; then
+    echo "${GREEN}diff-highlight already exists :)"
+  else
+    mkdir -p $HOME/bin
+    curl https://raw.githubusercontent.com/git/git/master/contrib/diff-highlight/diff-highlight > $HOME/bin/diff-highlight
+    chmod +x $HOME/bin/diff-highlight
+  fi
 }
 
 install_git_userconfig() {
