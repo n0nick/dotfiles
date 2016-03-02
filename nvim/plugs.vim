@@ -29,9 +29,6 @@ Plug 'digitaltoad/vim-jade',     { 'for': 'jade'     }
 Plug 'shime/vim-livedown',       { 'for': 'markdown' } " Live Markdown preview
 Plug 'tpope/vim-rails',          { 'for': 'ruby'     } " Rails-oriented editing
 Plug 'tpope/vim-endwise',        { 'for': 'ruby'     } " Smart 'end' for Ruby
-Plug 'tmhedberg/matchit' |
-  Plug 'kana/vim-textobj-user' |
-    Plug 'nelstrom/vim-textobj-rubyblock', { 'for': 'ruby' } " Ruby text objects
 
 Plug 'terryma/vim-expand-region'
 
