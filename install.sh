@@ -31,13 +31,13 @@ symlink() {
   local source=$1
   local target=$2
 
-  run "ln -sf" $source $target
+  run "ln -snf" $source $target
 }
 
 symlink_dir() {
   dirname=$1
 
-  run "ln -sF $DOTF/$dirname $HOME/.$dirname"
+  run "ln -snF $DOTF/$dirname $HOME/.$dirname"
 }
 
 chapter() {
