@@ -29,6 +29,12 @@ Plug 'digitaltoad/vim-jade',     { 'for': 'jade'     }
 Plug 'shime/vim-livedown',       { 'for': 'markdown' } " Live Markdown preview
 Plug 'tpope/vim-rails',          { 'for': 'ruby'     } " Rails-oriented editing
 Plug 'tpope/vim-endwise',        { 'for': 'ruby'     } " Smart 'end' for Ruby
+" JS syntax plugins via https://goo.gl/rG8gvZ
+Plug 'othree/yajs.vim',         { 'for': 'javascript' }
+Plug 'gavocanov/vim-js-indent', { 'for': 'javascript' }
+Plug 'mxw/vim-jsx',             { 'for': 'javascript' }
+Plug 'othree/javascript-libraries-syntax.vim', { 'for': 'javascript' }
+Plug 'elzr/vim-json',           { 'for': 'json' }
 
 Plug 'terryma/vim-expand-region'
 
