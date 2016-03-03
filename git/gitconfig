@@ -34,7 +34,8 @@
 	h = help
 	l = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr by %C(yellow)%an%Creset)%Creset'
 	m = merge
-	mff = merge --no-ff
+	mf = merge --ff-only
+	mnf = merge --no-ff
 	pl = pull
 	ps = push
 	pst = push --tags
