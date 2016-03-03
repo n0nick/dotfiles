@@ -49,10 +49,6 @@ playground.
 
         $ brew install git
 
-7. [Amethyst] for window management
-
-        $ brew cask install amethyst
-
 ## Installation
 
         $ git clone https://github.com/n0nick/dotfiles
@@ -72,4 +68,3 @@ want.](https://github.com/n0nick/dotfiles/blob/master/COPYING)
 [Tmux]: http://tmux.sourceforge.net/
 [iTerm2]: http://iterm2.com/
 [Git]: http://git-scm.com/
-[Amethyst]: http://ianyh.com/amethyst/

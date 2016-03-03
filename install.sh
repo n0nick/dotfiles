@@ -80,7 +80,7 @@ install_prezto() {
 }
 
 install_dotfiles() {
-  dirs=('zsh' 'ctags' 'git' 'ruby' 'shell' 'tmux' 'amethyst')
+  dirs=('zsh' 'ctags' 'git' 'ruby' 'shell' 'tmux')
   for dir in $dirs; do
     chapter "Linking ${(C)dir} configuration files"
     for file ($dir/*); do
