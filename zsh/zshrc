@@ -12,7 +12,6 @@ alias gob="rave gob"
 alias lock='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
 alias pdo="powder open"
 alias pdr="powder restart"
-alias r18="bundle exec rake i18n:js:export"
 alias ssh='TERM=xterm ssh' # fix $TERM problem on remotes
 alias tmux="tmux -2" # tmux with 256 colors support
 alias nospring="DISABLE_SPRING=1"
@@ -27,7 +26,5 @@ alias 1pass-sync="1pass-to-android && 1pass-to-mac"
 alias vi="nvim"
 alias vim="nvim"
 
-
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
