@@ -14,6 +14,7 @@ main() {
   install_dotfiles $*
   install_vim $*
   install_neovim $*
+  install_tmux $*
   setup_git $*
   echo -n "\n\n"
   echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
@@ -63,9 +64,7 @@ install_prezto() {
       "$preztodir"
     greendot
   else
-    run "git -C \"$preztodir\" pull --quiet"
-    greendot
-    run "git -C \"$preztodir\" submodule update --init --recursive --quiet"
+    run "git -C \"$preztodir\" pull --quiet --recurse-submodules=yes"
     greendot
   fi
 
@@ -113,6 +112,19 @@ install_neovim() {
   greendot
   run "nvim +PlugInstall +qall"
   greendot
+}
+
+install_tmux() {
+  chapter "Installing Tmux Plugin Manager"
+  if [ -d "$HOME/.tmux/plugins/tpm" ]; then
+    run "git -C $HOME/.tmux/plugins/tpm pull --quiet"
+    greendot
+  else
+    run "mkdir -p $HOME/.tmux/plugins/tpm"
+    greendot
+    run "git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm"
+    greendot
+  fi
 }
 
 setup_git() {
