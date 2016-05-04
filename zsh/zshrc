@@ -26,5 +26,12 @@ alias 1pass-sync="1pass-to-android && 1pass-to-mac"
 alias vi="nvim"
 alias vim="nvim"
 
+# gcloud SDK command completion and PATH
+if [[ -d "$HOME/google-cloud-sdk" ]]; then
+  export PATH=$HOME/google-cloud-sdk/bin:$PATH
+  source "$HOME/google-cloud-sdk/completion.zsh.inc"
+  source "$HOME/google-cloud-sdk/path.zsh.inc"
+fi
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
