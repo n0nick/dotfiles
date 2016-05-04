@@ -38,6 +38,7 @@
 	mnf = merge --no-ff
 	pl = pull
 	ps = push
+	psr = push-review
 	pst = push --tags
 	pullff = pull --ff-only
 	r = reset
