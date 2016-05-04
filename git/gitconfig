@@ -3,7 +3,7 @@
 [push]
 	default = simple
 [core]
-	editor = vim -f
+	editor = nvim
 	excludesfile = /Users/sagie/.gitignore
 [instaweb]
 	httpd = webrick
