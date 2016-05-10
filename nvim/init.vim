@@ -127,4 +127,7 @@ let g:go_autodetect_gopath="0"
 
 let g:tagbar_ctags_bin="~/.homebrew/bin/ctags"
 
+let g:airline_powerline_fonts=1
+let g:airline_theme="tomorrow"
+
 set completeopt=menuone

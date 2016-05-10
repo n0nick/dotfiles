@@ -1,6 +1,8 @@
 call plug#begin('~/.config/nvim/plugged')
 
 " UI, Navigation
+Plug 'vim-airline/vim-airline' " Footer UI
+Plug 'vim-airline/vim-airline-themes' " Footer UI
 Plug 'kshenoy/vim-signature' " Toggle and display marks
 Plug 'tpope/vim-unimpaired'  " Pairs of handy bracket mappings
 Plug 'duff/vim-bufonly', { 'on': 'Bufonly' } " Keep only current buffer
