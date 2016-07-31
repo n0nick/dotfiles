@@ -75,6 +75,7 @@ autocmd vimrc QuickFixCmdPost *grep* cwindow
 
 " .es6 files are javascript
 autocmd BufRead,BufNewFile *.es6 setfiletype javascript
+autocmd BufRead,BufNewFile *.jsx setfiletype javascript
 
 " load installed plugs
 source ~/.config/nvim/plugs.vim
