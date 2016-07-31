@@ -1,4 +1,4 @@
 export PATH=$HOME/.rbenv/shims:$PATH
-export POW_DST_PORT=20561
-
 eval "$(rbenv init -)"
+export POW_DST_PORT=20561
+export POW_DOMAINS=dev,waze.localhost
