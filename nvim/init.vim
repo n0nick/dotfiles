@@ -130,4 +130,8 @@ let g:tagbar_ctags_bin="~/.homebrew/bin/ctags"
 let g:airline_powerline_fonts=1
 let g:airline_theme="tomorrow"
 
+" Tell Neomake about local ESLint https://git.io/v6e1e
+let b:neomake_javascript_eslint_exe = nrun#Which('eslint')
+let b:neomake_javascript_enabled_makers = ['eslint']
+
 set completeopt=menuone

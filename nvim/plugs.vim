@@ -35,6 +35,7 @@ Plug 'tpope/vim-endwise',        { 'for': 'ruby'     } " Smart 'end' for Ruby
 Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
 Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
 Plug 'elzr/vim-json',            { 'for': 'json'       }
+Plug 'jaawerth/nrun.vim'
 
 Plug 'terryma/vim-expand-region'
 
