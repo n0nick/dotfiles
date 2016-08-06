@@ -97,9 +97,6 @@ let test#strategy = 'neoterm'
 let test#ruby#rspec#executable = 'bundle exec rspec'
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
-nmap <silent> <leader>a :TestSuite<CR>
-nmap <silent> <leader>l :TestLast<CR>
-nmap <silent> <leader>g :TestVisit<CR>
 
 " Expand Ruby text objects
 call expand_region#custom_text_objects('ruby', {
