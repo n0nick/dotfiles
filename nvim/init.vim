@@ -14,6 +14,9 @@ set listchars=tab:▸\ ,eol:¬,trail:·
 " Show 80 characters column line
 set colorcolumn=80
 
+" Quickly update stuff
+set updatetime=100
+
 " set leader key
 let g:mapleader=","
 
