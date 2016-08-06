@@ -123,9 +123,6 @@ if has("user_commands")
   command! -bang -nargs=? -complete=option Set set<bang> <args>
 endif
 
-let g:go_fmt_command="goimports"
-let g:go_autodetect_gopath="0"
-
 let g:tagbar_ctags_bin="~/.homebrew/bin/ctags"
 
 let g:airline_powerline_fonts=1
@@ -136,3 +133,27 @@ let b:neomake_javascript_eslint_exe = nrun#Which('eslint')
 let b:neomake_javascript_enabled_makers = ['eslint']
 
 set completeopt=menuone
+
+" vim-go customization via https://github.com/fatih/vim-go-tutorial
+let g:go_list_type = "quickfix"
+let g:go_fmt_command="goimports"
+let g:go_auto_type_info = 1
+let g:go_autodetect_gopath="0"
+let g:go_auto_sameids = 1
+
+autocmd FileType go set autowrite
+autocmd FileType go nmap <leader>r <Plug>(go-run)
+autocmd FileType go nmap <leader>t <Plug>(go-test)
+autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
+autocmd FileType go nmap <Leader>i <Plug>(go-info)
+
+function! s:build_go_files() " :GoBuild or :GoTestCompile based on the go file
+  let l:file = expand('%')
+  if l:file =~# '^\f\+_test\.go$'
+    call go#cmd#Test(0, 1)
+  elseif l:file =~# '^\f\+\.go$'
+    call go#cmd#Build(0)
+  endif
+endfunction
+autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
