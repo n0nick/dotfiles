@@ -10,8 +10,8 @@
 
 Oh, this one's for [me](https://github.com/n0nick).
 I'm using these customizations on my work laptop and workstation (A Macbook and
-a Mac Pro), mostly for Web development, with a side of general code and academic
-playground.
+a Linux workstation), mostly for Web development, with a side of general code
+and academic playground.
 
 ## Prerequisites
 
@@ -49,6 +49,24 @@ playground.
 
         $ brew install git
 
+## Linux bootstrap
+
+1. [Nix]
+
+        $ curl https://nixos.org/nix/install | sh
+
+2. Zsh
+
+        $ chsh -s $(which zsh)
+
+3. Neovim
+
+        $ nx-env -i neovim
+
+4. Tmux
+
+        $ nx-env -i tmux
+
 ## Installation
 
         $ git clone https://github.com/n0nick/dotfiles
@@ -68,3 +86,4 @@ want.](https://github.com/n0nick/dotfiles/blob/master/COPYING)
 [Tmux]: http://tmux.sourceforge.net/
 [iTerm2]: http://iterm2.com/
 [Git]: http://git-scm.com/
+[Nix]: https://nixos.org/nix/
