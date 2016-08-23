@@ -123,7 +123,9 @@ if has("user_commands")
   command! -bang -nargs=? -complete=option Set set<bang> <args>
 endif
 
-let g:tagbar_ctags_bin="~/.homebrew/bin/ctags"
+if has('mac')
+  let g:tagbar_ctags_bin="~/.homebrew/bin/ctags"
+endif
 
 let g:airline_powerline_fonts=1
 let g:airline_theme="tomorrow"
