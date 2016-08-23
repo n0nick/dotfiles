@@ -46,14 +46,15 @@ export GOPATH="$HOME/dev/go"
 path=(
   /usr/local/{bin,sbin}
   $HOME/bin
-  $HOME/.homebrew/bin
   $HOME/Library/Python/2.7/bin
   $GOPATH/bin
   $path
 )
 
-# Python path
-export PYTHONPATH=$HOME/.homebrew/lib/python2.7/site-packages:$PYTHONPATH
+if [[ -d "$HOME/.homebrew" ]]; then
+  path=($HOME/.homebrew/bin $path)
+  export PYTHONPATH=$HOME/.homebrew/lib/python2.7/site-packages:$PYTHONPATH
+fi
 
 # Tomcat path
 if [[ -s "$HOME/.homebrew/Cellar/tomcat6/6.0.39" ]]; then
