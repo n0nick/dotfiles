@@ -84,7 +84,14 @@ autocmd BufRead,BufNewFile *.jsx setfiletype javascript
 source ~/.config/nvim/plugs.vim
 
 " color scheme
-color Tomorrow-Night-Eighties
+if has('mac')
+  color Tomorrow-Night-Eighties
+else
+  if filereadable(expand("~/.vimrc_background"))
+    let base16colorspace=256
+    source ~/.vimrc_background
+  endif
+endif
 
 " run neomake on the current file on every write
 autocmd! vimrc BufWritePost * Neomake | lwindow

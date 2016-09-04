@@ -11,7 +11,11 @@ Plug 'duff/vim-bufonly', { 'on': 'Bufonly' } " Keep only current buffer
 Plug 'christoomey/vim-tmux-navigator'
 
 " Colors
-Plug 'chriskempson/vim-tomorrow-theme'
+if has('mac')
+  Plug 'chriskempson/vim-tomorrow-theme'
+else
+  Plug 'chriskempson/base16-vim'
+endif
 
 " Editing
 Plug 'tpope/vim-repeat'     " Smarter repeats through '.'
