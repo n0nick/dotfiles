@@ -56,6 +56,10 @@ if [[ -d "$HOME/.homebrew" ]]; then
   export PYTHONPATH=$HOME/.homebrew/lib/python2.7/site-packages:$PYTHONPATH
 fi
 
+if [[ -d "$HOME/.npm-packages" ]]; then
+  path=($HOME/.npm-packages/bin $path)
+fi
+
 # Tomcat path
 if [[ -s "$HOME/.homebrew/Cellar/tomcat6/6.0.39" ]]; then
   path=($HOME/.homebrew/Cellar/tomcat6/6.0.39/bin $path)
