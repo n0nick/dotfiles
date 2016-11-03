@@ -23,7 +23,7 @@ Plug 'tpope/vim-surround'   " Quoting/parenthesizing made simple
 Plug 'tpope/vim-abolish'    " Easy search, substitute, and abbreviate
 Plug 'Raimondi/delimitMate' " Insert mode auto-completion for delimiters
 Plug 'tomtom/tcomment_vim'  " Commenting code lines
-Plug 'benekastah/neomake'   " Asynchronous :make
+Plug 'neomake/neomake'   " Asynchronous :make
 Plug 'tommcdo/vim-lion'     " Simple alignment operator
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 Plug 'majutsushi/tagbar'
