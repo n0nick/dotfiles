@@ -174,6 +174,7 @@ setup_i3() {
 
     mkdir -p $HOME/bin
     symlink "$DOTF/i3/status.sh" "$HOME/bin/i3-custom-status"
+    symlink "$DOTF/i3/keyboard-toggle.sh" "$HOME/bin/keyboard-toggle"
   fi
 }
 

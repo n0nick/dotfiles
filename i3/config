@@ -164,3 +164,6 @@ focus_follows_mouse no
 
 # lock screen
 bindsym $mod+$alt+l exec "gnome-screensaver-command --lock"
+
+# language switchers
+bindsym Ctrl+space exec "keyboard-toggle"
