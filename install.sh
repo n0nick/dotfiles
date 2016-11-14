@@ -166,10 +166,14 @@ install_git_userconfig() {
 
 setup_i3() {
   if [ "i3 exists" ]; then
-    mkdir -p "$HOME/.config/i3"
-    mkdir -p "$HOME/.config/i3status"
+    mkdir -p $HOME/.config/i3
+    mkdir -p $HOME/.config/i3status
+
     symlink "$DOTF/i3/config" "$HOME/.config/i3/config"
     symlink "$DOTF/i3/status.config" "$HOME/.config/i3status/config"
+
+    mkdir -p $HOME/bin
+    symlink "$DOTF/i3/status.sh" "$HOME/bin/i3-custom-status"
   fi
 }
 
