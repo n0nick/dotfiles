@@ -16,6 +16,7 @@ main() {
   install_neovim $*
   install_tmux $*
   setup_git $*
+  setup_i3 $*
   echo -n "\n\n"
   echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
 }
@@ -160,6 +161,15 @@ install_git_userconfig() {
     greendot
   else
     echo "${GREEN}gitconfig.user already exists :)"
+  fi
+}
+
+setup_i3() {
+  if [ "i3 exists" ]; then
+    mkdir -p "$HOME/.config/i3"
+    mkdir -p "$HOME/.config/i3status"
+    symlink "$DOTF/i3/config" "$HOME/.config/i3/config"
+    symlink "$DOTF/i3/status.config" "$HOME/.config/i3status/config"
   fi
 }
 
