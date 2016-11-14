@@ -51,6 +51,10 @@ path=(
   $path
 )
 
+if [[ -d "$HOME/.nix-profile" ]]; then
+  path=($HOME/.nix-profile/bin $path)
+fi
+
 if [[ -d "$HOME/.homebrew" ]]; then
   path=($HOME/.homebrew/bin $path)
   export PYTHONPATH=$HOME/.homebrew/lib/python2.7/site-packages:$PYTHONPATH
