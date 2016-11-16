@@ -126,6 +126,7 @@ install_tmux() {
     run "git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm"
     greendot
   fi
+  run "$HOME/.tmux/plugins/tpm/bin/update_plugins all"
 }
 
 setup_git() {
