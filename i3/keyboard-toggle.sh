@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LANG=$(setxkbmap -query | grep layout | awk '{print $2}')
+LANG=$(setxkbmap -query | awk '/layout/{print $2}')
 
 if [ "$LANG" == "us" ]; then
   setxkbmap il
