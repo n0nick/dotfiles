@@ -88,6 +88,7 @@ if has('mac')
   color Tomorrow-Night-Eighties
 else
   if filereadable(expand("~/.vimrc_background"))
+    set t_Co=256
     let base16colorspace=256
     source ~/.vimrc_background
     highlight! link MatchParen StatusLine
