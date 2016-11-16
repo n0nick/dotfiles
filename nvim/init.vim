@@ -48,9 +48,9 @@ nnoremap <silent> <C-l> <C-w>l
 nnoremap <silent> <C-w>b :Bufonly<CR>
 
 " system clipboard
-vmap <Leader>y "*y
-map <Leader>p "*p<CR>
-map <Leader>P "*P<CR>
+vmap <Leader>y "+y
+map <Leader>p "+p<CR>
+map <Leader>P "+P<CR>
 
 " easy file navigation http://vimcasts.org/e/14
 cnoremap %% <C-R>=fnameescape(expand('%:h')).'/'<cr>
