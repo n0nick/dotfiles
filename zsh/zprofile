@@ -87,6 +87,14 @@ if (( $#commands[(i)lesspipe(|.sh)] )); then
 fi
 
 #
+# Terminal
+#
+
+if hash xfce4-terminal 2>/dev/null; then
+  export TERMINAL='xfce4-terminal'
+fi
+
+#
 # Temporary Files
 #
 
