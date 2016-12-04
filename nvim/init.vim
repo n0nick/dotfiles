@@ -106,7 +106,6 @@ let g:notes_directories = ['~/Documents/Notes']
 
 " vim-test configuration
 let test#strategy = 'neoterm'
-let test#ruby#rspec#executable = 'bundle exec rspec'
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
 
