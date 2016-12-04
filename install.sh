@@ -174,8 +174,9 @@ setup_i3() {
     symlink "$DOTF/i3/status.config" "$HOME/.config/i3status/config"
 
     mkdir -p $HOME/bin
-    symlink "$DOTF/i3/status.sh" "$HOME/bin/i3-custom-status"
-    symlink "$DOTF/i3/keyboard-toggle.sh" "$HOME/bin/keyboard-toggle"
+    for script in i3-custom-status i3-pixel-lock keyboard-toggle; do
+      symlink "$DOTF/i3/$script.sh" "$HOME/bin/$script"
+    done
   fi
 }
 
