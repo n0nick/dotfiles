@@ -196,5 +196,11 @@ for_window [instance="gnome-font-viewer"] floating enable
 for_window [instance="crx_fhbjgbiflinjbdggehcddcbncdddomop"] floating enable # Postman
 for_window [instance="crx_ljclpkphhpbpinifbeabbhlfddcpfdde"] floating enable # Hangouts
 
+# Karma Chrome launcher: float + resize + center + don't focus
+for_window [instance="google-chrome.*/tmp/.*/karma-"] floating enable
+for_window [instance="google-chrome.*/tmp/.*/karma-"] resize set 1024 768
+for_window [instance="google-chrome.*/tmp/.*/karma-"] move position center
+no_focus [instance="google-chrome.*/tmp/.*/karma-"]
+
 # rename workspace
 bindsym $mod+n exec i3-input -F 'rename workspace to "%s"' -P 'New name for this workspace: '
