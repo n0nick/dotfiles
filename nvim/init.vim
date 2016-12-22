@@ -167,3 +167,5 @@ function! s:build_go_files() " :GoBuild or :GoTestCompile based on the go file
   endif
 endfunction
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+
+autocmd BufRead,BufNewFile Dockerfile.* set ft=dockerfile
