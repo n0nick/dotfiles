@@ -4,6 +4,7 @@ vim/tmp/
 vim/spell/
 vim/.netrwhist
 
+nvim/local.vim
 nvim/autoload/plug.vim
 nvim/plugged/
 nvim/spell/
