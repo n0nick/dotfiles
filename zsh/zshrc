@@ -26,6 +26,12 @@ alias 1pass-sync="1pass-to-android && 1pass-to-mac"
 alias vi="nvim"
 alias vim="nvim"
 
+# 'open' command for Linux
+if [ -x "$(command -v xdg-open)" ]; then
+  alias o="xdg-open"
+  alias open="xdg-open"
+fi
+
 # gcloud SDK command completion and PATH
 if [[ -d "$HOME/google-cloud-sdk" ]]; then
   export PATH=$HOME/google-cloud-sdk/bin:$PATH
