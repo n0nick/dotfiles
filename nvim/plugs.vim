@@ -29,17 +29,19 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 Plug 'majutsushi/tagbar'
 
 " File formats
-Plug 'kchmck/vim-coffee-script', { 'for': 'coffee'   }
-Plug 'fatih/vim-go',             { 'for': 'go'       }
-Plug 'digitaltoad/vim-jade',     { 'for': 'jade'     }
-Plug 'shime/vim-livedown',       { 'for': 'markdown' } " Live Markdown preview
-Plug 'tpope/vim-rails',          { 'for': 'ruby'     } " Rails-oriented editing
-Plug 'tpope/vim-endwise',        { 'for': 'ruby'     } " Smart 'end' for Ruby
+Plug 'kchmck/vim-coffee-script',   { 'for': 'coffee'   }
+Plug 'fatih/vim-go',               { 'for': 'go'       }
+Plug 'digitaltoad/vim-jade',       { 'for': 'jade'     }
+Plug 'shime/vim-livedown',         { 'for': 'markdown' } " Live Markdown preview
+Plug 'tpope/vim-rails',            { 'for': 'ruby'     }
+Plug 'tpope/vim-endwise',          { 'for': 'ruby'     } " Smart 'end' for Ruby
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
+Plug 'Shougo/vimproc.vim' | Plug 'Quramy/tsuquyomi', { 'for': 'typescript' }
+Plug 'jaawerth/nrun.vim' " NPM bin finder
 " JS syntax plugins via https://goo.gl/rG8gvZ
 Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
 Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
 Plug 'elzr/vim-json',            { 'for': 'json'       }
-Plug 'jaawerth/nrun.vim'
 
 Plug 'terryma/vim-expand-region'
 
