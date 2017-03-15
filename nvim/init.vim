@@ -150,6 +150,7 @@ let g:go_fmt_command="goimports"
 let g:go_auto_type_info = 1
 let g:go_autodetect_gopath="0"
 let g:go_auto_sameids = 1
+let g:go_term_enabled = 1 " https://git.io/vDrpg
 
 autocmd FileType go set autowrite
 autocmd FileType go nmap <leader>r <Plug>(go-run)

@@ -31,6 +31,7 @@ Plug 'majutsushi/tagbar'
 " File formats
 Plug 'kchmck/vim-coffee-script',   { 'for': 'coffee'   }
 Plug 'fatih/vim-go',               { 'for': 'go'       }
+Plug 'jodosha/vim-godebug',        { 'for': 'go'       }
 Plug 'digitaltoad/vim-jade',       { 'for': 'jade'     }
 Plug 'shime/vim-livedown',         { 'for': 'markdown' } " Live Markdown preview
 Plug 'tpope/vim-rails',            { 'for': 'ruby'     }
