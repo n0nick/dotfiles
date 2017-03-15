@@ -9,7 +9,7 @@ set tabstop=2 shiftwidth=2 smarttab
 
 " mark tabs, trailing whitespace
 set list
-set listchars=tab:▸\ ,eol:¬,trail:·
+set listchars=tab:▸\ ,trail:·
 
 " Show 80 characters column line
 set colorcolumn=80
