@@ -24,9 +24,9 @@ and academic playground.
 
 1. [Homebrew] and [homebrew-cask](https://github.com/caskroom/homebrew-cask)
 
-        $ ruby -e "$(curl -fsSL \
-            https://raw.github.com/Homebrew/homebrew/go/install)"
-        $ brew install caskroom/cask/brew-cask
+        $ /usr/bin/ruby -e "$(curl -fsSL \
+          https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        $ brew tap caskroom/cask
 
 2. [iTerm2]
 
