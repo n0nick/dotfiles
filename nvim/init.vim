@@ -170,4 +170,6 @@ autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 
 autocmd BufRead,BufNewFile Dockerfile.* set ft=dockerfile
 
-source ~/.config/nvim/local.vim
+if filereadable(expand("~/.config/nvim/local.vim"))
+  source ~/.config/nvim/local.vim
+endif
