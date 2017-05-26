@@ -185,6 +185,7 @@ bindsym $mod+grave scratchpad show
 for_window [instance="gnome-font-viewer"] floating enable
 for_window [instance="crx_fhbjgbiflinjbdggehcddcbncdddomop"] floating enable # Postman
 for_window [instance="crx_ljclpkphhpbpinifbeabbhlfddcpfdde"] floating enable # Hangouts
+for_window [instance="chat"] floating enable # Hangouts
 
 # Karma Chrome launcher: float + resize + center + don't focus
 for_window [instance="google-chrome.*/tmp/.*/karma-"] floating enable
