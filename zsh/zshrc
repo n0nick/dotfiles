@@ -69,3 +69,5 @@ fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
+
+export PATH="$HOME/.yarn/bin:$PATH"
