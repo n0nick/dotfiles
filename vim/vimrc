@@ -98,7 +98,7 @@ set hlsearch
 
 " mark tabs, trailing whitespace
 set list
-set listchars=tab:▸\ ,eol:¬,trail:·
+set listchars=tab:▸\ ,trail:·
 
 " define a group `vimrc` and initialize.
 augroup vimrc
