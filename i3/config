@@ -172,8 +172,6 @@ bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 1 toggle
 bindsym XF86AudioPlay exec playerctl play-pause
 
 # next/previous focus & workspace
-bindsym $alt+Tab focus right
-bindsym $alt+Shift+Tab focus left
 bindsym $mod+Tab workspace back_and_forth
 
 # cycle window border: normal, 1px, none
