@@ -198,3 +198,6 @@ bindsym $mod+n exec i3-input -F 'rename workspace to "%s"' -P 'New name for this
 
 # Screenshot grabber
 bindsym --release Print exec snipit
+
+# Redshift screen tinting
+exec --no-startup-id redshift-gtk -l 32.070066:34.794123 -m randr
