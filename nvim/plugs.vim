@@ -27,6 +27,7 @@ Plug 'neomake/neomake'   " Asynchronous :make
 Plug 'tommcdo/vim-lion'     " Simple alignment operator
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 Plug 'majutsushi/tagbar'
+Plug 'sbdchd/neoformat', { 'on': 'Neoformat'}
 
 " File formats
 Plug 'kchmck/vim-coffee-script',   { 'for': 'coffee'   }
