@@ -160,9 +160,7 @@ bar {
 focus_follows_mouse no
 
 # lock screen
-# bindsym Ctrl+$alt+l exec "i3-msg workspace number 1 && gnome-screensaver-command --lock"
-exec --no-startup-id ~/bin/locker &
-bindsym Ctrl+$alt+l exec "i3-pixel-lock"
+bindsym Ctrl+$alt+l exec "i3-msg workspace number 1 && gnome-screensaver-command --lock"
 
 # language switchers
 bindsym Ctrl+space exec "keyboard-toggle"
