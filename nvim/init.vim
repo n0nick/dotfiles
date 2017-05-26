@@ -80,6 +80,8 @@ autocmd vimrc QuickFixCmdPost *grep* cwindow
 autocmd BufRead,BufNewFile *.es6 setfiletype javascript
 autocmd BufRead,BufNewFile *.jsx setfiletype javascript
 
+autocmd FileType javascript set formatprg=prettier\ --stdin
+
 " load installed plugs
 source ~/.config/nvim/plugs.vim
 
@@ -170,6 +172,13 @@ endfunction
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 
 autocmd BufRead,BufNewFile Dockerfile.* set ft=dockerfile
+
+let g:neoformat_javascript_prettier = {
+      \ 'exe': 'prettier',
+      \ 'args': ['--stdin', '--single-quote'],
+      \ 'stdin': 1,
+      \ }
+nnoremap <Leader>f :Neoformat<cr>
 
 if filereadable(expand("~/.config/nvim/local.vim"))
   source ~/.config/nvim/local.vim
