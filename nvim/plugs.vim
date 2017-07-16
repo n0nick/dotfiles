@@ -22,7 +22,7 @@ Plug 'tpope/vim-surround'   " Quoting/parenthesizing made simple
 Plug 'tpope/vim-abolish'    " Easy search, substitute, and abbreviate
 Plug 'Raimondi/delimitMate' " Insert mode auto-completion for delimiters
 Plug 'tomtom/tcomment_vim'  " Commenting code lines
-Plug 'neomake/neomake'   " Asynchronous :make
+Plug 'w0rp/ale'             " Asynchronous linting
 Plug 'tommcdo/vim-lion'     " Simple alignment operator
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 Plug 'majutsushi/tagbar'
@@ -37,7 +37,6 @@ Plug 'tpope/vim-rails',            { 'for': 'ruby'     }
 Plug 'tpope/vim-endwise',          { 'for': 'ruby'     } " Smart 'end' for Ruby
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 Plug 'Shougo/vimproc.vim' | Plug 'Quramy/tsuquyomi', { 'for': 'typescript' }
-Plug 'jaawerth/nrun.vim' " NPM bin finder
 " JS syntax plugins via https://goo.gl/rG8gvZ
 Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
 Plug 'mxw/vim-jsx',              { 'for': 'javascript' }

@@ -104,9 +104,6 @@ else
   endif
 endif
 
-" run neomake on the current file on every write
-autocmd! vimrc BufWritePost * Neomake | lwindow
-
 " Command completion list mode
 set wildmode=list:longest
 
@@ -141,11 +138,12 @@ endif
 let g:airline_powerline_fonts=1
 let g:airline_theme="tomorrow"
 
-" Tell Neomake about local ESLint https://git.io/v6e1e
-let b:neomake_javascript_eslint_exe = nrun#Which('eslint')
-let b:neomake_javascript_enabled_makers = ['eslint']
-
 set completeopt=menuone
+
+" Error and warning signs.
+let g:ale_sign_error = '⤫'
+let g:ale_sign_warning = '⚠'
+let g:airline#extensions#ale#enabled = 1
 
 " vim-go customization via https://github.com/fatih/vim-go-tutorial
 let g:go_list_type = "quickfix"
