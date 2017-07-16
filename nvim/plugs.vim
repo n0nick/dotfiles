@@ -29,7 +29,6 @@ Plug 'majutsushi/tagbar'
 Plug 'sbdchd/neoformat', { 'on': 'Neoformat'}
 
 " File formats
-Plug 'kchmck/vim-coffee-script',   { 'for': 'coffee'   }
 Plug 'fatih/vim-go',               { 'for': 'go'       }
 Plug 'jodosha/vim-godebug',        { 'for': 'go'       }
 Plug 'digitaltoad/vim-jade',       { 'for': 'jade'     }
@@ -44,8 +43,6 @@ Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
 Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
 Plug 'elzr/vim-json',            { 'for': 'json'       }
 
-Plug 'terryma/vim-expand-region'
-
 " Running tests
 Plug 'janko-m/vim-test' " Run tests in current context
 Plug 'kassio/neoterm'   " Re-usable terminal buffers
@@ -54,9 +51,8 @@ Plug 'kassio/neoterm'   " Re-usable terminal buffers
 Plug 'tpope/vim-fugitive'     " Git commands
 Plug 'tpope/vim-git'          " Git syntax highlighting
 Plug 'airblade/vim-gitgutter' " Git diff gutter
-Plug 'mattn/webapi-vim' | Plug 'mattn/gist-vim', { 'on': 'Gist' } " Post to Gist
 
 " Misc
-Plug 'xolox/vim-misc' | Plug 'xolox/vim-notes', { 'on': 'Notes' }
+Plug 'mattn/webapi-vim' | Plug 'mattn/gist-vim', { 'on': 'Gist' } " Post to Gist
 
 call plug#end()

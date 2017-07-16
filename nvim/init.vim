@@ -118,12 +118,6 @@ let test#strategy = 'neoterm'
 nmap <silent> <leader>t :TestNearest<CR>
 nmap <silent> <leader>T :TestFile<CR>
 
-" Expand Ruby text objects
-call expand_region#custom_text_objects('ruby', {
-  \ 'ir' :0,
-  \ 'ar' :0,
-  \ })
-
 " http://blog.sanctum.geek.nz/vim-command-typos/
 if has("user_commands")
   command! -bang -nargs=? -complete=file E e<bang> <args>
