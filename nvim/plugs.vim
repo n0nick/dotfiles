@@ -27,9 +27,11 @@ Plug 'tommcdo/vim-lion'     " Simple alignment operator
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 Plug 'majutsushi/tagbar'
 Plug 'sbdchd/neoformat', { 'on': 'Neoformat'}
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 " File formats
 Plug 'fatih/vim-go',               { 'for': 'go'       }
+Plug 'zchee/deoplete-go',          { 'for': 'go', 'do': 'make'}
 Plug 'jodosha/vim-godebug',        { 'for': 'go'       }
 Plug 'digitaltoad/vim-jade',       { 'for': 'jade'     }
 Plug 'shime/vim-livedown',         { 'for': 'markdown' } " Live Markdown preview
