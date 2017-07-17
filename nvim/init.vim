@@ -30,6 +30,10 @@ nnoremap <Leader>. '.
 nnoremap <silent> vv <C-w>v
 nnoremap <silent> ss <C-w>s
 
+" load path
+set path+=app/javascript,app/assets/stylesheets/,
+autocmd FileType javascript set suffixesadd+=,.jade,jsx,
+
 if has('nvim')
   " fix <C-h> (https://github.com/neovim/neovim/issues/2048)
   nmap <BS> <C-h>
