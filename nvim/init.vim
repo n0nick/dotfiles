@@ -180,7 +180,8 @@ function! s:build_go_files() " :GoBuild or :GoTestCompile based on the go file
 endfunction
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 
-autocmd BufRead,BufNewFile Dockerfile.* set ft=dockerfile
+autocmd BufReadPost Dockerfile.* set filetype=dockerfile
+autocmd BufReadPost Jenkinsfile set filetype=groovy
 
 let g:neoformat_javascript_prettier = {
       \ 'exe': 'prettier',
