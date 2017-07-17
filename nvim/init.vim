@@ -140,6 +140,10 @@ let g:airline_theme="tomorrow"
 
 set completeopt=menuone
 
+" Change word under cursor and dot repeat via https://bluz71.github.io/2017/05/15/vim-tips-tricks.html
+nnoremap c* *Ncgn
+nnoremap c# #NcgN
+
 " Error and warning signs.
 let g:ale_sign_error = '⤫'
 let g:ale_sign_warning = '⚠'
