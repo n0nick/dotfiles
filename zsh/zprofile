@@ -51,8 +51,8 @@ path=(
   $path
 )
 
-if [[ -d "$HOME/.nix-profile" ]]; then
-  path=($HOME/.nix-profile/bin $path)
+if [ -e $HOME/.nix-profile/etc/profile.d/nix.sh ]; then
+  source $HOME/.nix-profile/etc/profile.d/nix.sh;
 fi
 
 if [[ -d "$HOME/.homebrew" ]]; then
