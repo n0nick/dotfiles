@@ -3,6 +3,8 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
+[[ -s "$HOME/.zprofile" ]] && source "$HOME/.zprofile"
+
 unsetopt autocd # turn off changing directory without "cd"
 unsetopt nomatch # https://robots.thoughtbot.com/how-to-use-arguments-in-a-rake-task
 
