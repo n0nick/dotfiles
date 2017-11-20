@@ -43,6 +43,7 @@ Plug 'Shougo/vimproc.vim' | Plug 'Quramy/tsuquyomi', { 'for': 'typescript' }
 Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
 Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
 Plug 'elzr/vim-json',            { 'for': 'json'       }
+Plug 'digitalrounin/vim-yaml-folds', { 'for': 'yaml' }
 
 " Running tests
 Plug 'janko-m/vim-test' " Run tests in current context
