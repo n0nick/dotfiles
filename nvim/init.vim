@@ -93,6 +93,12 @@ autocmd BufRead,BufNewFile *.jsx setfiletype javascript
 
 autocmd FileType javascript set formatprg=prettier\ --stdin
 
+" \ 'typescript': ['tslint', 'tsserver', 'typecheck', 'prettier'],
+autocmd BufRead,BufNewFile *.ts setfiletype typescript
+let g:ale_linters = {
+\ 'typescript': ['tslint', 'tsserver', 'typecheck'],
+\}
+
 " load installed plugs
 source ~/.config/nvim/plugs.vim
 
@@ -197,6 +203,8 @@ let g:neoformat_javascript_prettier = {
       \ 'stdin': 1,
       \ }
 nnoremap <Leader>f :Neoformat<cr>
+
+nnoremap <silent> <leader>h :echo tsuquyomi#hint()<CR>
 
 if filereadable(expand("~/.config/nvim/local.vim"))
   source ~/.config/nvim/local.vim
