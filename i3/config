@@ -45,6 +45,7 @@ bindsym $mod+d exec --no-startup-id "rofi -combi-modi window,drun -show combi"
 bindsym $mod+Shift+d exec --no-startup-id rofi -show drun
 bindsym $mod+Shift+w exec --no-startup-id rofi -show window
 bindsym $mod+Shift+s exec --no-startup-id rofi -show ssh
+bindsym $mod+Shift+b exec --no-startup-id rofi -show Workspace
 
 # change focus
 bindsym $mod+h focus left
