@@ -97,8 +97,11 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
+# navigate workspaces
 bindsym $mod+Ctrl+h workspace prev
+bindsym $mod+Ctrl+Left workspace prev
 bindsym $mod+Ctrl+l workspace next
+bindsym $mod+Ctrl+Right workspace next
 
 # switch to workspace
 bindsym $mod+1 workspace number 1
