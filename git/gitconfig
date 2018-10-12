@@ -72,3 +72,5 @@
 	diff = diff-highlight | less
 [color]
 	ui = auto
+[http]
+	cookiefile = /usr/local/google/home/sagie/.gitcookies
