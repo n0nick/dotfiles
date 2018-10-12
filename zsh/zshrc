@@ -21,12 +21,7 @@ alias tmux="tmux -2" # tmux with 256 colors support
 alias nospring="DISABLE_SPRING=1"
 alias j="fasd_cd -d"
 
-# Syncing 1Password with my phone
-alias 1pass-to-android="adb-sync ~/Documents/1Password /sdcard/"
-alias 1pass-to-mac="adb-sync --reverse /sdcard/1Password ~/Documents/"
-alias 1pass-sync="1pass-to-android && 1pass-to-mac"
-
-# Experimenting with Neovim
+# Neovim
 alias vi="nvim"
 alias vim="nvim"
 
