@@ -37,13 +37,14 @@ Plug 'digitaltoad/vim-jade',       { 'for': 'jade'     }
 Plug 'shime/vim-livedown',         { 'for': 'markdown' } " Live Markdown preview
 Plug 'tpope/vim-rails',            { 'for': 'ruby'     }
 Plug 'tpope/vim-endwise',          { 'for': 'ruby'     } " Smart 'end' for Ruby
+Plug 'kchmck/vim-coffee-script',   { 'for': 'coffee'   }
 Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 Plug 'Shougo/vimproc.vim' | Plug 'Quramy/tsuquyomi', { 'for': 'typescript' }
 " JS syntax plugins via https://goo.gl/rG8gvZ
 Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
 Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
 Plug 'elzr/vim-json',            { 'for': 'json'       }
-Plug 'digitalrounin/vim-yaml-folds', { 'for': 'yaml' }
+Plug 'Einenlum/yaml-revealer',   { 'for': 'yaml' }
 
 " Running tests
 Plug 'janko-m/vim-test' " Run tests in current context
