@@ -99,6 +99,8 @@ let g:ale_linters = {
 \ 'typescript': ['tslint', 'tsserver', 'typecheck'],
 \}
 
+autocmd FileType typescript nmap <buffer> <Leader>h : <C-u>echo tsuquyomi#hint()<CR>
+
 " load installed plugs
 source ~/.config/nvim/plugs.vim
 
@@ -205,6 +207,18 @@ let g:neoformat_javascript_prettier = {
 nnoremap <Leader>f :Neoformat<cr>
 
 nnoremap <silent> <leader>h :echo tsuquyomi#hint()<CR>
+
+" Alternate file jumping for Typescript files (*/foo.ts -> */foo_test.ts)
+function init#typescriptAlternateEdit()
+  let l:filename=expand('%:p')
+
+  if l:filename =~ '_test.ts$'
+    execute 'edit' substitute(l:filename, '_test.ts$', '.ts', '')
+  else
+    execute 'edit' substitute(l:filename, '.ts$', '_test.ts', '')
+  endif
+endfunction
+autocmd FileType typescript command! A call init#typescriptAlternateEdit()
 
 if filereadable(expand("~/.config/nvim/local.vim"))
   source ~/.config/nvim/local.vim
