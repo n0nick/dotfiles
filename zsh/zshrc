@@ -8,6 +8,8 @@ fi
 unsetopt autocd # turn off changing directory without "cd"
 unsetopt nomatch # https://robots.thoughtbot.com/how-to-use-arguments-in-a-rake-task
 
+eval "$(fasd --init auto)"
+
 # Aliases
 alias be="bundle exec"
 alias gob="rave gob"
@@ -17,7 +19,7 @@ alias pdr="powder restart"
 alias ssh='TERM=xterm ssh' # fix $TERM problem on remotes
 alias tmux="tmux -2" # tmux with 256 colors support
 alias nospring="DISABLE_SPRING=1"
-alias j='fasd_cd' # No need for interactive mode
+alias j="fasd_cd -d"
 
 # Syncing 1Password with my phone
 alias 1pass-to-android="adb-sync ~/Documents/1Password /sdcard/"
