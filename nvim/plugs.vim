@@ -34,7 +34,7 @@ Plug 'fatih/vim-go',               { 'for': 'go'       }
 Plug 'zchee/deoplete-go',          { 'for': 'go', 'do': 'make'}
 Plug 'jodosha/vim-godebug',        { 'for': 'go'       }
 Plug 'digitaltoad/vim-jade',       { 'for': 'jade'     }
-Plug 'shime/vim-livedown',         { 'for': 'markdown' } " Live Markdown preview
+Plug 'iamcco/markdown-preview.nvim', { 'for': 'markdown', 'do': 'cd app & yarn install'  }
 Plug 'tpope/vim-rails',            { 'for': 'ruby'     }
 Plug 'tpope/vim-endwise',          { 'for': 'ruby'     } " Smart 'end' for Ruby
 Plug 'kchmck/vim-coffee-script',   { 'for': 'coffee'   }
