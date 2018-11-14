@@ -95,6 +95,8 @@ let g:ale_linters = {
 \ 'typescript': ['tslint', 'tsserver', 'typecheck'],
 \}
 
+" typescript mappings
+let g:tsuquyomi_disable_default_mappings = 1
 autocmd FileType typescript nmap <buffer> <Leader>h : <C-u>echo tsuquyomi#hint()<CR>
 
 " load installed plugs
@@ -197,8 +199,6 @@ let g:neoformat_javascript_prettier = {
       \ 'stdin': 1,
       \ }
 nnoremap <Leader>f :Neoformat<cr>
-
-nnoremap <silent> <leader>h :echo tsuquyomi#hint()<CR>
 
 " Alternate file jumping for Typescript files (*/foo.ts -> */foo_test.ts)
 function init#typescriptAlternateEdit()
