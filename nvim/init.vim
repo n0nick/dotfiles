@@ -87,10 +87,6 @@ autocmd vimrc FileType gitcommit setlocal spell
 " automatically open quickfix window for grep results
 autocmd vimrc QuickFixCmdPost *grep* cwindow
 
-" .es6 files are javascript
-autocmd BufRead,BufNewFile *.es6 setfiletype javascript
-autocmd BufRead,BufNewFile *.jsx setfiletype javascript
-
 autocmd FileType javascript set formatprg=prettier\ --stdin
 
 " \ 'typescript': ['tslint', 'tsserver', 'typecheck', 'prettier'],
