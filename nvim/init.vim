@@ -89,7 +89,6 @@ autocmd vimrc QuickFixCmdPost *grep* cwindow
 
 autocmd FileType javascript set formatprg=prettier\ --stdin
 
-" \ 'typescript': ['tslint', 'tsserver', 'typecheck', 'prettier'],
 autocmd BufRead,BufNewFile *.ts setfiletype typescript
 let g:ale_linters = {
 \ 'typescript': ['tslint', 'tsserver', 'typecheck'],
