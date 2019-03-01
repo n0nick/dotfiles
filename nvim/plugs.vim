@@ -55,6 +55,7 @@ Plug 'kassio/neoterm'   " Re-usable terminal buffers
 
 " Git
 Plug 'tpope/vim-fugitive'     " Git commands
+Plug 'christoomey/vim-conflicted' " Git conflict resolution
 Plug 'tpope/vim-git'          " Git syntax highlighting
 Plug 'airblade/vim-gitgutter' " Git diff gutter
 

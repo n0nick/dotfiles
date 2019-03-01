@@ -55,6 +55,7 @@
 	t = tag
 	semtag = !git tag -a $(semver tag) -m \"tagging $(semver tag)\"
 	g = grep --break --heading --line-number
+	conflicted = !nvim +Conflicted
 [include]
 	path = .gitconfig.user
 [google]
