@@ -11,23 +11,13 @@ unsetopt nomatch # https://robots.thoughtbot.com/how-to-use-arguments-in-a-rake-
 eval "$(fasd --init auto)"
 
 # Aliases
-alias be="bundle exec"
-alias gob="rave gob"
-alias lock='/System/Library/CoreServices/"Menu Extras"/User.menu/Contents/Resources/CGSession -suspend'
-alias pdo="powder open"
-alias pdr="powder restart"
+unalias gs
 alias ssh='TERM=xterm ssh' # fix $TERM problem on remotes
 alias tmux="tmux -2" # tmux with 256 colors support
-alias nospring="DISABLE_SPRING=1"
 alias j="fasd_cd -d"
-
-# Neovim
 alias vi="nvim"
 alias vim="nvim"
-
-# 'open' command for Linux
 if [ -x "$(command -v xdg-open)" ]; then
-  alias o="xdg-open"
   alias open="xdg-open"
 fi
 
