@@ -94,10 +94,6 @@ let g:ale_linters = {
 \ 'typescript': ['tslint', 'tsserver', 'typecheck'],
 \}
 
-" typescript mappings
-let g:tsuquyomi_disable_default_mappings = 1
-autocmd FileType typescript nmap <buffer> <Leader>h : <C-u>echo tsuquyomi#hint()<CR>
-
 " load installed plugs
 source ~/.config/nvim/plugs.vim
 
@@ -200,7 +196,7 @@ let g:neoformat_javascript_prettier = {
 nnoremap <Leader>f :Neoformat<cr>
 
 " Alternate file jumping for Typescript files (*/foo.ts -> */foo_test.ts)
-function init#typescriptAlternateEdit()
+function! init#typescriptAlternateEdit()
   let l:filename=expand('%:p')
 
   if l:filename =~ '_test.ts$'
@@ -210,6 +206,23 @@ function init#typescriptAlternateEdit()
   endif
 endfunction
 autocmd FileType typescript command! A call init#typescriptAlternateEdit()
+
+" typescript key mappings
+set cmdheight=2
+let g:echodoc#enable_at_startup = 1
+let g:nvim_typescript#type_info_on_hold = 1
+let g:nvim_typescript#default_mappings = 1
+" autocmd FileType typescript nmap <C-]> :TSDef<cr>
+" autocmd FileType typescript nmap <leader>r :TSRefs<cr>
+" autocmd FileType typescript nmap <leader>d :TSDoc<cr>
+" autocmd FileType typescript nmap <leader>t :TSType<cr>
+" autocmd FileType typescript nmap <leader>i :TSImport<cr>
+
+let g:ale_fixers = {
+      \ 'typescript': ['tslint'],
+      \ 'javascript': ['eslint'],
+      \ }
+autocmd FileType typescript nmap <leader>f :ALEFix<cr>
 
 if filereadable(expand("~/.config/nvim/local.vim"))
   source ~/.config/nvim/local.vim

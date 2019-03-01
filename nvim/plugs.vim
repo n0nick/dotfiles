@@ -5,6 +5,8 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'kshenoy/vim-signature' " Toggle and display marks
 Plug 'tpope/vim-unimpaired' " Pairs of handy bracket mappings
 Plug 'duff/vim-bufonly', { 'on': 'Bufonly' } " Keep only current buffer
+Plug 'Shougo/denite.nvim'
+Plug 'Shougo/echodoc.vim' " Function signatures in command line
 
 " Tmux integration
 Plug 'christoomey/vim-tmux-navigator'
@@ -27,7 +29,7 @@ Plug 'tommcdo/vim-lion'     " Simple alignment operator
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 Plug 'majutsushi/tagbar'
 Plug 'sbdchd/neoformat', { 'on': 'Neoformat'}
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Async completion
 
 " File formats
 Plug 'fatih/vim-go',               { 'for': 'go'       }
@@ -38,13 +40,14 @@ Plug 'iamcco/markdown-preview.nvim', { 'for': 'markdown', 'do': 'cd app & yarn i
 Plug 'tpope/vim-rails',            { 'for': 'ruby'     }
 Plug 'tpope/vim-endwise',          { 'for': 'ruby'     } " Smart 'end' for Ruby
 Plug 'kchmck/vim-coffee-script',   { 'for': 'coffee'   }
-Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-Plug 'Shougo/vimproc.vim' | Plug 'Quramy/tsuquyomi', { 'for': 'typescript' }
 " JS syntax plugins via https://goo.gl/rG8gvZ
 Plug 'pangloss/vim-javascript',  { 'for': 'javascript' }
 Plug 'mxw/vim-jsx',              { 'for': 'javascript' }
 Plug 'elzr/vim-json',            { 'for': 'json'       }
 Plug 'Einenlum/yaml-revealer',   { 'for': 'yaml' }
+" Typescript
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'mhartington/nvim-typescript', { 'do': './install.sh' }
 
 " Running tests
 Plug 'janko-m/vim-test' " Run tests in current context
