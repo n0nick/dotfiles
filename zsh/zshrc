@@ -8,13 +8,11 @@ fi
 unsetopt autocd # turn off changing directory without "cd"
 unsetopt nomatch # https://robots.thoughtbot.com/how-to-use-arguments-in-a-rake-task
 
-eval "$(fasd --init auto)"
-
 # Aliases
-unalias gs
-alias ssh='TERM=xterm ssh' # fix $TERM problem on remotes
+alias g="git"
+alias gg="git grep"
+alias ssh="TERM=xterm ssh" # fix $TERM problem on remotes
 alias tmux="tmux -2" # tmux with 256 colors support
-alias j="fasd_cd -d"
 alias vi="nvim"
 alias vim="nvim"
 if [ -x "$(command -v xdg-open)" ]; then
@@ -32,36 +30,18 @@ if [ -x "$(command -v kubectl)" ]; then
   source <(kubectl completion zsh)
 fi
 
-# kubectl context switcher + completion
-function kube-context() {
-  kubectl config use-context $@
-}
-
-_kube-context_completions() {
-  local -a options
-  options=()
-  for c in $(kubectl config view -o jsonpath='{.contexts[*].name}'); do
-    d=$(echo $c | awk 'BEGIN { FS="_" }; { printf "%11s: %-15s %-14s", $4, $3, $2 }')
-    options=($options "$c:$d")
-  done
-  _describe 'Kubernetes contexts' options
-}
-
-compdef _kube-context_completions kube-context
-
-# base16 colors
-if [[ -d "$HOME/.config/base16-shell" ]]; then
-  BASE16_SHELL=$HOME/.config/base16-shell/
-  [ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
-fi
-
 if [[ -d "$HOME/.yarn/bin" ]]; then
   export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+fi
+
+# https://github.com/sindresorhus/guides/blob/master/npm-global-without-sudo.md
+NPM_PACKAGES="${HOME}/.npm-packages"
+if [[ -d "$NPM_PACKAGES" ]]; then
+  export PATH="$NPM_PACKAGES/bin:$PATH"
 fi
 
 if [[ -d "$HOME/.rbenv/shims" ]]; then
   export PATH="$HOME/.rbenv/shims:$PATH"
 fi
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user

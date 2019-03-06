@@ -17,6 +17,7 @@ zstyle ':prezto:load' pmodule \
   'git' \
   'tmux' \
   'ruby' \
+  'syntax-highlighting' \
   'history-substring-search'
 
 # Set the key mapping style to 'emacs' or 'vi'.
@@ -24,6 +25,9 @@ zstyle ':prezto:module:editor' key-bindings 'vi'
 
 # Ignore git submodules in status
 zstyle ':prezto:module:git:status:ignore' submodules 'all'
+
+# Avoid git aliases
+zstyle ':prezto:module:git:alias' skip 'yes'
 
 # Set the prompt theme to load.
 PURE_PROMPT_SYMBOL="$"
