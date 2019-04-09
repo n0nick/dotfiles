@@ -12,7 +12,6 @@ unsetopt nomatch # https://robots.thoughtbot.com/how-to-use-arguments-in-a-rake-
 alias g="git"
 alias gg="git grep"
 alias ssh="TERM=xterm ssh" # fix $TERM problem on remotes
-alias tmux="tmux -2" # tmux with 256 colors support
 alias vi="nvim"
 alias vim="nvim"
 if [ -x "$(command -v xdg-open)" ]; then
