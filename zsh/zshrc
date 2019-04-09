@@ -27,7 +27,10 @@ fi
 
 # kubectl command completion
 if [ -x "$(command -v kubectl)" ]; then
-  source <(kubectl completion zsh)
+  if [ ! -f "$HOME/.kubectl.zsh" ]; then
+    kubectl completion zsh > "$HOME/.kubectl.zsh"
+  fi
+  source "$HOME/.kubectl.zsh"
 fi
 
 if [[ -d "$HOME/.yarn/bin" ]]; then
