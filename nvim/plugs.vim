@@ -5,7 +5,6 @@ Plug 'vim-airline/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'kshenoy/vim-signature' " Toggle and display marks
 Plug 'tpope/vim-unimpaired' " Pairs of handy bracket mappings
 Plug 'duff/vim-bufonly', { 'on': 'Bufonly' } " Keep only current buffer
-Plug 'Shougo/denite.nvim'
 Plug 'Shougo/echodoc.vim' " Function signatures in command line
 
 " Tmux integration
