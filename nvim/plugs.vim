@@ -29,6 +29,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " Fuzzy search
 Plug 'majutsushi/tagbar'
 Plug 'sbdchd/neoformat', { 'on': 'Neoformat'}
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Async completion
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " File formats
 Plug 'fatih/vim-go',               { 'for': 'go', 'do': 'GoUpdateBinaries' }
