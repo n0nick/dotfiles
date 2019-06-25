@@ -75,3 +75,7 @@
 	ui = auto
 [http]
 	cookiefile = /usr/local/google/home/sagie/.gitcookies
+[diff]
+	tool = vimdiff
+[merge]
+	tool = vimdiff
