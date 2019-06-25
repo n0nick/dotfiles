@@ -31,7 +31,7 @@ Plug 'sbdchd/neoformat', { 'on': 'Neoformat'}
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' } " Async completion
 
 " File formats
-Plug 'fatih/vim-go',               { 'for': 'go'       }
+Plug 'fatih/vim-go',               { 'for': 'go', 'do': 'GoUpdateBinaries' }
 Plug 'zchee/deoplete-go',          { 'for': 'go', 'do': 'make'}
 Plug 'jodosha/vim-godebug',        { 'for': 'go'       }
 Plug 'digitaltoad/vim-jade',       { 'for': 'jade'     }
