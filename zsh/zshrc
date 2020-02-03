@@ -46,4 +46,6 @@ if [[ -d "$HOME/.rbenv/shims" ]]; then
   export PATH="$HOME/.rbenv/shims:$PATH"
 fi
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 [ -f ~/.zshrc.user ] && source ~/.zshrc.user
