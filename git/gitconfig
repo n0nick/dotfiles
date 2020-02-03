@@ -74,3 +74,5 @@
 	tool = vimdiff
 [merge]
 	tool = vimdiff
+[log]
+	mailmap = true
