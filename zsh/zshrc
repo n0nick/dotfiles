@@ -19,9 +19,9 @@ if [ -x "$(command -v xdg-open)" ]; then
 fi
 
 # gcloud SDK command completion and PATH
-if [[ -d "/usr/lib/google-cloud-sdk" ]]; then
-  source "/usr/lib/google-cloud-sdk/completion.zsh.inc"
-  source "/usr/lib/google-cloud-sdk/path.zsh.inc"
+if [[ -d "$HOME/.gcloud" ]]; then
+  source "$HOME/.gcloud/completion.zsh.inc"
+  source "$HOME/.gcloud/path.zsh.inc"
 fi
 
 # kubectl command completion
