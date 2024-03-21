@@ -224,6 +224,11 @@ let g:ale_fixers = {
       \ }
 autocmd FileType typescript nmap <leader>f :ALEFix<cr>
 
+" python virtual environment for Neovim https://neovim.io/doc/user/provider.html#python-virtualenv
+if filereadable(expand("~/.config/nvim/py3nvim/bin/python"))
+  let g:python3_host_prog = expand("~/.config/nvim/py3nvim/bin/python")
+endif
+
 if filereadable(expand("~/.config/nvim/local.vim"))
   source ~/.config/nvim/local.vim
 endif

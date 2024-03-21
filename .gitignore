@@ -7,6 +7,7 @@ vim/.netrwhist
 nvim/local.vim
 nvim/autoload/plug.vim
 nvim/plugged/
+nvim/py3nvim/
 nvim/spell/
 nvim/.netrwhist
 
