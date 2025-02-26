@@ -81,11 +81,5 @@ return {
 
         -- Python: brew install pyright
         lspconfig["pyright"].setup {}
-
-        -- Ruby: gem install solargraph
-        lspconfig["solargraph"].setup {}
-
-        -- https://phpactor.readthedocs.io/en/master/usage/standalone.html#installation
-        lspconfig["phpactor"].setup {}
     end
 }
