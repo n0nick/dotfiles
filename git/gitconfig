@@ -1,10 +1,14 @@
 [rebase]
-	autosquash = true
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
 [push]
 	default = simple
+	autoSetupRemote = true
+	followTags = true
 [core]
 	editor = nvim
-	excludesfile = /Users/sagie/.gitignore
+	excludesfile = ~/.gitignore
 [instaweb]
 	httpd = webrick
 	port = 4000
@@ -72,7 +76,12 @@
 	cookiefile = /usr/local/google/home/sagie/.gitcookies
 [diff]
 	tool = vimdiff
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
 [merge]
+	conflictstyle = zdiff3
 	tool = vimdiff
 [log]
 	mailmap = true
@@ -81,3 +90,22 @@
 	process = git-lfs filter-process
 	required = true
 	clean = git-lfs clean -- %f
+[column]
+	ui = auto
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[init]
+	defaultBranch = main
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
+[help]
+	autocorrect = prompt
+[commit]
+	verbose = true
+[rerere]
+	enabled = true
+	autoupdate = true
