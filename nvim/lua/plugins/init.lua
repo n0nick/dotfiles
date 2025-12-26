@@ -1,13 +1,16 @@
 -- Plugin specifications for lazy.nvim
 
 return {
-  -- Add your plugins here
-  -- Example:
-  -- {
-  --   'plugin-author/plugin-name',
-  --   config = function()
-  --     -- plugin configuration
-  --   end,
-  -- },
+  -- Editing
+  { 'numToStr/Comment.nvim' },
+  { 'tpope/vim-repeat' },
+  { 'tpope/vim-surround' },
+  { 'tpope/vim-abolish' },
+
+  -- Git
+  { 'tpope/vim-fugitive' },
+  { 'tpope/vim-git' },
+  { 'christoomey/vim-conflicted' },
+  -- TODO airblade/vim-gitgutter
 }
 
