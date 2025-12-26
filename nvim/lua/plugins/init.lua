@@ -8,10 +8,10 @@ return {
   { 'tpope/vim-abolish' },
 
   -- Git
-  { 'tpope/vim-fugitive' },
-  { 'tpope/vim-git' },
-  { 'christoomey/vim-conflicted' },
-  -- TODO airblade/vim-gitgutter
+  { 'lewis6991/gitsigns.nvim' },
+  -- { 'tpope/vim-fugitive' },
+  -- { 'tpope/vim-git' },
+  -- { 'christoomey/vim-conflicted' },
 
   -- Languages
   {
