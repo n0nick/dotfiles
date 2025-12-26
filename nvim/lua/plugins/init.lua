@@ -12,5 +12,11 @@ return {
   { 'tpope/vim-git' },
   { 'christoomey/vim-conflicted' },
   -- TODO airblade/vim-gitgutter
+
+  -- Languages
+  {
+    "mason-org/mason.nvim",
+    opts = {}
+  }
 }
 
