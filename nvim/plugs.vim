@@ -9,10 +9,10 @@ Plug 'tpope/vim-surround'   " Quoting/parenthesizing made simple
 
 " Go
 Plug 'nvim-treesitter/nvim-treesitter', { 'do': 'TSInstall vim vimdoc go' }
-Plug 'neovim/nvim-lspconfig'
-Plug 'ray-x/go.nvim', { 'for': 'go' }
-Plug 'ray-x/guihua.lua' " recommended if need floating window support
-Plug 'ray-x/lsp_signature.nvim', { 'for': 'go' }
+"Plug 'neovim/nvim-lspconfig'
+"Plug 'ray-x/go.nvim', { 'for': 'go' }
+"Plug 'ray-x/guihua.lua' " recommended if need floating window support
+"Plug 'ray-x/lsp_signature.nvim', { 'for': 'go' }
 
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'

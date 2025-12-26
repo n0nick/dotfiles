@@ -100,33 +100,6 @@ cmp.setup {
 }
 EOF
 
-lua << EOF
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
-require'lspconfig'.cssls.setup {
-  capabilities = capabilities,
-}
-EOF
-
-lua <<EOF
-require 'go'.setup({
-  goimports = 'gopls', -- if set to 'gopls' will use golsp format
-  gofmt = 'gopls', -- if set to gopls will use golsp format
-  tag_transform = false,
-  test_dir = '',
-  comment_placeholder = '   ',
-  lsp_cfg = {
-    capabilities = capabilities,
-    }, -- false: use your own lspconfig
-  lsp_gofumpt = true, -- true: set default gofmt in gopls format to gofumpt
-  lsp_on_attach = true, -- use on_attach from go.nvim
-  dap_debug = true,
-})
-
-require'vim.lsp.protocol'
-require'lsp_signature'.setup()
-EOF
-
 " python virtual environment for Neovim https://neovim.io/doc/user/provider.html#python-virtualenv
 if filereadable(expand("~/.config/nvim/py3nvim/bin/python"))
   let g:python3_host_prog = expand("~/.config/nvim/py3nvim/bin/python")
