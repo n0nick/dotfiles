@@ -46,6 +46,9 @@ if vim.fn.filereadable(python3_host_prog) == 1 then
   vim.g.python3_host_prog = python3_host_prog
 end
 
+-- Plugin manager (lazy.nvim)
+require('config.lazy')
+
 -- Local config
 local local_config = vim.fn.expand('~/.config/nvim/local.vim')
 if vim.fn.filereadable(local_config) == 1 then
