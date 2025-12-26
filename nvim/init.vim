@@ -61,11 +61,6 @@ autocmd vimrc FileType gitcommit setlocal spell
 " automatically open quickfix window for grep results
 autocmd vimrc QuickFixCmdPost *grep* cwindow
 
-" load installed plugs
-source ~/.config/nvim/plugs.vim
-
-colorscheme catppuccin " catppuccin-latte, catppuccin-frappe, catppuccin-macchiato, catppuccin-mocha
-
 " http://blog.sanctum.geek.nz/vim-command-typos/
 if has("user_commands")
   command! -bang -nargs=? -complete=file E e<bang> <args>
@@ -81,24 +76,6 @@ if has("user_commands")
   command! -bang Bd bd<bang>
   command! -bang -nargs=? -complete=option Set set<bang> <args>
 endif
-
-lua << EOF
-local cmp = require "cmp"
-local cmp_types = require"cmp.types.cmp"
-
-cmp.setup {
-  mapping = {
-    ['<CR>'] = cmp.mapping.confirm({ select = true }),
-    ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp_types.SelectBehavior.Insert }), 
-    ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp_types.SelectBehavior.Insert }),
-  },
-
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" },
-    { name = "buffer" },
-  }),
-}
-EOF
 
 " python virtual environment for Neovim https://neovim.io/doc/user/provider.html#python-virtualenv
 if filereadable(expand("~/.config/nvim/py3nvim/bin/python"))
