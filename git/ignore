@@ -22,3 +22,6 @@ Session.vim
 # Zeus
 custom_plan.rb
 zeus.json
+
+# Claude Code
+**/.claude/settings.local.json

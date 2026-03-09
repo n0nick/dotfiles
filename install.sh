@@ -12,6 +12,7 @@ main() {
   echo "${PURPLE}Let's do this!$RESET"
   install_prezto $*
   install_dotfiles $*
+  install_git $*
   install_vim $*
   install_neovim $*
   install_tmux $*
@@ -80,7 +81,7 @@ install_prezto() {
 }
 
 install_dotfiles() {
-  dirs=('zsh' 'ctags' 'git' 'ruby' 'shell' 'tmux')
+  dirs=('zsh' 'ctags' 'ruby' 'shell' 'tmux')
   for dir in $dirs; do
     chapter "Linking ${(C)dir} configuration files"
     for file ($dir/*); do
@@ -88,6 +89,15 @@ install_dotfiles() {
       greendot
     done
   done
+}
+
+install_git() {
+  chapter "Linking Git configuration files"
+  run "mkdir -p $HOME/.config"
+  symlink "$DOTF/git" "$HOME/.config/git"
+  greendot
+  symlink "$DOTF/git/tigrc" "$HOME/.tigrc"
+  greendot
 }
 
 install_vim() {

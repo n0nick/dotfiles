@@ -8,7 +8,7 @@
 	followTags = true
 [core]
 	editor = nvim
-	excludesfile = ~/.gitignore
+
 [instaweb]
 	httpd = webrick
 	port = 4000
@@ -61,7 +61,7 @@
 	g = grep --break --heading --line-number
 	conflicted = !nvim +Conflicted
 [include]
-	path = .gitconfig.user
+	path = ~/.gitconfig.user
 [google]
 	lastUpdateCheck = 20150101000000
 	uplink = true
