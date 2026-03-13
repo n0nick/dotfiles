@@ -42,14 +42,24 @@ vim.keymap.set('', '<leader>es', make_dir_cmd('sp'), { desc = 'Split and edit fi
 vim.keymap.set('', '<leader>ev', make_dir_cmd('vsp'), { desc = 'Vertical split and edit file in current directory' })
 vim.keymap.set('', '<leader>et', make_dir_cmd('tabe'), { desc = 'Edit file in current directory in new tab' })
 
--- LSP
+-- LSP (via lspsaga)
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local opts = { buffer = args.buf }
-    vim.keymap.set('n', '<C-]>', vim.lsp.buf.definition, opts)
-    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-    vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set('n', '<C-]>', '<cmd>Lspsaga goto_definition<CR>', opts)
+    vim.keymap.set('n', 'K', '<cmd>Lspsaga hover_doc<CR>', opts)
+    vim.keymap.set('n', 'gr', '<cmd>Lspsaga finder<CR>', opts)
+    vim.keymap.set('n', '<Leader>rn', '<cmd>Lspsaga rename<CR>', opts)
+    vim.keymap.set('n', '<Leader>ca', '<cmd>Lspsaga code_action<CR>', opts)
+    vim.keymap.set('n', '<Leader>pd', '<cmd>Lspsaga peek_definition<CR>', opts)
+    vim.keymap.set('n', '[d', '<cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+    vim.keymap.set('n', ']d', '<cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+    vim.keymap.set('n', '<Leader>ol', '<cmd>Lspsaga outline<CR>', opts)
+    vim.keymap.set('n', '<Leader>gi', '<cmd>Lspsaga implement<CR>', opts)
+    vim.keymap.set('n', '<Leader>pt', '<cmd>Lspsaga peek_type_definition<CR>', opts)
+    vim.keymap.set('n', '<Leader>gt', '<cmd>Lspsaga goto_type_definition<CR>', opts)
+    vim.keymap.set('n', '<Leader>ci', '<cmd>Lspsaga incoming_calls<CR>', opts)
+    vim.keymap.set('n', '<Leader>co', '<cmd>Lspsaga outgoing_calls<CR>', opts)
   end,
 })
 
