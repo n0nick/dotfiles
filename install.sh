@@ -117,12 +117,6 @@ install_neovim() {
   chapter "Installing Neovim plugins and configuration"
   symlink "$DOTF/nvim" "$HOME/.config/nvim"
   greendot
-  # Install Vim plugins (via vim-plug)
-  run "curl -fLo $DOTF/nvim/autoload/plug.vim --create-dirs" \
-        "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-  greendot
-  run "nvim +PlugInstall +qall"
-  greendot
   run "python3 -m venv $HOME/.config/nvim/py3nvim"
   run "$HOME/.config/nvim/py3nvim/bin/python3 -m pip install pynvim"
   greendot
