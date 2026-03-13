@@ -22,6 +22,12 @@ require('config.typos')
 -- Autocommands
 local vimrc_group = vim.api.nvim_create_augroup('vimrc', { clear = true })
 
+-- Check for file changes when focusing nvim
+vim.api.nvim_create_autocmd('FocusGained', {
+  group = vimrc_group,
+  command = 'silent! checktime',
+})
+
 -- Spellcheck in Git commit messages
 vim.api.nvim_create_autocmd('FileType', {
   group = vimrc_group,
