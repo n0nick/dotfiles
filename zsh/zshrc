@@ -56,3 +56,6 @@ fi
 
 # https://iterm2.com/documentation-shell-integration.html
 [ -f ~/.iterm2_shell_integration.zsh ] && source ~/.iterm2_shell_integration.zsh
+
+# Prompt
+eval "$(starship init zsh)"

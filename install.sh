@@ -126,6 +126,21 @@ install_dotfiles() {
       greendot
     done
   done
+
+  chapter "Installing and linking Starship prompt"
+  if ! command -v starship &> /dev/null; then
+    if [[ "$(uname)" == "Darwin" ]] && command -v brew &> /dev/null; then
+      run "brew install starship"
+    else
+      run "curl -sS https://starship.rs/install.sh | sh -s -- -y"
+    fi
+    greendot
+  else
+    echo "${GREEN}starship already installed :)"
+  fi
+  run "mkdir -p $HOME/.config"
+  symlink "$DOTF/shell/starship.toml" "$HOME/.config/starship.toml"
+  greendot
 }
 
 install_git() {

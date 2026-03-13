@@ -13,7 +13,6 @@ zstyle ':prezto:load' pmodule \
   'spectrum' \
   'utility' \
   'completion' \
-  'prompt' \
   'git' \
   'tmux' \
   'syntax-highlighting' \
@@ -27,7 +26,3 @@ zstyle ':prezto:module:git:status:ignore' submodules 'all'
 
 # Avoid git aliases
 zstyle ':prezto:module:git:alias' skip 'yes'
-
-# Set the prompt theme to load.
-PURE_PROMPT_SYMBOL="$"
-zstyle ':prezto:module:prompt' theme 'pure'
