@@ -155,7 +155,7 @@ install_neovim() {
   symlink "$DOTF/nvim" "$HOME/.config/nvim"
   greendot
   run "python3 -m venv $HOME/.config/nvim/py3nvim"
-  run "$HOME/.config/nvim/py3nvim/bin/python3 -m pip install pynvim"
+  run "$HOME/.config/nvim/py3nvim/bin/python3 -m pip install -q pynvim"
   greendot
 }
 
