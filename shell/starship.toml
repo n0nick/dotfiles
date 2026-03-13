@@ -6,6 +6,7 @@ $git_branch\
 $git_status\
 $cmd_duration\
 $line_break\
+$hostname\
 $character"""
 
 [character]
@@ -33,6 +34,11 @@ untracked = "?"
 renamed = "»"
 deleted = "×"
 stashed = ""
+
+[hostname]
+ssh_only = true
+format = "[$hostname]($style) "
+style = "243"
 
 [cmd_duration]
 min_time = 3_000
