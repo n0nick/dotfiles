@@ -11,7 +11,14 @@ unsetopt nomatch # https://robots.thoughtbot.com/how-to-use-arguments-in-a-rake-
 # Aliases
 alias g="git"
 alias gg="git grep"
-alias ssh="TERM=xterm ssh" # fix $TERM problem on remotes
+# SSH: fix $TERM on remotes + visual cue via background color
+ssh() {
+  printf '\e]11;#2a1a1a\a'
+  trap 'printf "\e]111\a"; trap - INT' INT
+  TERM=xterm-256color command ssh "$@"
+  trap - INT
+  printf '\e]111\a'
+}
 alias vi="nvim"
 alias vim="nvim"
 if [ -x "$(command -v xdg-open)" ]; then
