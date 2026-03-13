@@ -8,16 +8,53 @@ export BLUE="\033[34m"
 export PURPLE="\033[35m"
 export RESET="\033[0m"
 
+usage() {
+  echo "Usage: $0 [flags]"
+  echo ""
+  echo "Flags (default: run all):"
+  echo "  --prezto      Install and configure Prezto"
+  echo "  --dotfiles    Link shell/ctags/ruby/tmux dotfiles"
+  echo "  --git         Link and configure Git"
+  echo "  --vim         Install Vim plugins and configuration"
+  echo "  --neovim      Install Neovim plugins and configuration"
+  echo "  --tmux        Install Tmux Plugin Manager"
+  echo "  --i3          Set up i3 configuration"
+  echo "  --help        Show this help message"
+}
+
 main() {
+  local run_all=true
+  local do_prezto=false
+  local do_dotfiles=false
+  local do_git=false
+  local do_vim=false
+  local do_neovim=false
+  local do_tmux=false
+  local do_i3=false
+
+  for arg in "$@"; do
+    case $arg in
+      --prezto)   do_prezto=true; run_all=false ;;
+      --dotfiles) do_dotfiles=true; run_all=false ;;
+      --git)      do_git=true; run_all=false ;;
+      --vim)      do_vim=true; run_all=false ;;
+      --neovim)   do_neovim=true; run_all=false ;;
+      --tmux)     do_tmux=true; run_all=false ;;
+      --i3)       do_i3=true; run_all=false ;;
+      --help)     usage; return 0 ;;
+      *) echo "Unknown flag: $arg"; usage; return 1 ;;
+    esac
+  done
+
   echo "${PURPLE}Let's do this!$RESET"
-  install_prezto $*
-  install_dotfiles $*
-  install_git $*
-  install_vim $*
-  install_neovim $*
-  install_tmux $*
-  setup_git $*
-  setup_i3 $*
+  [[ $run_all == true || $do_prezto == true ]]   && install_prezto
+  [[ $run_all == true || $do_dotfiles == true ]] && install_dotfiles
+  [[ $run_all == true || $do_git == true ]]      && install_git
+  [[ $run_all == true || $do_vim == true ]]      && install_vim
+  [[ $run_all == true || $do_neovim == true ]]   && install_neovim
+  [[ $run_all == true || $do_tmux == true ]]     && install_tmux
+  [[ $run_all == true || $do_git == true ]]      && setup_git
+  [[ $run_all == true || $do_i3 == true ]]       && setup_i3
   echo -n "\n\n"
   echo "${GREEN}Yay! That's all!  ¯\_(ツ)_/¯$RESET"
 }
@@ -137,7 +174,7 @@ install_tmux() {
 }
 
 setup_git() {
-  install_git_userconfig $*
+  install_git_userconfig
 
   chapter "Setting up diff-highlight for Git"
   if hash diff-highlight 2>/dev/null; then
