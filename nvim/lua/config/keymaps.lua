@@ -42,6 +42,17 @@ vim.keymap.set('', '<leader>es', make_dir_cmd('sp'), { desc = 'Split and edit fi
 vim.keymap.set('', '<leader>ev', make_dir_cmd('vsp'), { desc = 'Vertical split and edit file in current directory' })
 vim.keymap.set('', '<leader>et', make_dir_cmd('tabe'), { desc = 'Edit file in current directory in new tab' })
 
+-- LSP
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(args)
+    local opts = { buffer = args.buf }
+    vim.keymap.set('n', '<C-]>', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<Leader>rn', vim.lsp.buf.rename, opts)
+  end,
+})
+
 -- Sudo save
 vim.keymap.set('c', 'w!!', 'w !sudo tee > /dev/null %')
 
