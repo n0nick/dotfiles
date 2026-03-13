@@ -3,12 +3,17 @@
 return {
   -- Colorscheme
   {
-    'catppuccin/nvim',
-    name = 'catppuccin',
+    'folke/tokyonight.nvim',
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd.colorscheme('catppuccin-mocha')
+      require('tokyonight').setup({
+        on_highlights = function(hl, c)
+          hl.NormalFloat = { bg = c.bg_dark }
+          hl.FloatBorder = { fg = c.blue, bg = c.bg_dark }
+        end,
+      })
+      vim.cmd.colorscheme('tokyonight-night')
     end,
   },
 
