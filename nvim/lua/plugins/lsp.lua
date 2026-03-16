@@ -8,6 +8,13 @@ return {
         filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
       })
       vim.lsp.enable('gopls')
+
+      vim.lsp.config('buf_ls', {
+        cmd = { 'buf', 'beta', 'lsp' },
+        root_markers = { 'buf.yaml', 'buf.work.yaml', '.git' },
+        filetypes = { 'proto' },
+      })
+      vim.lsp.enable('buf_ls')
     end,
   },
 
