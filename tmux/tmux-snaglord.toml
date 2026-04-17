@@ -1,8 +1,14 @@
 # Use a built-in preset
-preset = "starship"
+# preset = "starship"
 
 # OR define a custom regex (takes precedence)
-# prompt = "^[/~].* % "
+# Our starship prompt is two lines:
+#   1. <path> [<branch>]          e.g. "dev/personal/dotfiles master"
+#   2. $ <command>                (or "❮ <command>" when in zsh vi-NORMAL mode)
+# Matching only "^\$ " (the `dollar` preset) leaves the info line lumped into
+# the previous command's output. This regex matches both lines as prompt
+# boundaries so the info line doesn't contaminate captured output.
+prompt = '^(\$ |❮ |[\w.~@-]+(/[\w.~@-]+)+( .+)?\s*$)'
 
 # Enable Nerd Font icons and Powerline glyphs (default: false)
 # nerd_fonts = true
