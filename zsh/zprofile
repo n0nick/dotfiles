@@ -112,3 +112,11 @@ TMPPREFIX="${TMPDIR%/}/zsh"
 if [[ -d "/opt/homebrew" ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
+
+#
+# OrbStack setup
+#
+
+if [[ -f "$HOME/.orbstack/shell/init.zsh" ]]; then
+  source "$HOME/.orbstack/shell/init.zsh"
+fi
