@@ -18,6 +18,7 @@ usage() {
   echo "  --vim         Install Vim plugins and configuration"
   echo "  --neovim      Install Neovim plugins and configuration"
   echo "  --tmux        Install Tmux Plugin Manager"
+  echo "  --ghostty     Link Ghostty configuration (macOS)"
   echo "  --i3          Set up i3 configuration"
   echo "  --help        Show this help message"
 }
@@ -30,6 +31,7 @@ main() {
   local do_vim=false
   local do_neovim=false
   local do_tmux=false
+  local do_ghostty=false
   local do_i3=false
 
   for arg in "$@"; do
@@ -40,6 +42,7 @@ main() {
       --vim)      do_vim=true; run_all=false ;;
       --neovim)   do_neovim=true; run_all=false ;;
       --tmux)     do_tmux=true; run_all=false ;;
+      --ghostty)  do_ghostty=true; run_all=false ;;
       --i3)       do_i3=true; run_all=false ;;
       --help)     usage; return 0 ;;
       *) echo "Unknown flag: $arg"; usage; return 1 ;;
@@ -53,6 +56,7 @@ main() {
   [[ $run_all == true || $do_vim == true ]]      && install_vim
   [[ $run_all == true || $do_neovim == true ]]   && install_neovim
   [[ $run_all == true || $do_tmux == true ]]     && install_tmux
+  [[ $run_all == true || $do_ghostty == true ]]  && install_ghostty
   [[ $run_all == true || $do_git == true ]]      && setup_git
   [[ $run_all == true || $do_i3 == true ]]       && setup_i3
   echo -n "\n\n"
@@ -222,6 +226,17 @@ install_git_userconfig() {
   else
     echo "${GREEN}gitconfig.user already exists :)"
   fi
+}
+
+install_ghostty() {
+  if [[ "$(uname)" != "Darwin" ]]; then
+    return
+  fi
+  chapter "Linking Ghostty configuration"
+  ghostty_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
+  run "mkdir -p \"$ghostty_dir\""
+  symlink "$DOTF/ghostty/config" "$ghostty_dir/config"
+  greendot
 }
 
 setup_i3() {
