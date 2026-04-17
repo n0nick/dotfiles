@@ -57,3 +57,8 @@ shell-integration = zsh
 mouse-hide-while-typing = true
 scrollback-limit = 1000000
 window-save-state = always
+
+# Send Alt+Enter for Shift+Enter so apps (Claude Code, REPLs) can use it as
+# "newline without submit". Tmux's extended-keys/CSI u could also surface
+# shift+Enter distinctly, but that encoding mangles multi-line cmd+v pastes.
+keybind = shift+enter=text:\x1b\r
