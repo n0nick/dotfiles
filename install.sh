@@ -202,6 +202,9 @@ install_tmux() {
   else
     echo "${GREEN}tmux-snaglord already installed :)"
   fi
+  run "mkdir -p $HOME/.config/tmux-snaglord"
+  symlink "$DOTF/tmux/tmux-snaglord.toml" "$HOME/.config/tmux-snaglord/config.toml"
+  greendot
 }
 
 setup_git() {
