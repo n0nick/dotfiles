@@ -179,7 +179,8 @@ install_neovim() {
 }
 
 install_tmux() {
-  chapter "Installing Tmux Plugin Manager"
+  chapter "Installing Tmux tools and plugins"
+
   if [ -d "$HOME/.tmux/plugins/tpm" ]; then
     run "git -C $HOME/.tmux/plugins/tpm pull --quiet"
     greendot
@@ -190,6 +191,17 @@ install_tmux() {
     greendot
   fi
   run "$HOME/.tmux/plugins/tpm/bin/update_plugins all"
+
+  if ! command -v tmux-snaglord &> /dev/null; then
+    if [[ "$(uname)" == "Darwin" ]] && command -v brew &> /dev/null; then
+      run "brew install raine/tmux-snaglord/tmux-snaglord"
+    else
+      run "curl -fsSL https://raw.githubusercontent.com/raine/tmux-snaglord/main/scripts/install.sh | bash"
+    fi
+    greendot
+  else
+    echo "${GREEN}tmux-snaglord already installed :)"
+  fi
 }
 
 setup_git() {
