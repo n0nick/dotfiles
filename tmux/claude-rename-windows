@@ -1,0 +1,85 @@
+#!/usr/bin/env zsh
+# Background loop: rename tmux windows based on active Claude sessions.
+# Start via tmux hooks (session-created, client-attached) — no status-right dependency.
+# Window prefix: 🔔 = needs input, ⏵ = working, ⏵⏵ = working (auto mode), none = idle.
+# Restarts automatically on crash via outer loop in the hook command.
+#
+# Power-aware interval: 2s on battery, 5s on AC.
+
+setopt NO_HUP  # survive tmux hook process exit
+
+find_claude_pid() {
+    local shell_pid=$1
+    # Direct child named 'claude'
+    pgrep -P "$shell_pid" -x claude 2>/dev/null | head -1
+}
+
+get_pane_state() {
+    local pane_id=$1
+    local last_line
+    last_line=$(tmux capture-pane -pt "$pane_id" -p 2>/dev/null | sed '/^[[:space:]]*$/d' | tail -1)
+    case "$last_line" in
+        *'Esc to cancel'*|*'esc to cancel'*) echo "Input" ;;
+        *'esc to interrupt'*|*'Esc to interrupt'*)
+            if [[ "$last_line" == *'auto mode on'* ]]; then
+                echo "WorkingAuto"
+            else
+                echo "Working"
+            fi
+            ;;
+        *) echo "Idle" ;;
+    esac
+}
+
+typeset -A last_names  # pane_id → last window name (avoid redundant renames)
+
+while true; do
+    # Read all panes: "pane_id window_id shell_pid"
+    tmux list-panes -aF "#{pane_id} #{window_id} #{pane_pid}" 2>/dev/null | \
+    while read -r pane_id window_id shell_pid; do
+        claude_pid=$(find_claude_pid "$shell_pid")
+        [[ -z "$claude_pid" ]] && continue
+
+        session_file="$HOME/.claude/sessions/${claude_pid}.json"
+        [[ ! -f "$session_file" ]] && continue
+
+        # cwd first (always populated) so a missing .name doesn't shift fields
+        IFS=$'\t' read -r cwd session_name < <(
+            jq -r '[.cwd // "", .name // ""] | @tsv' "$session_file" 2>/dev/null
+        )
+        if [[ -z "$session_name" ]]; then
+            # Fall back to branch shortname or project name for generic branches
+            branch=$(git -C "$cwd" rev-parse --abbrev-ref HEAD 2>/dev/null)
+            shortname="${branch##*/}"
+            project=$(basename "$cwd")
+            case "$shortname" in
+                main|master|dev|develop|HEAD|"") session_name="$project" ;;
+                *) session_name="$shortname" ;;
+            esac
+        fi
+
+        state=$(get_pane_state "$pane_id")
+        case "$state" in
+            Input)       prefix="🔔 " ;;
+            WorkingAuto) prefix="⏵⏵ " ;;
+            Working)     prefix="⏵ " ;;
+            *)           prefix="" ;;
+        esac
+
+        new_name="${prefix}${session_name}"
+        if [[ "${last_names[$pane_id]}" != "$new_name" ]]; then
+            tmux set-window-option -t "$window_id" automatic-rename off 2>/dev/null
+            tmux rename-window -t "$window_id" "$new_name" 2>/dev/null
+            last_names[$pane_id]=$new_name
+        fi
+    done
+
+    # Power-aware interval (2s on AC, 5s on battery or unknown)
+    if command -v pmset &>/dev/null; then
+        pmset -g batt 2>/dev/null | grep -q 'AC Power' && sleep 2 || sleep 5
+    elif [[ -f /sys/class/power_supply/AC/online ]]; then
+        [[ $(cat /sys/class/power_supply/AC/online) == "1" ]] && sleep 2 || sleep 5
+    else
+        sleep 5
+    fi
+done

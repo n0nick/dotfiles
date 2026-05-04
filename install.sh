@@ -205,6 +205,21 @@ install_tmux() {
   run "mkdir -p $HOME/.config/tmux-snaglord"
   symlink "$DOTF/tmux/tmux-snaglord.toml" "$HOME/.config/tmux-snaglord/config.toml"
   greendot
+
+  if ! command -v jq &>/dev/null; then
+    if [[ "$(uname)" == "Darwin" ]] && command -v brew &> /dev/null; then
+      run "brew install jq"
+    else
+      notice "jq not found — install it manually (required for claude-rename-windows)"
+    fi
+    greendot
+  else
+    echo "${GREEN}jq already installed :)"
+  fi
+
+  run "mkdir -p $HOME/bin"
+  symlink "$DOTF/tmux/claude-rename-windows" "$HOME/bin/claude-rename-windows"
+  greendot
 }
 
 setup_git() {
