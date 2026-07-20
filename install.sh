@@ -286,7 +286,7 @@ install_claude() {
 }
 
 setup_i3() {
-  if [ "i3 exists" ]; then
+  if command -v i3 &>/dev/null; then
     mkdir -p $HOME/.config/i3
     mkdir -p $HOME/.config/i3status
 
