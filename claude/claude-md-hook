@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+# Stop hook: records the current session's transcript path, keyed by tmux pane.
+jq -r '.transcript_path // empty' > "/tmp/claude-transcript-${TMUX_PANE}"

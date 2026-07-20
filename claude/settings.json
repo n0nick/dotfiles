@@ -1,0 +1,38 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/bin/claude-md-hook"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.message' | { read -r msg; terminal-notifier -title 'Claude Code' -message \"$msg\" -contentImage \"$HOME/.claude/claude-icon.png\" -activate com.mitchellh.ghostty; }"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "vercel@claude-plugins-official": true
+  },
+  "cleanupPeriodDays": 365,
+  "effortLevel": "high",
+  "tui": "default",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "model": "claude-fable-5[1m]"
+}

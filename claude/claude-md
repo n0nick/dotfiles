@@ -1,0 +1,47 @@
+#!/usr/bin/env zsh
+# Open the last Claude response from the current session in the default markdown app.
+
+POINTER="/tmp/claude-transcript-${TMUX_PANE}"
+
+if [[ ! -f "$POINTER" ]]; then
+  echo "No transcript pointer at $POINTER — has a response completed in this pane yet?" >&2
+  exit 1
+fi
+
+TRANSCRIPT=$(cat "$POINTER")
+
+if [[ ! -f "$TRANSCRIPT" ]]; then
+  echo "Transcript file not found: $TRANSCRIPT" >&2
+  exit 1
+fi
+
+python3 << PYEOF
+import json, sys, subprocess
+from datetime import datetime
+from pathlib import Path
+
+entries = []
+with open("$TRANSCRIPT") as f:
+    for line in f:
+        try:
+            d = json.loads(line)
+            if d.get("type") == "assistant":
+                texts = [c["text"] for c in d["message"]["content"] if c.get("type") == "text"]
+                if texts:
+                    entries.append((d.get("slug") or "claude", "".join(texts)))
+        except Exception:
+            pass
+
+if not entries:
+    print("No assistant text found in transcript", file=sys.stderr)
+    sys.exit(1)
+
+slug, text = entries[-1]
+slug = slug.replace(" ", "-")
+timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+path = f"/tmp/claude-{slug}-{timestamp}.md"
+
+Path(path).write_text(text)
+subprocess.run(["open", path])
+print(path)
+PYEOF

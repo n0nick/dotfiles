@@ -19,6 +19,7 @@ usage() {
   echo "  --neovim      Install Neovim plugins and configuration"
   echo "  --tmux        Install Tmux Plugin Manager"
   echo "  --ghostty     Link Ghostty configuration (macOS)"
+  echo "  --claude      Link Claude Code settings and scripts"
   echo "  --i3          Set up i3 configuration"
   echo "  --help        Show this help message"
 }
@@ -32,6 +33,7 @@ main() {
   local do_neovim=false
   local do_tmux=false
   local do_ghostty=false
+  local do_claude=false
   local do_i3=false
 
   for arg in "$@"; do
@@ -43,6 +45,7 @@ main() {
       --neovim)   do_neovim=true; run_all=false ;;
       --tmux)     do_tmux=true; run_all=false ;;
       --ghostty)  do_ghostty=true; run_all=false ;;
+      --claude)   do_claude=true; run_all=false ;;
       --i3)       do_i3=true; run_all=false ;;
       --help)     usage; return 0 ;;
       *) echo "Unknown flag: $arg"; usage; return 1 ;;
@@ -57,6 +60,7 @@ main() {
   [[ $run_all == true || $do_neovim == true ]]   && install_neovim
   [[ $run_all == true || $do_tmux == true ]]     && install_tmux
   [[ $run_all == true || $do_ghostty == true ]]  && install_ghostty
+  [[ $run_all == true || $do_claude == true ]]   && install_claude
   [[ $run_all == true || $do_git == true ]]      && setup_git
   [[ $run_all == true || $do_i3 == true ]]       && setup_i3
   echo -n "\n\n"
@@ -267,6 +271,17 @@ install_ghostty() {
   ghostty_dir="$HOME/Library/Application Support/com.mitchellh.ghostty"
   run "mkdir -p \"$ghostty_dir\""
   symlink "$DOTF/ghostty/config" "$ghostty_dir/config"
+  greendot
+}
+
+install_claude() {
+  chapter "Linking Claude Code settings and scripts"
+  run "mkdir -p $HOME/.claude"
+  symlink "$DOTF/claude/settings.json" "$HOME/.claude/settings.json"
+  symlink "$DOTF/claude/claude-icon.png" "$HOME/.claude/claude-icon.png"
+  run "mkdir -p $HOME/bin"
+  symlink "$DOTF/claude/claude-md" "$HOME/bin/claude-md"
+  symlink "$DOTF/claude/claude-md-hook" "$HOME/bin/claude-md-hook"
   greendot
 }
 
