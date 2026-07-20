@@ -210,7 +210,7 @@ install_tmux() {
     if [[ "$(uname)" == "Darwin" ]] && command -v brew &> /dev/null; then
       run "brew install jq"
     else
-      notice "jq not found — install it manually (required for claude-rename-windows)"
+      notice "jq not found — install it manually (required for agent-rename-windows)"
     fi
     greendot
   else
@@ -218,7 +218,8 @@ install_tmux() {
   fi
 
   run "mkdir -p $HOME/bin"
-  symlink "$DOTF/tmux/claude-rename-windows" "$HOME/bin/claude-rename-windows"
+  symlink "$DOTF/tmux/agent-rename-windows" "$HOME/bin/agent-rename-windows"
+  rm -f "$HOME/bin/claude-rename-windows"  # pre-rename symlink
   greendot
 }
 
