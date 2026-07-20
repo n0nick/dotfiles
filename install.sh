@@ -100,6 +100,28 @@ greendot() {
   echo -n "${GREEN}.$RESET"
 }
 
+ensure_installed() {
+  local cmd=$1
+  local brew_pkg=$2
+  local fallback=$3     # eval'd when brew is unavailable
+  local manual_note=$4  # shown when brew is unavailable and no fallback
+
+  if command -v "$cmd" &>/dev/null; then
+    echo "${GREEN}$cmd already installed :)"
+    return
+  fi
+
+  if [[ "$(uname)" == "Darwin" ]] && command -v brew &>/dev/null; then
+    run "brew install $brew_pkg"
+    greendot
+  elif [[ -n "$fallback" ]]; then
+    run "$fallback"
+    greendot
+  else
+    notice "${manual_note:-$cmd not found — install it manually}"
+  fi
+}
+
 #### Steps
 install_prezto() {
   chapter "Installing and configuring Prezto"
@@ -136,16 +158,8 @@ install_dotfiles() {
   done
 
   chapter "Installing and linking Starship prompt"
-  if ! command -v starship &> /dev/null; then
-    if [[ "$(uname)" == "Darwin" ]] && command -v brew &> /dev/null; then
-      run "brew install starship"
-    else
-      run "curl -sS https://starship.rs/install.sh | sh -s -- -y"
-    fi
-    greendot
-  else
-    echo "${GREEN}starship already installed :)"
-  fi
+  ensure_installed starship starship \
+    "curl -sS https://starship.rs/install.sh | sh -s -- -y"
   run "mkdir -p $HOME/.config"
   symlink "$DOTF/shell/starship.toml" "$HOME/.config/starship.toml"
   greendot
@@ -196,30 +210,14 @@ install_tmux() {
   fi
   run "$HOME/.tmux/plugins/tpm/bin/update_plugins all"
 
-  if ! command -v tmux-snaglord &> /dev/null; then
-    if [[ "$(uname)" == "Darwin" ]] && command -v brew &> /dev/null; then
-      run "brew install raine/tmux-snaglord/tmux-snaglord"
-    else
-      run "curl -fsSL https://raw.githubusercontent.com/raine/tmux-snaglord/main/scripts/install.sh | bash"
-    fi
-    greendot
-  else
-    echo "${GREEN}tmux-snaglord already installed :)"
-  fi
+  ensure_installed tmux-snaglord raine/tmux-snaglord/tmux-snaglord \
+    "curl -fsSL https://raw.githubusercontent.com/raine/tmux-snaglord/main/scripts/install.sh | bash"
   run "mkdir -p $HOME/.config/tmux-snaglord"
   symlink "$DOTF/tmux/tmux-snaglord.toml" "$HOME/.config/tmux-snaglord/config.toml"
   greendot
 
-  if ! command -v jq &>/dev/null; then
-    if [[ "$(uname)" == "Darwin" ]] && command -v brew &> /dev/null; then
-      run "brew install jq"
-    else
-      notice "jq not found — install it manually (required for agent-rename-windows)"
-    fi
-    greendot
-  else
-    echo "${GREEN}jq already installed :)"
-  fi
+  ensure_installed jq jq "" \
+    "jq not found — install it manually (required for agent-rename-windows)"
 
   run "mkdir -p $HOME/bin"
   symlink "$DOTF/tmux/agent-rename-windows" "$HOME/bin/agent-rename-windows"
