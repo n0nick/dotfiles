@@ -16,19 +16,25 @@ find_claude_pid() {
 
 get_pane_state() {
     local pane_id=$1
-    local last_line
-    last_line=$(tmux capture-pane -pt "$pane_id" -p 2>/dev/null | sed '/^[[:space:]]*$/d' | tail -1)
-    case "$last_line" in
-        *'Esc to cancel'*|*'esc to cancel'*) echo "Input" ;;
-        *'esc to interrupt'*|*'Esc to interrupt'*)
-            if [[ "$last_line" == *'auto mode on'* ]]; then
-                echo "WorkingAuto"
-            else
-                echo "Working"
-            fi
-            ;;
-        *) echo "Idle" ;;
-    esac
+    local -a lines
+    local line
+    # The status line isn't always the last line — the subagents list renders
+    # below it. Scan the bottom lines upward; nearest-to-bottom match wins.
+    lines=("${(@f)$(tmux capture-pane -pt "$pane_id" 2>/dev/null | sed '/^[[:space:]]*$/d' | tail -15)}")
+    for line in "${(Oa)lines[@]}"; do
+        case "$line" in
+            *'Esc to cancel'*|*'esc to cancel'*) echo "Input"; return ;;
+            *'esc to interrupt'*|*'Esc to interrupt'*)
+                if [[ "$line" == *'auto mode on'* ]]; then
+                    echo "WorkingAuto"
+                else
+                    echo "Working"
+                fi
+                return
+                ;;
+        esac
+    done
+    echo "Idle"
 }
 
 typeset -A last_names  # pane_id → last window name (avoid redundant renames)
