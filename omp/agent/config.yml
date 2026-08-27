@@ -21,3 +21,5 @@ mnemopi:
 autolearn:
   enabled: true
   autoContinue: false
+tui:
+  resizeScrollback: preserve
