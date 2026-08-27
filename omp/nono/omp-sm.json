@@ -62,7 +62,8 @@
       "$HOME/.claude.json",
       "$HOME/.codex",
       "$HOME/.gemini",
-      "$HOME/dev/personal/dotfiles/claude"
+      "$HOME/dev/personal/dotfiles/claude",
+      "/Users"
     ]
   },
 
