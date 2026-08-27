@@ -54,7 +54,10 @@
       "$HOME/.codex",
       "$HOME/.gemini",
       "$HOME/dev/personal/dotfiles/claude",
-      "$HOME/dev/personal/dotfiles/pi/agent/auth.json"
+      "$HOME/dev/personal/dotfiles/pi/agent/auth.json",
+      "$HOME/dev/personal/dotfiles/omp/nono",
+      "$HOME/dev/personal/dotfiles/omp/bin",
+      "$HOME/dev/personal/dotfiles/install.sh"
     ],
     "suppress_save_prompt": [
       "$HOME/.aws",
