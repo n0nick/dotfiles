@@ -12,3 +12,5 @@ nvim/spell/
 nvim/.netrwhist
 
 git/gitconfig.user
+
+omp/agent/config.yml.lock

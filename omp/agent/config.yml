@@ -3,6 +3,8 @@ providers:
     []
 modelRoles:
   default: anthropic/claude-opus-5:high
+  smol: anthropic/claude-haiku-4-5
+  tiny: anthropic/claude-haiku-4-5
 symbolPreset: nerd
 composer:
   shape: box
@@ -11,3 +13,8 @@ theme:
 setupVersion: 2
 secrets:
   enabled: true
+memory:
+  backend: mnemopi
+mnemopi:
+  scoping: per-project-tagged
+  llmMode: smol
