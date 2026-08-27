@@ -39,7 +39,8 @@
       "/usr/include",
       "$HOME/.local/bin/omp",
       "$HOME/.CFUserTextEncoding",
-      "$HOME/.claude/CLAUDE.md"
+      "$HOME/.claude/CLAUDE.md",
+      "$HOME/.gitconfig.user"
     ],
     "deny": [
       "$HOME/.viam",
