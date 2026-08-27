@@ -1,0 +1,129 @@
+{
+  "extends": "default",
+  "meta": {
+    "name": "omp-sm",
+    "version": "1.0.0",
+    "description": "Oh My Pi (omp) under a Seatbelt boundary. Adapted from the UNPUBLISHED nono-packs/omp profile (author rlex) - re-audit after every nono minor upgrade, the schema is still pre-1.0. Domain allowlist and secret denies carried over from the retired pi sandbox.json.",
+    "author": "sagie"
+  },
+
+  "groups": {
+    "include": [
+      "node_runtime",
+      "python_runtime",
+      "bun_runtime",
+      "git_config",
+      "unlink_protection",
+      { "name": "user_caches_macos", "when": "macos" }
+    ]
+  },
+
+  "security": {
+    "signal_mode": "isolated",
+    "capability_elevation": false
+  },
+
+  "filesystem": {
+    "allow": [
+      "$WORKDIR",
+      "$HOME/.omp",
+      "$HOME/dev/personal/dotfiles/omp/agent",
+      "$NONO_CONFIG/profile-drafts",
+      "$HOME/dev/go",
+      "$HOME/Library/Caches/go-build"
+    ],
+    "read": [
+      "$NONO_PACKAGES",
+      "$NONO_CONFIG/profiles",
+      "/etc/passwd",
+      "/usr/include",
+      "$HOME/.local/bin/omp",
+      "$HOME/.CFUserTextEncoding"
+    ],
+    "deny": [
+      "$HOME/.viam",
+      "$HOME/.viamdevrc",
+      "$HOME/.config/mcp-atlassian.env",
+      "$HOME/.config/gcloud",
+      "$HOME/.config/vercel-plugin",
+      "$HOME/.mongodb",
+      "$HOME/.docker",
+      "$HOME/.claude",
+      "$HOME/.claude.json",
+      "$HOME/.codex",
+      "$HOME/.gemini",
+      "$HOME/dev/personal/dotfiles/claude",
+      "$HOME/dev/personal/dotfiles/pi/agent/auth.json"
+    ],
+    "suppress_save_prompt": [
+      "$HOME/.claude",
+      "$HOME/.claude.json",
+      "$HOME/.codex",
+      "$HOME/.gemini",
+      "$HOME/dev/personal/dotfiles/claude"
+    ]
+  },
+
+  "network": {
+    "network_profile": "developer",
+    "allow_domain": [
+      "proxy.golang.org",
+      "sum.golang.org",
+      "go.dev",
+      "*.atlassian.net",
+      "mcp.atlassian.com",
+      "mcp.vercel.com",
+      "*.mongodb.net",
+      "*.googleapis.com"
+    ],
+    "credentials": [],
+    "open_port": [],
+    "listen_port": []
+  },
+
+  "workdir": {
+    "access": "readwrite"
+  },
+
+  "open_urls": {
+    "allow_origins": [],
+    "allow_localhost": true
+  },
+  "allow_launch_services": true,
+
+  "environment": {
+    "set_vars": {
+      "OMP_NONO_STATUS_INDICATOR": "true"
+    },
+    "allow_vars": [
+      "PATH",
+      "HOME",
+      "SHELL",
+      "USER",
+      "LOGNAME",
+      "TMPDIR",
+      "LANG",
+      "LC_*",
+      "TERM",
+      "TERMINFO",
+      "COLORTERM",
+      "TERM_PROGRAM",
+      "TERM_PROGRAM_VERSION",
+      "TMUX",
+      "TMUX_PANE",
+      "GOPATH",
+      "GOROOT",
+      "GOBIN",
+      "GOCACHE",
+      "GOMODCACHE",
+      "PKG_CONFIG_PATH",
+      "OMP_*",
+      "PI_*"
+    ]
+  },
+
+  "undo": {
+    "exclude_patterns": ["node_modules", ".next", "__pycache__", "target"],
+    "exclude_globs": ["*.tmp.[0-9]*.[0-9]*"]
+  }
+}

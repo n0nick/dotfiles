@@ -296,6 +296,22 @@ install_omp() {
   # secret-placeholder.key (the HMAC key for secret obfuscation).
   symlink "$DOTF/omp/agent/config.yml" "$HOME/.omp/agent/config.yml"
   greendot
+
+  # nono supplies the kernel-enforced boundary omp itself does not have.
+  # Re-audit omp-sm.json after every nono minor upgrade: nono is pre-1.0 and
+  # its profile schema is still moving (the top-level `policy` section was
+  # already dissolved into filesystem/groups/commands).
+  ensure_installed nono nono "" \
+    "nono not found — see https://nono.sh/docs/cli/getting_started/installation"
+  run "mkdir -p $HOME/.config/nono/profiles"
+  symlink "$DOTF/omp/nono/omp-sm.json" "$HOME/.config/nono/profiles/omp-sm.json"
+  greendot
+
+  # Launch omp sandboxed with `omp-nono`. Deliberately not named `omp`, so an
+  # unsandboxed run stays an explicit choice rather than an accident.
+  run "mkdir -p $HOME/bin"
+  symlink "$DOTF/omp/bin/omp-nono" "$HOME/bin/omp-nono"
+  greendot
 }
 
 setup_i3() {

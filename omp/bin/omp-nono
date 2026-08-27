@@ -1,0 +1,25 @@
+#!/bin/zsh
+# Launch oh-my-pi inside its nono Seatbelt sandbox.
+#
+# Why a wrapper: `binary` in a profile is only honoured for user-authored
+# profiles and still needs the profile resolved, and --startup-timeout 0 is
+# required because omp's cold start can exceed nono's interactivity deadline
+# before it enters alt-screen.
+#
+# Deliberately NOT named `omp` so an unsandboxed run is always an explicit
+# choice rather than an accident.
+#
+# The sandbox grants the current working directory read+write, so launch this
+# from the repo you intend to work in.
+
+set -e
+
+if ! command -v nono &> /dev/null; then
+  print -u2 "omp-nono: nono not installed (brew install nono)"
+  exit 1
+fi
+
+exec nono run \
+  --profile omp-sm \
+  --startup-timeout 0 \
+  -- omp "$@"
