@@ -1,16 +1,28 @@
 #!/bin/zsh
 # Launch oh-my-pi inside its nono Seatbelt sandbox.
 #
-# Why a wrapper: `binary` in a profile is only honoured for user-authored
-# profiles and still needs the profile resolved, and --startup-timeout 0 is
-# required because omp's cold start can exceed nono's interactivity deadline
-# before it enters alt-screen.
-#
-# Deliberately NOT named `omp` so an unsandboxed run is always an explicit
+# Deliberately NOT named `omp`, so running unsandboxed is always an explicit
 # choice rather than an accident.
 #
 # The sandbox grants the current working directory read+write, so launch this
 # from the repo you intend to work in.
+#
+# Two non-obvious flags/shims, both load-bearing:
+#
+# --startup-timeout 0
+#   nono terminates a child that does not "appear interactive" in time. omp's
+#   cold start (MCP servers, model discovery) can exceed that deadline before
+#   it enters alt-screen.
+#
+# PI_PROXY="$HTTPS_PROXY"
+#   With domain filtering active, nono blocks direct egress and exports
+#   HTTPS_PROXY/HTTP_PROXY into the child. But omp only installs its
+#   proxy-aware global fetch when PI_PROXY is set -- it ignores HTTPS_PROXY,
+#   logging `global proxy fetch not installed / reason: PI_PROXY unset` and
+#   then failing every provider call with `Connection error.`
+#   So copy it across inside the sandbox, where nono has already assigned the
+#   ephemeral port and session token. Doing it this way avoids having to pin
+#   --proxy-port and NONO_PROXY_PASS to fixed values out here.
 
 set -e
 
@@ -22,4 +34,4 @@ fi
 exec nono run \
   --profile omp-sm \
   --startup-timeout 0 \
-  -- omp "$@"
+  -- /bin/sh -c 'PI_PROXY="${HTTPS_PROXY:-}" exec omp "$@"' omp "$@"

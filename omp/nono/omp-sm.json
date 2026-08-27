@@ -38,7 +38,8 @@
       "/etc/passwd",
       "/usr/include",
       "$HOME/.local/bin/omp",
-      "$HOME/.CFUserTextEncoding"
+      "$HOME/.CFUserTextEncoding",
+      "$HOME/.claude/CLAUDE.md"
     ],
     "deny": [
       "$HOME/.viam",
@@ -48,7 +49,7 @@
       "$HOME/.config/vercel-plugin",
       "$HOME/.mongodb",
       "$HOME/.docker",
-      "$HOME/.claude",
+      "$HOME/.claude/plugins",
       "$HOME/.claude.json",
       "$HOME/.codex",
       "$HOME/.gemini",
