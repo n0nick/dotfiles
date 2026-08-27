@@ -1,7 +1,10 @@
 #!/usr/bin/env zsh
-# Background loop: rename tmux windows based on active Claude sessions.
+# Background loop: rename tmux windows based on active coding-agent sessions.
+# Handles Claude Code and oh-my-pi (omp), bare or sandboxed via omp-nono.
 # Start via tmux hooks (session-created, client-attached) — no status-right dependency.
 # Window prefix: 🔔 = needs input, ⏵ = working, ⏵⏵ = working (auto mode), none = idle.
+# ⏵⏵ is Claude-only: omp's footer carries no approval-mode indicator, so a yolo
+# omp is indistinguishable from an always-ask one.
 # Restarts automatically on crash via outer loop in the hook command.
 #
 # Power-aware interval: 2s on battery, 5s on AC.
@@ -14,13 +17,87 @@ find_claude_pid() {
     pgrep -P "$shell_pid" -x claude 2>/dev/null | head -1
 }
 
-get_pane_state() {
+find_omp_pid() {
+    local shell_pid=$1 pid kid
+    # Bare `omp` is a direct child. Under `omp-nono` the tree is
+    # shell → nono → omp: the wrapper's `sh -c` exec's into omp, so it leaves
+    # no frame of its own. Shallowest match wins.
+    pid=$(pgrep -P "$shell_pid" -x omp 2>/dev/null | head -1)
+    if [[ -z "$pid" ]]; then
+        for kid in ${(f)"$(pgrep -P "$shell_pid" 2>/dev/null)"}; do
+            pid=$(pgrep -P "$kid" -x omp 2>/dev/null | head -1)
+            [[ -n "$pid" ]] && break
+        done
+    fi
+    print -r -- "$pid"
+}
+
+pane_tail() {
+    # Bottom non-blank lines of a pane. The status line isn't always the last
+    # line — subagent lists and approval boxes render below it.
+    tmux capture-pane -pt "$1" 2>/dev/null | sed '/^[[:space:]]*$/d' | tail -15
+}
+
+fallback_name() {
+    # Branch shortname, or the project name for generic branches.
+    local cwd=$1 branch shortname project
+    branch=$(git -C "$cwd" rev-parse --abbrev-ref HEAD 2>/dev/null)
+    shortname="${branch##*/}"
+    project=$(basename "$cwd")
+    case "$shortname" in
+        main|master|dev|develop|HEAD|"") print -r -- "$project" ;;
+        *) print -r -- "$shortname" ;;
+    esac
+}
+
+get_claude_session() {
+    # → "cwd\tname", or non-zero when this pid has no session file
+    local session_file="$HOME/.claude/sessions/${1}.json"
+    [[ ! -f "$session_file" ]] && return 1
+    # cwd first (always populated) so a missing .name doesn't shift fields
+    jq -r '[.cwd // "", .name // ""] | @tsv' "$session_file" 2>/dev/null
+}
+
+get_omp_session() {
+    # → "cwd\tname"
+    local pid=$1 cwd file title
+    # One lsof pass yields both the cwd and the session JSONL omp holds open
+    # for append. The path depth is load-bearing: the live session sits at
+    # sessions/<bucket>/<ts>_<id>.jsonl, while subagent transcripts live a
+    # level deeper under sessions/<bucket>/<ts>_<id>/<Name>.jsonl — matching
+    # those would let a running subagent hijack the window name.
+    IFS=$'\t' read -r cwd file < <(
+        lsof -p "$pid" -Ffn 2>/dev/null | awk '
+            /^f/ { fd = substr($0,2); next }
+            /^n/ { n = substr($0,2)
+                   if (fd == "cwd" && cwd == "") cwd = n
+                   if (sf == "" && n ~ /\/\.omp\/agent\/sessions\/[^\/]+\/[^\/]+\.jsonl$/) sf = n }
+            END  { printf "%s\t%s\n", cwd, sf }'
+    )
+    # Line 1 is a fixed-width title slot and is authoritative — the header's
+    # copy goes stale. Legacy files have no slot and open with the header.
+    # Only a user-set title becomes a window name: auto titles are generated
+    # sentences, too long and rewritten mid-session. Frequently empty by
+    # design — a session stays memory-only until its first assistant message,
+    # so a freshly started omp has no file at all.
+    if [[ -n "$file" ]]; then
+        title=$(head -2 "$file" 2>/dev/null | jq -rs '
+            (map(select(.type=="title"))   | first) as $slot
+          | (map(select(.type=="session")) | first) as $hdr
+          | if   $slot then (if $slot.source     == "user" then ($slot.title // "") else "" end)
+            elif $hdr  then (if $hdr.titleSource == "user" then ($hdr.title  // "") else "" end)
+            else "" end' 2>/dev/null)
+    fi
+    printf '%s\t%s\n' "$cwd" "$title"
+}
+
+get_claude_state() {
     local pane_id=$1
     local -a lines
     local line
     # The status line isn't always the last line — the subagents list renders
     # below it. Scan the bottom lines upward; nearest-to-bottom match wins.
-    lines=("${(@f)$(tmux capture-pane -pt "$pane_id" 2>/dev/null | sed '/^[[:space:]]*$/d' | tail -15)}")
+    lines=("${(@f)$(pane_tail "$pane_id")}")
     for line in "${(Oa)lines[@]}"; do
         case "$line" in
             *'Esc to cancel'*|*'esc to cancel'*) echo "Input"; return ;;
@@ -37,46 +114,76 @@ get_pane_state() {
     echo "Idle"
 }
 
-typeset -A last_names  # pane_id → last window name (avoid redundant renames)
+get_omp_state() {
+    local pane_id=$1 tail_text
+    tail_text=$(pane_tail "$pane_id")
+    # A selector is awaiting a choice — tool approval, `ask`, any picker. It
+    # renders below the spinner, which keeps spinning underneath, so input has
+    # to win. Case-folded because the hint is per-component: tool approval
+    # writes "up/down navigate  enter select  esc cancel", `ask` writes
+    # "Enter select · n note · ↑/↓ move · Esc cancel". omp's "(esc to cancel)"
+    # is no use here — that marks blocking work like compaction, not a question.
+    [[ "${tail_text:l}" == *'enter select'* ]] && { echo "Input"; return }
+    # Turn in flight: a braille spinner frame opens the line, as in
+    # "⠸ <intent> ⟨esc⟩". Anchor at the line start — the same text survives
+    # inside stale bordered renders ("│ ⠸ … │") further up the screen.
+    print -r -- "$tail_text" | grep -qE $'^[[:space:]]*[\u2800-\u28ff][[:space:]]' \
+        && { echo "Working"; return }
+    echo "Idle"
+}
+
+# Keyed by window, not pane: the rename target is the window, so two agent panes
+# sharing one window would each track only the name it set itself and overwrite
+# the other on every tick.
+typeset -A last_names  # window_id → last name we set (avoid redundant renames)
+typeset -A best_rank best_name  # window_id → winning pane's state rank / label
 
 while true; do
+    best_rank=() best_name=()
+
     # Read all panes: "pane_id window_id shell_pid"
     tmux list-panes -aF "#{pane_id} #{window_id} #{pane_pid}" 2>/dev/null | \
     while read -r pane_id window_id shell_pid; do
-        claude_pid=$(find_claude_pid "$shell_pid")
-        [[ -z "$claude_pid" ]] && continue
+        cwd="" session_name=""
 
-        session_file="$HOME/.claude/sessions/${claude_pid}.json"
-        [[ ! -f "$session_file" ]] && continue
-
-        # cwd first (always populated) so a missing .name doesn't shift fields
-        IFS=$'\t' read -r cwd session_name < <(
-            jq -r '[.cwd // "", .name // ""] | @tsv' "$session_file" 2>/dev/null
-        )
-        if [[ -z "$session_name" ]]; then
-            # Fall back to branch shortname or project name for generic branches
-            branch=$(git -C "$cwd" rev-parse --abbrev-ref HEAD 2>/dev/null)
-            shortname="${branch##*/}"
-            project=$(basename "$cwd")
-            case "$shortname" in
-                main|master|dev|develop|HEAD|"") session_name="$project" ;;
-                *) session_name="$shortname" ;;
-            esac
+        if agent_pid=$(find_claude_pid "$shell_pid"); [[ -n "$agent_pid" ]]; then
+            session_data=$(get_claude_session "$agent_pid") || continue
+            IFS=$'\t' read -r cwd session_name <<< "$session_data"
+            state=$(get_claude_state "$pane_id")
+        elif agent_pid=$(find_omp_pid "$shell_pid"); [[ -n "$agent_pid" ]]; then
+            IFS=$'\t' read -r cwd session_name < <(get_omp_session "$agent_pid")
+            state=$(get_omp_state "$pane_id")
+        else
+            continue
         fi
 
-        state=$(get_pane_state "$pane_id")
+        if [[ -z "$session_name" ]]; then
+            [[ -z "$cwd" ]] && continue
+            session_name=$(fallback_name "$cwd")
+        fi
+
         case "$state" in
-            Input)       prefix="🔔 " ;;
-            WorkingAuto) prefix="⏵⏵ " ;;
-            Working)     prefix="⏵ " ;;
-            *)           prefix="" ;;
+            Input)       rank=3 prefix="🔔 " ;;
+            WorkingAuto) rank=2 prefix="⏵⏵ " ;;
+            Working)     rank=1 prefix="⏵ " ;;
+            *)           rank=0 prefix="" ;;
         esac
 
-        new_name="${prefix}${session_name}"
-        if [[ "${last_names[$pane_id]}" != "$new_name" ]]; then
+        # Several agent panes can share one window, so the most demanding one
+        # wins the label — a window still rings if any pane in it needs you.
+        # Ties go to the first pane in tmux's stable ordering, which is what
+        # keeps the label from oscillating between panes tick to tick.
+        if [[ -z "${best_rank[$window_id]}" ]] || (( rank > best_rank[$window_id] )); then
+            best_rank[$window_id]=$rank
+            best_name[$window_id]="${prefix}${session_name}"
+        fi
+    done
+
+    for window_id in ${(k)best_name}; do
+        if [[ "${last_names[$window_id]}" != "${best_name[$window_id]}" ]]; then
             tmux set-window-option -t "$window_id" automatic-rename off 2>/dev/null
-            tmux rename-window -t "$window_id" "$new_name" 2>/dev/null
-            last_names[$pane_id]=$new_name
+            tmux rename-window -t "$window_id" "${best_name[$window_id]}" 2>/dev/null
+            last_names[$window_id]="${best_name[$window_id]}"
         fi
     done
 
