@@ -57,6 +57,7 @@
       "$HOME/dev/personal/dotfiles/pi/agent/auth.json"
     ],
     "suppress_save_prompt": [
+      "$HOME/.aws",
       "$HOME/.claude",
       "$HOME/.claude.json",
       "$HOME/.codex",
