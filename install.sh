@@ -20,6 +20,7 @@ usage() {
   echo "  --tmux        Install Tmux Plugin Manager"
   echo "  --ghostty     Link Ghostty configuration (macOS)"
   echo "  --claude      Link Claude Code settings and scripts"
+  echo "  --omp         Link oh-my-pi (omp) configuration"
   echo "  --i3          Set up i3 configuration"
   echo "  --help        Show this help message"
 }
@@ -34,6 +35,7 @@ main() {
   local do_tmux=false
   local do_ghostty=false
   local do_claude=false
+  local do_omp=false
   local do_i3=false
 
   for arg in "$@"; do
@@ -46,6 +48,7 @@ main() {
       --tmux)     do_tmux=true; run_all=false ;;
       --ghostty)  do_ghostty=true; run_all=false ;;
       --claude)   do_claude=true; run_all=false ;;
+      --omp)      do_omp=true; run_all=false ;;
       --i3)       do_i3=true; run_all=false ;;
       --help)     usage; return 0 ;;
       *) echo "Unknown flag: $arg"; usage; return 1 ;;
@@ -61,6 +64,7 @@ main() {
   [[ $run_all == true || $do_tmux == true ]]     && install_tmux
   [[ $run_all == true || $do_ghostty == true ]]  && install_ghostty
   [[ $run_all == true || $do_claude == true ]]   && install_claude
+  [[ $run_all == true || $do_omp == true ]]      && install_omp
   [[ $run_all == true || $do_git == true ]]      && setup_git
   [[ $run_all == true || $do_i3 == true ]]       && setup_i3
   echo -n "\n\n"
@@ -280,6 +284,17 @@ install_claude() {
   run "mkdir -p $HOME/bin"
   symlink "$DOTF/claude/claude-md" "$HOME/bin/claude-md"
   symlink "$DOTF/claude/claude-md-hook" "$HOME/bin/claude-md-hook"
+  greendot
+}
+
+install_omp() {
+  chapter "Linking oh-my-pi (omp) configuration"
+  run "mkdir -p $HOME/.omp/agent"
+  # Link individual files, not the whole agent dir. Unlike ~/.pi/agent, omp
+  # keeps local state in here that must never be versioned: agent.db,
+  # history.db, models.db, sessions/, auth-broker.token, and
+  # secret-placeholder.key (the HMAC key for secret obfuscation).
+  symlink "$DOTF/omp/agent/config.yml" "$HOME/.omp/agent/config.yml"
   greendot
 }
 
