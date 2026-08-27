@@ -23,3 +23,5 @@ autolearn:
   autoContinue: false
 tui:
   resizeScrollback: preserve
+compaction:
+  idleEnabled: true
