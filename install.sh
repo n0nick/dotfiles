@@ -21,6 +21,7 @@ usage() {
   echo "  --ghostty     Link Ghostty configuration (macOS)"
   echo "  --claude      Link Claude Code settings and scripts"
   echo "  --omp         Link oh-my-pi (omp) configuration"
+  echo "  --raycast     Link Raycast scripts (macOS)"
   echo "  --i3          Set up i3 configuration"
   echo "  --help        Show this help message"
 }
@@ -36,6 +37,7 @@ main() {
   local do_ghostty=false
   local do_claude=false
   local do_omp=false
+  local do_raycast=false
   local do_i3=false
 
   for arg in "$@"; do
@@ -49,6 +51,7 @@ main() {
       --ghostty)  do_ghostty=true; run_all=false ;;
       --claude)   do_claude=true; run_all=false ;;
       --omp)      do_omp=true; run_all=false ;;
+      --raycast)  do_raycast=true; run_all=false ;;
       --i3)       do_i3=true; run_all=false ;;
       --help)     usage; return 0 ;;
       *) echo "Unknown flag: $arg"; usage; return 1 ;;
@@ -65,6 +68,7 @@ main() {
   [[ $run_all == true || $do_ghostty == true ]]  && install_ghostty
   [[ $run_all == true || $do_claude == true ]]   && install_claude
   [[ $run_all == true || $do_omp == true ]]      && install_omp
+  [[ $run_all == true || $do_raycast == true ]]  && install_raycast
   [[ $run_all == true || $do_git == true ]]      && setup_git
   [[ $run_all == true || $do_i3 == true ]]       && setup_i3
   echo -n "\n\n"
@@ -311,6 +315,28 @@ install_omp() {
   # unsandboxed run stays an explicit choice rather than an accident.
   run "mkdir -p $HOME/bin"
   symlink "$DOTF/omp/bin/omp-nono" "$HOME/bin/omp-nono"
+  greendot
+}
+
+install_raycast() {
+  if [[ "$(uname)" != "Darwin" ]]; then
+    return
+  fi
+  chapter "Installing and linking Raycast scripts"
+  # Raycast is a GUI cask, not a CLI, so check for the app bundle rather
+  # than using ensure_installed (which relies on `command -v`).
+  if [[ -d "/Applications/Raycast.app" ]]; then
+    echo "${GREEN}Raycast already installed :)"
+  elif command -v brew &>/dev/null; then
+    run "brew install --cask raycast"
+    greendot
+  else
+    notice "Raycast not found — install it from https://raycast.com"
+  fi
+
+  # Point Raycast's Script Commands directory at ~/.raycast (set in
+  # Raycast → Extensions → Script Commands → Add Directory).
+  symlink "$DOTF/raycast" "$HOME/.raycast"
   greendot
 }
 
