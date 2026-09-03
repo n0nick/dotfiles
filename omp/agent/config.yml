@@ -2,7 +2,7 @@ providers:
   webSearchOrder:
     []
 modelRoles:
-  default: anthropic/claude-opus-5:high
+  default: anthropic/claude-opus-5:medium
   smol: anthropic/claude-haiku-4-5
   tiny: anthropic/claude-haiku-4-5
 symbolPreset: nerd
