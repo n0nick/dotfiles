@@ -1,0 +1,31 @@
+#!/bin/zsh
+#
+# Pull the newest Raycast export into the dotfiles repo.
+#
+# Raycast has no export CLI, so the config is a manual GUI snapshot:
+#   1. Raycast → Settings → Advanced → Export Settings & Data
+#      (keep a password — the committed file is encrypted; store the
+#      password in 1Password so a fresh machine can import it)
+#   2. Save it (defaults to ~/Downloads)
+#   3. Run `raycast-sync` to move it into the repo, then commit
+#
+# Restore on a new machine: open the committed Raycast.rayconfig and run
+# Raycast's "Import Settings & Data" (also GUI-only).
+
+set -e
+
+# ~/.raycast is symlinked to the repo's raycast/ dir by install.sh, so
+# writing here lands the file straight in the tracked directory.
+dest="$HOME/.raycast/Raycast.rayconfig"
+srcdir="${1:-$HOME/Downloads}"
+
+newest=$(ls -t "$srcdir"/*.rayconfig 2>/dev/null | head -1)
+if [[ -z "$newest" ]]; then
+  echo "No .rayconfig found in $srcdir."
+  echo "Run Raycast's 'Export Settings & Data' first, then re-run raycast-sync."
+  exit 1
+fi
+
+mv -f "$newest" "$dest"
+echo "Updated ${dest/#$HOME/~} from ${newest:t}"
+echo "Next: git -C \"$(cd "$HOME/.raycast" && pwd -P)/..\" add raycast/Raycast.rayconfig && git commit"

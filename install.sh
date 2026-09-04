@@ -338,6 +338,15 @@ install_raycast() {
   # Raycast → Extensions → Script Commands → Add Directory).
   symlink "$DOTF/raycast" "$HOME/.raycast"
   greendot
+
+  # raycast-sync pulls a manual GUI export into the repo. Raycast has no
+  # export/import CLI, so config is a hand-triggered encrypted snapshot —
+  # see the header in raycast/raycast-sync for the export/import ritual.
+  run "mkdir -p $HOME/bin"
+  symlink "$DOTF/raycast/raycast-sync" "$HOME/bin/raycast-sync"
+  greendot
+  notice "Raycast config is a manual snapshot: export from Raycast, run" \
+    "raycast-sync, then commit. Import on new machines is GUI-only."
 }
 
 setup_i3() {
