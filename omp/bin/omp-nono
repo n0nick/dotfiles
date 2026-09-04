@@ -23,12 +23,32 @@
 #   So copy it across inside the sandbox, where nono has already assigned the
 #   ephemeral port and session token. Doing it this way avoids having to pin
 #   --proxy-port and NONO_PROXY_PASS to fixed values out here.
+#
+# GH_TOKEN="$(gh auth token)"
+#   gh keeps its token in the macOS keychain, and the profile's required
+#   deny_keychains_macos group blocks that inside the sandbox -- gh then reports
+#   "the token in default is invalid" and every pr://, issue://, and github tool
+#   call 401s. So resolve the token out here, where the keychain is reachable,
+#   and pass it in via the profile's GH_TOKEN allow_vars entry. nono's
+#   credential proxy would be the tighter answer, but injecting requires TLS
+#   interception and gh is Go: crypto/x509 on darwin ignores SSL_CERT_FILE, so
+#   it rejects nono's per-session intercept CA.
+#   Left unset when gh is absent or logged out; gh's own error message is
+#   clearer than anything synthesized here.
 
 set -e
 
 if ! command -v nono &> /dev/null; then
   print -u2 "omp-nono: nono not installed (brew install nono)"
   exit 1
+fi
+
+if command -v gh &> /dev/null; then
+  gh_token="$(gh auth token 2>/dev/null)" || gh_token=""
+  if [[ -n "$gh_token" ]]; then
+    export GH_TOKEN="$gh_token"
+  fi
+  unset gh_token
 fi
 
 exec nono run \
