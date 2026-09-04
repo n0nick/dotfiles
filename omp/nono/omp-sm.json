@@ -40,7 +40,8 @@
       "$HOME/.local/bin/omp",
       "$HOME/.CFUserTextEncoding",
       "$HOME/.claude/CLAUDE.md",
-      "$HOME/.gitconfig.user"
+      "$HOME/.gitconfig.user",
+      "$HOME/.config/gh"
     ],
     "deny": [
       "$HOME/.viam",
@@ -99,7 +100,10 @@
 
   "environment": {
     "set_vars": {
-      "OMP_NONO_STATUS_INDICATOR": "true"
+      "OMP_NONO_STATUS_INDICATOR": "true",
+      "GH_NO_UPDATE_NOTIFIER": "1",
+      "GH_PAGER": "cat",
+      "GH_PROMPT_DISABLED": "1"
     },
     "allow_vars": [
       "PATH",
@@ -124,7 +128,14 @@
       "GOMODCACHE",
       "PKG_CONFIG_PATH",
       "OMP_*",
-      "PI_*"
+      "PI_*",
+      // Minted outside the sandbox by bin/omp-nono. The real gh credential
+      // lives in the macOS keychain, which deny_keychains_macos (a required
+      // group) blocks, so `gh` -- and therefore omp's pr:// / issue:// reads --
+      // has no other way to authenticate. nono's credential proxy is not an
+      // option: injection requires TLS interception, and gh is a Go binary, so
+      // crypto/x509 on darwin ignores SSL_CERT_FILE and rejects the session CA.
+      "GH_TOKEN"
     ]
   },
 
