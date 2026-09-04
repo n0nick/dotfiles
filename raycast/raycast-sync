@@ -1,31 +1,63 @@
 #!/bin/zsh
 #
-# Pull the newest Raycast export into the dotfiles repo.
+# Snapshot Raycast settings into the dotfiles repo.
 #
-# Raycast has no export CLI, so the config is a manual GUI snapshot:
-#   1. Raycast → Settings → Advanced → Export Settings & Data
-#      (keep a password — the committed file is encrypted; store the
-#      password in 1Password so a fresh machine can import it)
-#   2. Save it (defaults to ~/Downloads)
-#   3. Run `raycast-sync` to move it into the repo, then commit
+# Raycast has no export CLI and its deeplinks can't fill in the export form,
+# so the config stays a GUI-gated encrypted snapshot. This script removes the
+# remembering: it opens the export dialog for you, waits while you click
+# through, then moves the fresh .rayconfig into the tracked dir.
 #
-# Restore on a new machine: open the committed Raycast.rayconfig and run
-# Raycast's "Import Settings & Data" (also GUI-only).
+#   raycast-sync            # open export dialog, wait, then sync from ~/Downloads
+#   raycast-sync <dir>      # look for the export in <dir> instead
+#
+# In the dialog: the categories and password are remembered from last time, so
+# it's usually just Export → Save. Keep the password (stored in 1Password) —
+# it's what encrypts the committed file. Restore on a new machine is still
+# GUI-only: open the committed Raycast.rayconfig and run "Import Settings & Data".
 
 set -e
 
-# ~/.raycast is symlinked to the repo's raycast/ dir by install.sh, so
-# writing here lands the file straight in the tracked directory.
+# ~/.raycast is symlinked to the repo's raycast/ dir by install.sh, so writing
+# here lands the file straight in the tracked directory.
 dest="$HOME/.raycast/Raycast.rayconfig"
 srcdir="${1:-$HOME/Downloads}"
+export_deeplink="raycast://extensions/raycast/raycast/export-settings-data"
+
+# Remember the newest existing export so we can tell a fresh one apart from a
+# cancelled export (which would otherwise re-sync a stale file).
+before=$(ls -t "$srcdir"/*.rayconfig 2>/dev/null | head -1)
+before_mtime=0
+[[ -n "$before" ]] && before_mtime=$(stat -f %m "$before")
+
+echo "Opening Raycast's Export dialog…"
+echo "  → tick categories (remembered), keep the password, Export, and Save into ${srcdir/#$HOME/~}."
+open "$export_deeplink"
+printf '\nPress Enter once the export is saved (Ctrl-C to abort)… '
+read -r _
 
 newest=$(ls -t "$srcdir"/*.rayconfig 2>/dev/null | head -1)
 if [[ -z "$newest" ]]; then
-  echo "No .rayconfig found in $srcdir."
-  echo "Run Raycast's 'Export Settings & Data' first, then re-run raycast-sync."
+  echo "No .rayconfig found in $srcdir — nothing to sync."
+  exit 1
+fi
+if [[ "$(stat -f %m "$newest")" -le "$before_mtime" ]]; then
+  echo "No new export detected in $srcdir (newest is ${newest:t}, not newer than before)."
+  echo "Did the save complete? Aborting so a stale snapshot isn't committed."
   exit 1
 fi
 
 mv -f "$newest" "$dest"
-echo "Updated ${dest/#$HOME/~} from ${newest:t}"
-echo "Next: git -C \"$(cd "$HOME/.raycast" && pwd -P)/..\" add raycast/Raycast.rayconfig && git commit"
+echo "Synced ${dest/#$HOME/~} from ${newest:t}"
+
+# Resolve the repo via the physical path of the symlinked raycast dir. Don't
+# `cd ..` — zsh's logical cd would walk back through the ~/.raycast symlink to
+# $HOME instead of the repo. :h strips the trailing "raycast" component.
+repo=$(cd "$HOME/.raycast" && pwd -P); repo="${repo:h}"
+printf 'Commit it now? [Y/n] '
+read -r reply
+if [[ "$reply" == [nN]* ]]; then
+  echo "Skipped. Commit later: git -C \"$repo\" add raycast/Raycast.rayconfig && git commit"
+else
+  git -C "$repo" add raycast/Raycast.rayconfig
+  git -C "$repo" commit -m "raycast: refresh config snapshot"
+fi
