@@ -4,7 +4,6 @@ return {
     "nvim-lua/plenary.nvim",
     "nvim-treesitter/nvim-treesitter",
   },
-  module = "telescope",
 
   config = function()
     require('telescope').setup({})
@@ -17,6 +16,11 @@ return {
     vim.keymap.set("n", "<leader>fb", builtin.buffers, {})
     vim.keymap.set("n", "<leader>fh", ":Telescope find_files hidden=true <CR>")
 
+    -- Symbol jumping: document-local and project-wide
+    vim.keymap.set("n", "<leader>fs", builtin.lsp_document_symbols, { desc = 'Symbols in current file' })
+    vim.keymap.set("n", "<leader>fS", builtin.lsp_dynamic_workspace_symbols, { desc = 'Symbols across project' })
+    vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = 'Diagnostics' })
+
     vim.keymap.set('n', '<leader>pws', function()
       local word = vim.fn.expand("<cword>")
       builtin.grep_string({ search = word })
@@ -27,4 +31,3 @@ return {
     end)
   end
 }
-

@@ -15,7 +15,48 @@ return {
         filetypes = { 'proto' },
       })
       vim.lsp.enable('buf_ls')
+
+      -- TypeScript/JavaScript. cmd, filetypes and root_markers come from
+      -- nvim-lspconfig's shipped lsp/vtsls.lua; only settings are overridden.
+      vim.lsp.config('vtsls', {
+        settings = {
+          vtsls = {
+            autoUseWorkspaceTsdk = true,
+          },
+          typescript = {
+            preferences = { includePackageJsonAutoImports = 'auto' },
+            inlayHints = {
+              parameterNames = { enabled = 'literals' },
+              parameterTypes = { enabled = true },
+              propertyDeclarationTypes = { enabled = true },
+              functionLikeReturnTypes = { enabled = true },
+            },
+          },
+        },
+      })
+      vim.lsp.enable('vtsls')
+
+      -- Svelte. cmd, filetypes and root_dir come from lspconfig's shipped
+      -- lsp/svelte.lua, whose root_dir prefers a lockfile over .git -- which
+      -- is what makes a SvelteKit app nested inside a Go repo resolve to the
+      -- pnpm workspace root rather than the repo root.
+      vim.lsp.enable('svelte')
     end,
+  },
+
+  -- Installs the servers that aren't already on PATH.
+  -- gopls and buf are managed outside mason, so they're not listed here.
+  {
+    'mason-org/mason-lspconfig.nvim',
+    dependencies = {
+      'mason-org/mason.nvim',
+      'neovim/nvim-lspconfig',
+    },
+    opts = {
+      ensure_installed = { 'vtsls', 'svelte' },
+      -- Servers are configured and enabled explicitly above.
+      automatic_enable = false,
+    },
   },
 
   -- LSP UI enhancements
