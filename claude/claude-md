@@ -1,5 +1,12 @@
 #!/usr/bin/env zsh
-# Open the last Claude response from the current session in the default markdown app.
+# Open the last Claude response from this pane's session in the default markdown
+# app. Run it from the Claude prompt as `!preview` — the shell claude spawns
+# inherits TMUX_PANE, which is the same key the Stop hook writes under.
+
+if [[ -z "$TMUX_PANE" ]]; then
+  echo "No TMUX_PANE — run this inside tmux." >&2
+  exit 1
+fi
 
 POINTER="/tmp/claude-transcript-${TMUX_PANE}"
 
@@ -8,40 +15,29 @@ if [[ ! -f "$POINTER" ]]; then
   exit 1
 fi
 
-TRANSCRIPT=$(cat "$POINTER")
+TRANSCRIPT=$(<"$POINTER")
 
 if [[ ! -f "$TRANSCRIPT" ]]; then
   echo "Transcript file not found: $TRANSCRIPT" >&2
   exit 1
 fi
 
-python3 << PYEOF
-import json, sys, subprocess
-from datetime import datetime
-from pathlib import Path
+OUT="/tmp/claude-$(date +%Y%m%d-%H%M%S).md"
 
-entries = []
-with open("$TRANSCRIPT") as f:
-    for line in f:
-        try:
-            d = json.loads(line)
-            if d.get("type") == "assistant":
-                texts = [c["text"] for c in d["message"]["content"] if c.get("type") == "text"]
-                if texts:
-                    entries.append((d.get("slug") or "claude", "".join(texts)))
-        except Exception:
-            pass
+# Stream, don't slurp — transcripts reach tens of megabytes. Each assistant
+# message's text blocks collapse to one JSON string per line, so the last line
+# is the last response.
+jq -c 'select(.type == "assistant")
+       | ((.message.content? // []) | map(select(.type == "text").text) | join(""))
+       | select(. != "")' "$TRANSCRIPT" \
+  | tail -1 \
+  | jq -r . > "$OUT"
 
-if not entries:
-    print("No assistant text found in transcript", file=sys.stderr)
-    sys.exit(1)
+if [[ ! -s "$OUT" ]]; then
+  rm -f "$OUT"
+  echo "No assistant text found in $TRANSCRIPT" >&2
+  exit 1
+fi
 
-slug, text = entries[-1]
-slug = slug.replace(" ", "-")
-timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-path = f"/tmp/claude-{slug}-{timestamp}.md"
-
-Path(path).write_text(text)
-subprocess.run(["open", path])
-print(path)
-PYEOF
+open "$OUT"
+echo "$OUT"

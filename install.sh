@@ -287,7 +287,9 @@ install_claude() {
   symlink "$DOTF/claude/claude-icon.png" "$HOME/.claude/claude-icon.png"
   run "mkdir -p $HOME/bin"
   symlink "$DOTF/claude/claude-md" "$HOME/bin/claude-md"
+  symlink "$DOTF/claude/claude-md" "$HOME/bin/preview"
   symlink "$DOTF/claude/claude-md-hook" "$HOME/bin/claude-md-hook"
+  rm -f "$HOME/.claude/commands/preview.md"  # superseded by !preview
   greendot
 }
 
