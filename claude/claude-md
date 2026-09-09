@@ -1,7 +1,16 @@
 #!/usr/bin/env zsh
-# Open the last Claude response from this pane's session in the default markdown
-# app. Run it from the Claude prompt as `!preview` — the shell claude spawns
-# inherits TMUX_PANE, which is the same key the Stop hook writes under.
+# Open a Claude response from this pane's session in the default markdown app.
+# Run it from the Claude prompt as `!preview` — the shell claude spawns inherits
+# TMUX_PANE, which is the same key the Stop hook writes under.
+#
+# Usage: preview [N]   N=1 (default) is the last response, 2 the one before it.
+
+N="${1:-1}"
+
+if [[ ! "$N" =~ ^[0-9]+$ ]] || (( N < 1 )); then
+  echo "Usage: ${0:t} [N]   — N is a positive integer, 1 = most recent response." >&2
+  exit 1
+fi
 
 if [[ -z "$TMUX_PANE" ]]; then
   echo "No TMUX_PANE — run this inside tmux." >&2
@@ -22,22 +31,27 @@ if [[ ! -f "$TRANSCRIPT" ]]; then
   exit 1
 fi
 
-OUT="/tmp/claude-$(date +%Y%m%d-%H%M%S).md"
-
 # Stream, don't slurp — transcripts reach tens of megabytes. Each assistant
-# message's text blocks collapse to one JSON string per line, so the last line
-# is the last response.
-jq -c 'select(.type == "assistant")
-       | ((.message.content? // []) | map(select(.type == "text").text) | join(""))
-       | select(. != "")' "$TRANSCRIPT" \
-  | tail -1 \
-  | jq -r . > "$OUT"
+# message's text blocks collapse to one JSON string per line, so the last N
+# lines are the last N responses, oldest first.
+RESPONSES=$(jq -c 'select(.type == "assistant")
+                   | ((.message.content? // []) | map(select(.type == "text").text) | join(""))
+                   | select(. != "")' "$TRANSCRIPT" | tail -n "$N")
 
-if [[ ! -s "$OUT" ]]; then
-  rm -f "$OUT"
+if [[ -z "$RESPONSES" ]]; then
   echo "No assistant text found in $TRANSCRIPT" >&2
   exit 1
 fi
+
+FOUND=$(print -r -- "$RESPONSES" | wc -l | tr -d ' ')
+
+if (( FOUND < N )); then
+  echo "Only $FOUND response(s) in this transcript — cannot go back $N." >&2
+  exit 1
+fi
+
+OUT="/tmp/claude-$(date +%Y%m%d-%H%M%S).md"
+print -r -- "$RESPONSES" | head -1 | jq -r . > "$OUT"
 
 open "$OUT"
 echo "$OUT"
