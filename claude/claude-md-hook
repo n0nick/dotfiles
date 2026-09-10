@@ -1,19 +1,39 @@
 #!/usr/bin/env zsh
-# Stop hook. Two jobs:
+# Hook for both Stop and UserPromptSubmit; it branches on hook_event_name.
+#
+# On Stop:
 #   1. Record this session's transcript path, keyed by tmux pane, for `preview`.
 #   2. Refresh this session's entry in the live reader at ~/.claude/preview.
+#   3. Clear the working marker.
+# On UserPromptSubmit: set the working marker, so the reader can show which
+# sessions are busy and which are idle with something waiting for you.
 #
 # The reader half runs in the background: it costs about half a second on a
 # 50MB transcript, and nothing should wait on it to end a turn.
+#
+# This must print nothing on stdout: for UserPromptSubmit, anything written
+# there is injected into the session's context.
 
 INPUT=$(cat)
+EVENT=$(print -r -- "$INPUT" | jq -r '.hook_event_name // empty')
 TRANSCRIPT=$(print -r -- "$INPUT" | jq -r '.transcript_path // empty')
+
+SESSIONS="$HOME/.claude/preview/sessions"
+
+if [[ "$EVENT" == "UserPromptSubmit" ]]; then
+  ID="${TRANSCRIPT:t:r}"
+  [[ -z "$ID" ]] && ID=$(print -r -- "$INPUT" | jq -r '.session_id // empty')
+  [[ -d "$SESSIONS" && -n "$ID" ]] && : > "$SESSIONS/${ID}.busy"
+  exit 0
+fi
 
 [[ -n "$TMUX_PANE" ]] && print -r -- "$TRANSCRIPT" > "/tmp/claude-transcript-${TMUX_PANE}"
 [[ -n "$TRANSCRIPT" && -f "$TRANSCRIPT" ]] || exit 0
-
-SESSIONS="$HOME/.claude/preview/sessions"
 [[ -d "$SESSIONS" ]] || exit 0
+
+# Clear the marker before the slow part, so the reader stops showing "working"
+# as soon as the turn actually ends.
+rm -f "$SESSIONS/${TRANSCRIPT:t:r}.busy"
 
 {
   ID="${TRANSCRIPT:t:r}"
@@ -76,6 +96,8 @@ SESSIONS="$HOME/.claude/preview/sessions"
   # inactivity rather than time since the last rebuild.
   touch -r "$TRANSCRIPT" "$OUT" 2>/dev/null
 
-  # Sessions you haven't touched in a week stop being "live".
+  # Sessions you haven't touched in a week stop being "live". Markers outlive
+  # their turn only when a session is interrupted or killed, so they go sooner.
   find "$SESSIONS" -name '*.md' -mtime +7 -delete 2>/dev/null
+  find "$SESSIONS" -name '*.busy' -mmin +60 -delete 2>/dev/null
 } &!
