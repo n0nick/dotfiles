@@ -54,8 +54,19 @@
     border-bottom: 1px solid var(--rule); font-size: 12.5px; color: var(--muted);
   }
   #bar b { color: var(--fg); font-weight: 600; font-size: 13.5px; }
+  #nav {
+    margin-left: auto; display: inline-flex; align-items: center; gap: .3rem;
+  }
+  #nav button {
+    background: none; border: 1px solid var(--rule); border-radius: 5px;
+    color: var(--fg); font: inherit; font-size: 13px; line-height: 1;
+    padding: .15rem .45rem; cursor: pointer;
+  }
+  #nav button:hover:not(:disabled) { background: var(--sel); }
+  #nav button:disabled { opacity: .35; cursor: default; }
+  #pos { font-variant-numeric: tabular-nums; min-width: 4.2em; text-align: center; }
   #new {
-    margin-left: auto; align-self: center; background: var(--fg); color: var(--bg);
+    margin-left: .6rem; align-self: center; background: var(--fg); color: var(--bg);
     border: 0; border-radius: 999px; padding: .25rem .7rem;
     font: inherit; font-size: 11.5px; cursor: pointer; visibility: hidden;
   }
@@ -102,6 +113,11 @@
   <div id="wrap">
     <div id="bar">
       <b id="title">—</b><span id="sub"></span>
+      <span id="nav" hidden>
+        <button id="prev" title="Older (←)">‹</button>
+        <span id="pos"></span>
+        <button id="next" title="Newer (→)">›</button>
+      </span>
       <button id="new">new response ↑</button>
     </div>
     <main id="out"></main>
@@ -113,33 +129,38 @@
   const outEl   = document.getElementById('out');
   const titleEl = document.getElementById('title');
   const subEl   = document.getElementById('sub');
+  const navEl   = document.getElementById('nav');
+  const posEl   = document.getElementById('pos');
+  const prevEl  = document.getElementById('prev');
+  const nextEl  = document.getElementById('next');
   const pill    = document.getElementById('new');
   const wrap    = document.getElementById('wrap');
 
-  const sessions = new Map();   // file -> {name, project, updated, body, unread}
+  const sessions = new Map();   // file -> {name, project, updated, turns, lm, unread}
+  const at       = new Map();   // file -> index into turns; 0 is the newest
   let pinned = null;            // a session you clicked; null follows the newest
-
-  pill.onclick = () => {
-    wrap.scrollTo({ top: 0, behavior: 'smooth' });
-    pill.style.visibility = 'hidden';
-  };
 
   // Front matter values are JSON-encoded by the hook, so names containing
   // quotes or colons survive intact.
   function parse(text) {
     const m = text.match(/^---\n([\s\S]*?)\n---\n?/);
-    if (!m) return { name: null, project: '', updated: null, body: text };
     const meta = {};
-    for (const line of m[1].split('\n')) {
-      const i = line.indexOf(': ');
-      if (i < 0) continue;
-      try { meta[line.slice(0, i)] = JSON.parse(line.slice(i + 2)); } catch {}
+    let body = text;
+    if (m) {
+      body = text.slice(m[0].length);
+      for (const line of m[1].split('\n')) {
+        const i = line.indexOf(': ');
+        if (i < 0) continue;
+        try { meta[line.slice(0, i)] = JSON.parse(line.slice(i + 2)); } catch {}
+      }
     }
     return {
       name: meta.name || null,
       project: meta.project || '',
       updated: meta.updated ? new Date(meta.updated) : null,
-      body: text.slice(m[0].length),
+      // The separator is declared per file, not fixed: a message that quotes a
+      // fixed one would split itself in half here.
+      turns: body.split(meta.sep || '<!--turn-->').map(t => t.trim()).filter(Boolean),
     };
   }
 
@@ -156,8 +177,37 @@
   const ordered = () => [...sessions.entries()].sort((a, b) => b[1].updated - a[1].updated);
   const active  = () => (pinned && sessions.has(pinned)) ? pinned
                       : (ordered()[0] || [null])[0];
+  const index   = f => Math.min(at.get(f) ?? 0, Math.max(0, (sessions.get(f)?.turns.length ?? 1) - 1));
 
-  let shown = { file: null, body: null };
+  // Older is a higher index, since turns are stored newest-first.
+  function step(delta) {
+    const cur = active();
+    if (!cur) return;
+    const s = sessions.get(cur);
+    const next = Math.min(Math.max(index(cur) + delta, 0), s.turns.length - 1);
+    if (next === index(cur)) return;
+    at.set(cur, next);
+    if (next === 0) pill.style.visibility = 'hidden';
+    render(true);
+  }
+
+  prevEl.onclick = () => step(+1);
+  nextEl.onclick = () => step(-1);
+  addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); step(+1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(-1); }
+  });
+
+  pill.onclick = () => {
+    const cur = active();
+    if (cur) at.set(cur, 0);
+    pill.style.visibility = 'hidden';
+    render(true);
+    wrap.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  let shown = { file: null, text: null };
 
   function draw() {
     const cur = active(), rows = ordered();
@@ -183,33 +233,33 @@
       listEl.append(b);
     }
 
-    if (!cur) { titleEl.textContent = '—'; subEl.textContent = ''; return; }
-    const s = sessions.get(cur);
+    if (!cur) { titleEl.textContent = '—'; subEl.textContent = ''; navEl.hidden = true; return; }
+    const s = sessions.get(cur), i = index(cur);
     titleEl.textContent = s.name || cur.slice(0, 8);
     subEl.textContent = [s.project, ago(s.updated)].filter(Boolean).join(' · ');
+
+    navEl.hidden = s.turns.length < 2;
+    posEl.textContent = `${i + 1} / ${s.turns.length}`;
+    prevEl.disabled = i >= s.turns.length - 1;
+    nextEl.disabled = i <= 0;
   }
 
   function render(force) {
     const cur = active();
     draw();
-    if (!cur) { outEl.textContent = ''; shown = { file: null, body: null }; return; }
+    if (!cur) { outEl.textContent = ''; shown = { file: null, text: null }; return; }
 
-    const s = sessions.get(cur);
-    if (!force && shown.file === cur && shown.body === s.body) return;
+    const text = sessions.get(cur).turns[index(cur)] ?? '';
+    if (!force && shown.file === cur && shown.text === text) return;
 
     const switched = shown.file !== cur;
-    shown = { file: cur, body: s.body };
-    outEl.innerHTML = marked.parse(s.body);
-    s.unread = false;
+    shown = { file: cur, text };
+    outEl.innerHTML = marked.parse(text);
+    sessions.get(cur).unread = false;
 
-    // A new response is meant to be read from the top — but not while you're
-    // mid-way through the last one.
-    if (force || switched || wrap.scrollTop < 120) {
-      wrap.scrollTo({ top: 0 });
-      pill.style.visibility = 'hidden';
-    } else {
-      pill.style.visibility = 'visible';
-    }
+    // A new response is meant to be read from the top — but not while you are
+    // partway through the one you were reading.
+    if (force || switched || wrap.scrollTop < 120) wrap.scrollTo({ top: 0 });
   }
 
   async function poll() {
@@ -221,15 +271,31 @@
         .filter(h => h.endsWith('.md'));
 
       for (const f of files) {
+        // HEAD first: bodies carry ten turns each, and almost every tick is a
+        // no-op.
+        const h = await fetch('sessions/' + f, { method: 'HEAD', cache: 'no-store' });
+        if (!h.ok) continue;
+        const lm = h.headers.get('Last-Modified');
+        const prev = sessions.get(f);
+        if (prev && prev.lm === lm) continue;
+
         const r = await fetch('sessions/' + f, { cache: 'no-store' });
         if (!r.ok) continue;
-        const next = parse(await r.text());
-        const prev = sessions.get(f);
-        if (!prev) sessions.set(f, { ...next, unread: false });
-        else if (prev.body !== next.body) Object.assign(prev, next, { unread: true });
-        else Object.assign(prev, next, { unread: prev.unread });
+        const next = { ...parse(await r.text()), lm };
+
+        if (!prev) {
+          sessions.set(f, { ...next, unread: false });
+        } else {
+          const wasNewest = index(f) === 0;
+          const changed = prev.turns[0] !== next.turns[0];
+          Object.assign(prev, next, { unread: prev.unread || (changed && f !== active()) });
+          // Reading an older turn when a new one lands: hold your place and
+          // offer the jump instead of taking it.
+          if (changed && f === active() && !wasNewest) pill.style.visibility = 'visible';
+          if (wasNewest) at.set(f, 0);
+        }
       }
-      for (const f of [...sessions.keys()]) if (!files.includes(f)) sessions.delete(f);
+      for (const f of [...sessions.keys()]) if (!files.includes(f)) { sessions.delete(f); at.delete(f); }
     } catch { /* server down — keep showing what we have */ }
     render(false);
   }
