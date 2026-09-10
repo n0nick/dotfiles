@@ -45,17 +45,26 @@ SESSIONS="$HOME/.claude/preview/sessions"
   BODY=$("${0:A:h}/claude-turn" -p --all --sep "$SEP" "$TRANSCRIPT" 10 2>/dev/null) || exit 0
   [[ -n "$BODY" ]] || exit 0
 
+  # When the session last spoke, not when this hook ran — otherwise a rebuild
+  # restamps every session to the same minute and the recency sort collapses.
+  UPDATED=$(date -u -r "$TRANSCRIPT" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null) \
+    || UPDATED=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
   OUT="$SESSIONS/${ID}.md"
   {
     print -r -- "---"
     print -rn -- "name: ";    print -rn -- "${NAME//$'\n'/ }"    | jq -Rs .
     print -rn -- "project: "; print -rn -- "${PROJECT//$'\n'/ }" | jq -Rs .
-    print -rn -- "updated: "; print -rn -- "$(date -u +%Y-%m-%dT%H:%M:%SZ)" | jq -Rs .
+    print -rn -- "updated: "; print -rn -- "$UPDATED" | jq -Rs .
     print -rn -- "sep: ";     print -rn -- "$SEP" | jq -Rs .
     print -r -- "---"
     print -r -- ""
     print -r -- "$BODY"
   } > "$OUT.tmp" && mv -f "$OUT.tmp" "$OUT"
+
+  # Age the file to match the session, so the 7-day prune below measures real
+  # inactivity rather than time since the last rebuild.
+  touch -r "$TRANSCRIPT" "$OUT" 2>/dev/null
 
   # Sessions you haven't touched in a week stop being "live".
   find "$SESSIONS" -name '*.md' -mtime +7 -delete 2>/dev/null
