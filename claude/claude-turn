@@ -1,27 +1,58 @@
 #!/usr/bin/env zsh
-# claude-turn <transcript.jsonl> [N] — print the Nth-from-last turn's markdown.
+# claude-turn [-p] <transcript.jsonl> [N]        the Nth-from-last turn
+# claude-turn [-p] --all <transcript.jsonl> [K]  the last K turns, newest first
 #
 # A turn is everything Claude said between two of your messages, so the short
-# lines written before tool calls are kept, not just the final block. Tool
-# results are stored as `user` entries in the transcript, so a real turn
-# boundary is a user entry that is NOT carrying one.
+# lines written before tool calls are kept, not just the final block.
 #
-# Streams rather than slurps: transcripts reach tens of megabytes, of which
-# about 2% is prose.
+# Two traps in the transcript format:
+#   - tool results are stored as `user` entries, so a turn boundary is a user
+#     entry NOT carrying one, or every tool call would split a turn;
+#   - system-reminders are also `user` entries with plain string content, but
+#     marked isMeta, and they'd split a turn just as wrongly.
+#
+# -p prefixes each turn with your message as a blockquote.
+#
+# Turns are separated by an HTML comment: invisible when rendered, trivial to
+# split on, harmless if the file is opened in a plain markdown app. --sep takes
+# a caller-supplied one, which matters more than it sounds: a conversation
+# about this script quotes the default separator in its own text, and the
+# reader then splits a message in half. The hook passes a per-write nonce.
 
-TRANSCRIPT="${1:?usage: claude-turn <transcript.jsonl> [N]}"
-N="${2:-1}"
+emulate -L zsh
+
+SEP='<!--turn-->'
+MAX_PROMPT=1200
+PROMPT=false
+ALL=false
+
+while [[ "$1" == -* ]]; do
+  case "$1" in
+    -p|--prompt) PROMPT=true; shift ;;
+    --all)       ALL=true; shift ;;
+    --sep)       SEP="$2"; shift 2 ;;
+    *) echo "unknown flag: $1" >&2; exit 1 ;;
+  esac
+done
+
+TRANSCRIPT="${1:?usage: claude-turn [-p] [--all] <transcript.jsonl> [N]}"
+COUNT="${2:-1}"
 
 [[ -f "$TRANSCRIPT" ]] || { echo "no such transcript: $TRANSCRIPT" >&2; exit 1 }
-[[ "$N" == <-> && $N -ge 1 ]] || { echo "N must be a positive integer" >&2; exit 1 }
+[[ "$COUNT" == <-> && $COUNT -ge 1 ]] || { echo "N must be a positive integer" >&2; exit 1 }
 
 TMP=$(mktemp) || exit 1
 trap 'rm -f "$TMP"' EXIT
 
+# Boundaries come out as {"u":"<your message>"}, Claude's text as a bare JSON
+# string — so a line starting with "{" is a boundary.
 jq -c 'if (.type == "user"
+           and ((.isMeta // false) | not)
            and ((.message.content | type == "string")
                 or ((.message.content | map(.type) | index("tool_result")) == null)))
-       then "@@TURN@@"
+       then { u: (if (.message.content | type == "string")
+                  then .message.content
+                  else (.message.content | map(select(.type == "text").text) | join("")) end) }
        elif .type == "assistant"
        then ((.message.content? // []) | map(select(.type == "text").text) | join(""))
             | select(. != "")
@@ -29,20 +60,48 @@ jq -c 'if (.type == "user"
 
 lines=("${(@f)$(<"$TMP")}")
 
-typeset -a turn
-found=0
+# -r matters throughout: these are JSON strings, and print would eat the escapes.
+decode() { print -lr -- "$@" | jq -sr 'join("\n\n")' }
+
+# Walk backwards, closing a turn at each boundary. A turn's prompt is the
+# boundary reached after its text.
+typeset -a turns prompts block
 for (( i = ${#lines[@]}; i > 0; i-- )); do
-  if [[ "$lines[i]" == '"@@TURN@@"' ]]; then
-    if (( ${#turn[@]} )); then
-      (( ++found == N )) && break
-      turn=()
+  if [[ "$lines[i]" == \{* ]]; then
+    if (( ${#block[@]} )); then
+      turns+=("$(decode $block)")
+      prompts+=("$lines[i]")
+      block=()
+      (( ${#turns[@]} == COUNT )) && break
     fi
   else
-    turn=("$lines[i]" $turn)
+    block=("$lines[i]" $block)
   fi
 done
 
-(( ${#turn[@]} )) || { echo "no turn $N in $TRANSCRIPT" >&2; exit 1 }
+(( ${#turns[@]} )) || { echo "no turn $COUNT in $TRANSCRIPT" >&2; exit 1 }
+$ALL || (( ${#turns[@]} == COUNT )) || { echo "only ${#turns[@]} turn(s) in $TRANSCRIPT" >&2; exit 1 }
 
-# -r matters: the blocks are JSON strings, and print would eat their escapes.
-print -lr -- $turn | jq -sr 'join("\n\n")'
+emit() {
+  local idx=$1 p
+  if $PROMPT; then
+    p=$(print -r -- "$prompts[idx]" \
+        | jq -r '.u // ""' \
+        | perl -0pe 's{<system-reminder>.*?</system-reminder>}{}gs; s/\A\s+//; s/\s+\z//')
+    (( ${#p} > MAX_PROMPT )) && p="${p[1,$MAX_PROMPT]}…"
+    if [[ -n "$p" ]]; then
+      print -r -- "${(F)${(f)p}/#/> }"
+      print -r -- ""
+    fi
+  fi
+  print -r -- "$turns[idx]"
+}
+
+if $ALL; then
+  for (( n = 1; n <= ${#turns[@]}; n++ )); do
+    (( n > 1 )) && { print -r -- ""; print -r -- "$SEP"; print -r -- "" }
+    emit $n
+  done
+else
+  emit $COUNT
+fi

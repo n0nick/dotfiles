@@ -37,7 +37,12 @@ SESSIONS="$HOME/.claude/preview/sessions"
   # viam-app and an email address shreds into path segments.
   PROJECT=$(jq -r 'select(.cwd) | .cwd' "$TRANSCRIPT" 2>/dev/null | tail -1)
 
-  BODY=$("${0:A:h}/claude-turn" "$TRANSCRIPT" 1 2>/dev/null) || exit 0
+  # A fresh separator each write. A conversation about this code quotes the
+  # separator in its own text, and a fixed one would then split that message in
+  # half when the page reads the file back.
+  SEP="<!--turn-$(od -An -N4 -tx1 /dev/urandom | tr -d ' \n')-->"
+
+  BODY=$("${0:A:h}/claude-turn" -p --all --sep "$SEP" "$TRANSCRIPT" 10 2>/dev/null) || exit 0
   [[ -n "$BODY" ]] || exit 0
 
   OUT="$SESSIONS/${ID}.md"
@@ -46,6 +51,7 @@ SESSIONS="$HOME/.claude/preview/sessions"
     print -rn -- "name: ";    print -rn -- "${NAME//$'\n'/ }"    | jq -Rs .
     print -rn -- "project: "; print -rn -- "${PROJECT//$'\n'/ }" | jq -Rs .
     print -rn -- "updated: "; print -rn -- "$(date -u +%Y-%m-%dT%H:%M:%SZ)" | jq -Rs .
+    print -rn -- "sep: ";     print -rn -- "$SEP" | jq -Rs .
     print -r -- "---"
     print -r -- ""
     print -r -- "$BODY"
