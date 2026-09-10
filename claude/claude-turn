@@ -1,0 +1,48 @@
+#!/usr/bin/env zsh
+# claude-turn <transcript.jsonl> [N] — print the Nth-from-last turn's markdown.
+#
+# A turn is everything Claude said between two of your messages, so the short
+# lines written before tool calls are kept, not just the final block. Tool
+# results are stored as `user` entries in the transcript, so a real turn
+# boundary is a user entry that is NOT carrying one.
+#
+# Streams rather than slurps: transcripts reach tens of megabytes, of which
+# about 2% is prose.
+
+TRANSCRIPT="${1:?usage: claude-turn <transcript.jsonl> [N]}"
+N="${2:-1}"
+
+[[ -f "$TRANSCRIPT" ]] || { echo "no such transcript: $TRANSCRIPT" >&2; exit 1 }
+[[ "$N" == <-> && $N -ge 1 ]] || { echo "N must be a positive integer" >&2; exit 1 }
+
+TMP=$(mktemp) || exit 1
+trap 'rm -f "$TMP"' EXIT
+
+jq -c 'if (.type == "user"
+           and ((.message.content | type == "string")
+                or ((.message.content | map(.type) | index("tool_result")) == null)))
+       then "@@TURN@@"
+       elif .type == "assistant"
+       then ((.message.content? // []) | map(select(.type == "text").text) | join(""))
+            | select(. != "")
+       else empty end' "$TRANSCRIPT" > "$TMP" || exit 1
+
+lines=("${(@f)$(<"$TMP")}")
+
+typeset -a turn
+found=0
+for (( i = ${#lines[@]}; i > 0; i-- )); do
+  if [[ "$lines[i]" == '"@@TURN@@"' ]]; then
+    if (( ${#turn[@]} )); then
+      (( ++found == N )) && break
+      turn=()
+    fi
+  else
+    turn=("$lines[i]" $turn)
+  fi
+done
+
+(( ${#turn[@]} )) || { echo "no turn $N in $TRANSCRIPT" >&2; exit 1 }
+
+# -r matters: the blocks are JSON strings, and print would eat their escapes.
+print -lr -- $turn | jq -sr 'join("\n\n")'

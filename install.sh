@@ -288,8 +288,19 @@ install_claude() {
   run "mkdir -p $HOME/bin"
   symlink "$DOTF/claude/claude-md" "$HOME/bin/claude-md"
   symlink "$DOTF/claude/claude-md" "$HOME/bin/preview"
+  symlink "$DOTF/claude/claude-turn" "$HOME/bin/claude-turn"
   symlink "$DOTF/claude/claude-md-hook" "$HOME/bin/claude-md-hook"
   rm -f "$HOME/.claude/commands/preview.md"  # superseded by !preview
+
+  # Live reader: the Stop hook writes each session's latest turn here, and a
+  # launchd agent serves the directory on 127.0.0.1:8787.
+  run "mkdir -p $HOME/.claude/preview/sessions"
+  symlink "$DOTF/claude/preview.html" "$HOME/.claude/preview/index.html"
+  local agent="$HOME/Library/LaunchAgents/com.n0nick.claude-preview.plist"
+  run "mkdir -p $HOME/Library/LaunchAgents"
+  sed "s|__HOME__|$HOME|g" "$DOTF/claude/claude-preview.plist" > "$agent"
+  launchctl bootout "gui/$UID/com.n0nick.claude-preview" 2>/dev/null
+  launchctl bootstrap "gui/$UID" "$agent" 2>/dev/null
   greendot
 }
 

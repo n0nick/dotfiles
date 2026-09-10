@@ -1,3 +1,56 @@
 #!/usr/bin/env zsh
-# Stop hook: records the current session's transcript path, keyed by tmux pane.
-jq -r '.transcript_path // empty' > "/tmp/claude-transcript-${TMUX_PANE}"
+# Stop hook. Two jobs:
+#   1. Record this session's transcript path, keyed by tmux pane, for `preview`.
+#   2. Refresh this session's entry in the live reader at ~/.claude/preview.
+#
+# The reader half runs in the background: it costs about half a second on a
+# 50MB transcript, and nothing should wait on it to end a turn.
+
+INPUT=$(cat)
+TRANSCRIPT=$(print -r -- "$INPUT" | jq -r '.transcript_path // empty')
+
+[[ -n "$TMUX_PANE" ]] && print -r -- "$TRANSCRIPT" > "/tmp/claude-transcript-${TMUX_PANE}"
+[[ -n "$TRANSCRIPT" && -f "$TRANSCRIPT" ]] || exit 0
+
+SESSIONS="$HOME/.claude/preview/sessions"
+[[ -d "$SESSIONS" ]] || exit 0
+
+{
+  ID="${TRANSCRIPT:t:r}"
+
+  # How you actually refer to a session: the name you gave it, else the one
+  # Claude generated, else its opening line.
+  # Must come from the structured record, not a text grep: the transcript also
+  # contains shell commands and prose that mention renaming.
+  NAME=$(jq -r 'select(.type == "user" and .isMeta == true)
+                | select(.message.content | type == "string")
+                | .message.content
+                | capture("The user named this session \"(?<n>[^\"]+)\"").n' \
+           "$TRANSCRIPT" 2>/dev/null | tail -1)
+  [[ -n "$NAME" ]] || NAME=$(jq -rc 'select(.aiTitle) | .aiTitle' "$TRANSCRIPT" 2>/dev/null | tail -1)
+  [[ -n "$NAME" ]] || NAME=$(jq -rc 'select(.type == "user") | select(.message.content | type == "string") | .message.content' \
+                               "$TRANSCRIPT" 2>/dev/null | head -1 | cut -c1-60)
+  [[ -n "$NAME" ]] || NAME="$ID"
+
+  # The real path. The directory slug can't be trusted: dashes in it are
+  # ambiguous between "/" and a literal "-", which is how viam/app reads as
+  # viam-app and an email address shreds into path segments.
+  PROJECT=$(jq -r 'select(.cwd) | .cwd' "$TRANSCRIPT" 2>/dev/null | tail -1)
+
+  BODY=$("${0:A:h}/claude-turn" "$TRANSCRIPT" 1 2>/dev/null) || exit 0
+  [[ -n "$BODY" ]] || exit 0
+
+  OUT="$SESSIONS/${ID}.md"
+  {
+    print -r -- "---"
+    print -rn -- "name: ";    print -rn -- "${NAME//$'\n'/ }"    | jq -Rs .
+    print -rn -- "project: "; print -rn -- "${PROJECT//$'\n'/ }" | jq -Rs .
+    print -rn -- "updated: "; print -rn -- "$(date -u +%Y-%m-%dT%H:%M:%SZ)" | jq -Rs .
+    print -r -- "---"
+    print -r -- ""
+    print -r -- "$BODY"
+  } > "$OUT.tmp" && mv -f "$OUT.tmp" "$OUT"
+
+  # Sessions you haven't touched in a week stop being "live".
+  find "$SESSIONS" -name '*.md' -mtime +7 -delete 2>/dev/null
+} &!
