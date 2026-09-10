@@ -1,0 +1,75 @@
+#!/usr/bin/env zsh
+# keep [-n N] <name> — save a response from this pane's session into the vault.
+#
+# Same extraction as `preview`, but the file lands in ~/vault/notes with
+# frontmatter and an INDEX entry instead of dying in /tmp. Your message is
+# included as a blockquote, so the note says what it was answering.
+#
+# Deliberately does not commit: you decide what the vault records.
+
+emulate -L zsh
+
+VAULT="${CLAUDE_VAULT:-$HOME/vault}"
+N=1
+FORCE=false
+DESC=
+
+while [[ "$1" == -* ]]; do
+  case "$1" in
+    -n|--turn) N="$2"; shift 2 ;;
+    -d|--description) DESC="$2"; shift 2 ;;
+    -f|--force) FORCE=true; shift ;;
+    *) echo "usage: ${0:t} [-n N] [-f] <name>" >&2; exit 1 ;;
+  esac
+done
+
+NAME="${1:-}"
+[[ -n "$NAME" ]] || { echo "usage: ${0:t} [-n N] [-f] <name>" >&2; exit 1 }
+
+[[ -d "$VAULT/notes" ]] || { echo "No vault at $VAULT/notes" >&2; exit 1 }
+[[ -n "$TMUX_PANE" ]] || { echo "No TMUX_PANE — run this inside tmux." >&2; exit 1 }
+
+POINTER="/tmp/claude-transcript-${TMUX_PANE}"
+[[ -f "$POINTER" ]] || { echo "No transcript pointer at $POINTER." >&2; exit 1 }
+TRANSCRIPT=$(<"$POINTER")
+
+SLUG=$(print -r -- "$NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]\{1,\}/-/g; s/^-//; s/-$//')
+[[ -n "$SLUG" ]] || { echo "Name has no usable characters: $NAME" >&2; exit 1 }
+
+OUT="$VAULT/notes/${SLUG}.md"
+if [[ -e "$OUT" ]] && ! $FORCE; then
+  echo "Already exists: $OUT (use -f to overwrite)" >&2
+  exit 1
+fi
+
+BODY=$("${0:A:h}/claude-turn" -q "$TRANSCRIPT" "$N") || exit 1
+
+# The description is what an agent scans. Pass -d when you know what the note
+# is about; the fallback is the response's opening line, which is honest but
+# rarely a good retrieval line.
+[[ -n "$DESC" ]] || DESC=$(print -r -- "$BODY" \
+  | awk '!/^>/ && NF { sub(/^#+ /, ""); print; exit }' \
+  | sed 's/[*`]//g' | cut -c1-140)
+
+SESSION=$(jq -r 'select(.type == "custom-title") | .customTitle' "$TRANSCRIPT" 2>/dev/null | tail -1)
+[[ -n "$SESSION" ]] || SESSION=$(jq -rc 'select(.aiTitle) | .aiTitle' "$TRANSCRIPT" 2>/dev/null | tail -1)
+[[ -n "$SESSION" ]] || SESSION="${TRANSCRIPT:t:r}"
+
+{
+  print -r -- "---"
+  print -rn -- "title: ";       print -rn -- "$NAME" | jq -Rs .
+  print -rn -- "description: "; print -rn -- "$DESC" | jq -Rs .
+  print -r -- "tags: []"
+  print -r -- "created: $(date +%Y-%m-%d)"
+  print -rn -- "source: ";      print -rn -- "session $SESSION" | jq -Rs .
+  print -r -- "---"
+  print -r -- ""
+  print -r -- "$BODY"
+} > "$OUT.tmp" && mv -f "$OUT.tmp" "$OUT"
+
+# Index entry, unless one already points here.
+if ! grep -q "](notes/${SLUG}.md)" "$VAULT/INDEX.md" 2>/dev/null; then
+  print -r -- "- [${NAME}](notes/${SLUG}.md) — ${DESC}" >> "$VAULT/INDEX.md"
+fi
+
+echo "$OUT"
