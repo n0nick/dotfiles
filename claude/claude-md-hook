@@ -1,12 +1,17 @@
 #!/usr/bin/env zsh
-# Hook for both Stop and UserPromptSubmit; it branches on hook_event_name.
+# Hook for Stop, UserPromptSubmit, Notification and SessionEnd; it branches on
+# hook_event_name.
 #
 # On Stop:
 #   1. Record this session's transcript path, keyed by tmux pane, for `preview`.
 #   2. Refresh this session's entry in the live reader at ~/.claude/preview.
-#   3. Clear the working marker.
-# On UserPromptSubmit: set the working marker, so the reader can show which
-# sessions are busy and which are idle with something waiting for you.
+#   3. Clear both markers.
+# On UserPromptSubmit: mark working.
+# On Notification: mark needs-you — Claude is asking for input or permission,
+#   which reads as "working" otherwise, and that is the one state the reader
+#   exists to distinguish.
+# On SessionEnd: clear the markers, so a closed session does not sit there
+#   apparently busy until its marker goes stale.
 #
 # The reader half runs in the background: it costs about half a second on a
 # 50MB transcript, and nothing should wait on it to end a turn.
@@ -20,10 +25,15 @@ TRANSCRIPT=$(print -r -- "$INPUT" | jq -r '.transcript_path // empty')
 
 SESSIONS="$HOME/.claude/preview/sessions"
 
-if [[ "$EVENT" == "UserPromptSubmit" ]]; then
+if [[ "$EVENT" == (UserPromptSubmit|Notification|SessionEnd) ]]; then
   ID="${TRANSCRIPT:t:r}"
   [[ -z "$ID" ]] && ID=$(print -r -- "$INPUT" | jq -r '.session_id // empty')
-  [[ -d "$SESSIONS" && -n "$ID" ]] && : > "$SESSIONS/${ID}.busy"
+  [[ -d "$SESSIONS" && -n "$ID" ]] || exit 0
+  case "$EVENT" in
+    UserPromptSubmit) rm -f "$SESSIONS/${ID}.needs"; : > "$SESSIONS/${ID}.busy" ;;
+    Notification)     rm -f "$SESSIONS/${ID}.busy";  : > "$SESSIONS/${ID}.needs" ;;
+    SessionEnd)       rm -f "$SESSIONS/${ID}.busy" "$SESSIONS/${ID}.needs" ;;
+  esac
   exit 0
 fi
 
@@ -33,7 +43,7 @@ fi
 
 # Clear the marker before the slow part, so the reader stops showing "working"
 # as soon as the turn actually ends.
-rm -f "$SESSIONS/${TRANSCRIPT:t:r}.busy"
+rm -f "$SESSIONS/${TRANSCRIPT:t:r}.busy" "$SESSIONS/${TRANSCRIPT:t:r}.needs"
 
 {
   ID="${TRANSCRIPT:t:r}"
@@ -100,4 +110,6 @@ rm -f "$SESSIONS/${TRANSCRIPT:t:r}.busy"
   # their turn only when a session is interrupted or killed, so they go sooner.
   find "$SESSIONS" -name '*.md' -mtime +7 -delete 2>/dev/null
   find "$SESSIONS" -name '*.busy' -mmin +60 -delete 2>/dev/null
+  # needs-you is a real state that can last hours, so it expires far later.
+  find "$SESSIONS" -name '*.needs' -mmin +720 -delete 2>/dev/null
 } &!
