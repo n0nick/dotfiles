@@ -11,11 +11,15 @@
 #   - system-reminders are also `user` entries with plain string content, but
 #     marked isMeta, and they'd split a turn just as wrongly.
 #
-# -p prefixes each turn with your message, separated from the response by
-# --psep. It is emitted verbatim rather than quoted with "> ": your messages
-# contain their own blockquotes, and prefixing turns those into nested quotes
-# that markdown then flattens into one run-on paragraph. The reader renders
-# this half into its own quoted container instead.
+# Both flags prepend your message to each turn; they differ in how:
+#   -p  verbatim, separated from the response by --psep. For the reader, which
+#       renders that half into its own container.
+#   -q  as a markdown blockquote. For a file or clipboard, where there is no
+#       container to render into.
+#
+# -q must prefix every line individually and keep the blank ones, or markdown
+# swallows the whole message into a single run-on quote paragraph — your
+# messages contain their own blockquotes and paragraph breaks.
 #
 # Turns are separated by an HTML comment: invisible when rendered, trivial to
 # split on, harmless if the file is opened in a plain markdown app. --sep takes
@@ -28,11 +32,13 @@ emulate -L zsh
 SEP='<!--turn-->'
 PSEP='<!--prompt-->'
 PROMPT=false
+QUOTE=false
 ALL=false
 
 while [[ "$1" == -* ]]; do
   case "$1" in
     -p|--prompt) PROMPT=true; shift ;;
+    -q|--quote)  QUOTE=true; shift ;;
     --all)       ALL=true; shift ;;
     --sep)       SEP="$2"; shift 2 ;;
     --psep)      PSEP="$2"; shift 2 ;;
@@ -89,14 +95,21 @@ $ALL || (( ${#turns[@]} == COUNT )) || { echo "only ${#turns[@]} turn(s) in $TRA
 
 emit() {
   local idx=$1 p
-  if $PROMPT; then
+  local -a plines
+  if $PROMPT || $QUOTE; then
     p=$(print -r -- "$prompts[idx]" \
         | jq -r '.u // ""' \
         | perl -0pe 's{<system-reminder>.*?</system-reminder>}{}gs; s/\A\s+//; s/\s+\z//')
     if [[ -n "$p" ]]; then
-      print -r -- "$p"
-      print -r -- ""
-      print -r -- "$PSEP"
+      if $QUOTE; then
+        # Quoted (@f) keeps empty fields, so blank lines stay blank lines.
+        plines=("${(@f)p}")
+        print -rl -- ${plines/#/> }
+      else
+        print -r -- "$p"
+        print -r -- ""
+        print -r -- "$PSEP"
+      fi
       print -r -- ""
     fi
   fi
