@@ -53,7 +53,13 @@
   }
   @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
   @media (prefers-reduced-motion: reduce) { .s .busy { animation: none; } }
-  .s.working .nm { color: var(--accent); }
+  .s .needs {
+    position: absolute; right: .72rem; top: 50%; transform: translateY(-50%);
+    width: 15px; height: 15px; border-radius: 50%; background: var(--accent);
+    color: var(--bg); font-size: 10.5px; font-weight: 700; line-height: 15px;
+    text-align: center;
+  }
+  .s.working .nm, .s.needs-you .nm { color: var(--accent); }
   #working { color: var(--accent); }
   #empty { padding: 1rem; font-size: 13px; color: var(--muted); line-height: 1.5; }
 
@@ -164,6 +170,7 @@
 
   const sessions = new Map();   // file -> {name, project, updated, turns, lm, unread}
   const busy     = new Set();   // files whose session is mid-turn
+  const needs    = new Set();   // files whose session is waiting on you
   const at       = new Map();   // file -> index into turns; 0 is the newest
   let pinned = null;            // a session you clicked; null follows the newest
 
@@ -299,7 +306,14 @@
       meta.className = 'meta';
       meta.textContent = [shortPath(s.project), ago(s.updated)].filter(Boolean).join(' · ');
       b.append(nm, meta);
-      if (busy.has(file)) {
+      if (needs.has(file)) {
+        b.classList.add('needs-you');
+        const d = document.createElement('span');
+        d.className = 'needs';
+        d.textContent = '!';
+        d.title = 'Waiting for your input';
+        b.append(d);
+      } else if (busy.has(file)) {
         b.classList.add('working');
         const d = document.createElement('span');
         d.className = 'busy';
@@ -318,7 +332,9 @@
     titleEl.textContent = s.name || cur.slice(0, 8);
     subEl.textContent = [s.project, ago(s.updated)].filter(Boolean).join(' · ');
 
-    document.getElementById('working').hidden = !busy.has(cur);
+    const w = document.getElementById('working');
+    w.hidden = !(busy.has(cur) || needs.has(cur));
+    w.textContent = needs.has(cur) ? '· needs you' : '· working…';
     navEl.hidden = s.turns.length < 2;
     posEl.textContent = `${i + 1} / ${s.turns.length}`;
     prevEl.disabled = i >= s.turns.length - 1;
@@ -385,12 +401,15 @@
       // interrupted session leaves one behind, so ignore stale ones rather
       // than showing a spinner that never stops.
       busy.clear();
-      for (const b of hrefs.filter(h => h.endsWith('.busy'))) {
-        try {
-          const h = await fetch('sessions/' + b, { method: 'HEAD', cache: 'no-store' });
-          const age = Date.now() - new Date(h.headers.get('Last-Modified') || 0);
-          if (age < 15 * 60 * 1000) busy.add(b.replace(/\.busy$/, '.md'));
-        } catch { /* ignore */ }
+      needs.clear();
+      for (const [ext, set, maxAge] of [['.busy', busy, 15 * 60e3], ['.needs', needs, 12 * 3600e3]]) {
+        for (const b of hrefs.filter(h => h.endsWith(ext))) {
+          try {
+            const h = await fetch('sessions/' + b, { method: 'HEAD', cache: 'no-store' });
+            const age = Date.now() - new Date(h.headers.get('Last-Modified') || 0);
+            if (age < maxAge) set.add(b.slice(0, -ext.length) + '.md');
+          } catch { /* ignore */ }
+        }
       }
 
       for (const f of files) {

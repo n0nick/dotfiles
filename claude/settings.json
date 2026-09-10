@@ -30,6 +30,21 @@
           {
             "type": "command",
             "command": "jq -r '.message' | { read -r msg; terminal-notifier -title 'Claude Code' -message \"$msg\" -contentImage \"$HOME/.claude/claude-icon.png\" -activate com.mitchellh.ghostty; }"
+          },
+          {
+            "type": "command",
+            "command": "~/bin/claude-md-hook"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/bin/claude-md-hook"
           }
         ]
       }
