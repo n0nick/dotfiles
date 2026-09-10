@@ -24,7 +24,7 @@ fi
 TRANSCRIPT=$(<"$POINTER")
 OUT="/tmp/claude-$(date +%Y%m%d-%H%M%S).md"
 
-if ! "${0:A:h}/claude-turn" "$TRANSCRIPT" "${1:-1}" > "$OUT"; then
+if ! "${0:A:h}/claude-turn" -q "$TRANSCRIPT" "${1:-1}" > "$OUT"; then
   rm -f "$OUT"
   exit 1
 fi
