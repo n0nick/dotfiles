@@ -57,13 +57,17 @@
   #nav {
     margin-left: auto; display: inline-flex; align-items: center; gap: .3rem;
   }
-  #nav button {
+  #acts { display: inline-flex; align-items: center; gap: .3rem; margin-left: .5rem; }
+  #acts:not(.ready) { display: none; }
+  #nav button, #acts button {
     background: none; border: 1px solid var(--rule); border-radius: 5px;
     color: var(--fg); font: inherit; font-size: 13px; line-height: 1;
     padding: .15rem .45rem; cursor: pointer;
   }
-  #nav button:hover:not(:disabled) { background: var(--sel); }
+  #nav button:hover:not(:disabled), #acts button:hover { background: var(--sel); }
   #nav button:disabled { opacity: .35; cursor: default; }
+  #copy { min-width: 3.6em; }
+  #copy.done { border-color: var(--accent); color: var(--accent); }
   #pos { font-variant-numeric: tabular-nums; min-width: 4.2em; text-align: center; }
   #new {
     margin-left: .6rem; align-self: center; background: var(--fg); color: var(--bg);
@@ -125,6 +129,10 @@
         <button id="prev" title="Older (←)">‹</button>
         <span id="pos"></span>
         <button id="next" title="Newer (→)">›</button>
+      </span>
+      <span id="acts">
+        <button id="copy" title="Copy this response as markdown (c)">copy</button>
+        <button id="dl" title="Download this response as .md">↓</button>
       </span>
       <button id="new">new response ↑</button>
     </div>
@@ -206,6 +214,7 @@
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === 'ArrowLeft')  { e.preventDefault(); step(+1); }
     if (e.key === 'ArrowRight') { e.preventDefault(); step(-1); }
+    if (e.key === 'c') { e.preventDefault(); copyMd(); }
   });
 
   pill.onclick = () => {
@@ -217,6 +226,48 @@
   };
 
   let shown = { file: null, text: null };
+  // What the copy/download buttons act on: the response alone, matching what
+  // `preview` writes to a file. Your own message is not included — it is your
+  // words, and re-quoting it is what mangled the rendering earlier.
+  let onScreen = { md: '', filename: 'response.md' };
+
+  const copyEl = document.getElementById('copy');
+  const dlEl   = document.getElementById('dl');
+  const actsEl = document.getElementById('acts');
+
+  async function copyMd() {
+    if (!onScreen.md) return;
+    try {
+      await navigator.clipboard.writeText(onScreen.md);
+    } catch {
+      // Clipboard API needs a secure context; 127.0.0.1 counts, but fall back
+      // rather than fail silently if permission is refused.
+      const ta = document.createElement('textarea');
+      ta.value = onScreen.md;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.append(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch {}
+      ta.remove();
+    }
+    copyEl.textContent = 'copied';
+    copyEl.classList.add('done');
+    setTimeout(() => { copyEl.textContent = 'copy'; copyEl.classList.remove('done'); }, 1200);
+  }
+
+  function downloadMd() {
+    if (!onScreen.md) return;
+    const url = URL.createObjectURL(new Blob([onScreen.md], { type: 'text/markdown' }));
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = onScreen.filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  copyEl.onclick = copyMd;
+  dlEl.onclick = downloadMd;
 
   function draw() {
     const cur = active(), rows = ordered();
@@ -273,6 +324,11 @@
       (prompt ? `<blockquote class="prompt">${marked.parse(prompt)}</blockquote>` : '') +
       marked.parse(answer);
     sessions.get(cur).unread = false;
+
+    const slug = (sessions.get(cur).name || 'response')
+      .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'response';
+    onScreen = { md: answer, filename: `${slug}-${index(cur) + 1}.md` };
+    actsEl.classList.toggle('ready', !!answer);
 
     // Reaching here means the rendered text changed, so go to the top: a
     // response you have not read starts at its beginning.
