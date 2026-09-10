@@ -289,6 +289,7 @@ install_claude() {
   symlink "$DOTF/claude/claude-md" "$HOME/bin/claude-md"
   symlink "$DOTF/claude/claude-md" "$HOME/bin/preview"
   symlink "$DOTF/claude/claude-turn" "$HOME/bin/claude-turn"
+  symlink "$DOTF/claude/keep" "$HOME/bin/keep"
   symlink "$DOTF/claude/claude-md-hook" "$HOME/bin/claude-md-hook"
   rm -f "$HOME/.claude/commands/preview.md"  # superseded by !preview
 
