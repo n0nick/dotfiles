@@ -12,6 +12,17 @@
         ]
       }
     ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/bin/claude-md-hook"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "matcher": "",
@@ -33,5 +44,39 @@
   "effortLevel": "high",
   "tui": "default",
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "autoMode": {
+    "environment": [
+      "### Org-wide",
+      "**Organization**: viamrobotics (GitHub org) \u2014 inferred from repo remote `github.com:viamrobotics/app.git`",
+      "**Cloud provider(s)**: Google Cloud Platform (secrets in GCP Secret Manager, project \"engineering tools\"; gcloud is the top non-standard CLI by usage)",
+      "**Repository visibility**: private (viamrobotics/app, confirmed via gh)",
+      "**Internal sharing / snippet hosting**: None configured \u2014 treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: Google Cloud Secret Manager, \"engineering tools\" project (per README: FusionAuth keys, pkcs8 signing key fetched from there); CI secrets referenced by name only (e.g. GCP_SA_KEY, ANTHROPIC_API_KEY, JIRA_API_TOKEN, MAILGUN_SECRET, FUSIONAUTH_TEST_APIKEY) \u2014 values not accessible",
+      "**Default / protected branches**: default branch unknown (origin/HEAD unset); `main` is protected; rulesets active: \"Protect release branches\", \"main merge queue\"",
+      "**CI/CD deploy targets**: Kubernetes (deploy-k8s.yml, deploy-k8s-image-to-prod.yml, deploy-prod-manual.yml, deploy-prod-with-slack.yml, emergency-build-and-deploy-prod.yml, scheduled-deploy-prod.yml) \u2014 production deploy workflows present in .github/workflows",
+      "**Network posture**: None configured",
+      "**Host containment**: None configured \u2014 assume Claude Code runs on an ordinary developer machine with open internet",
+      "**Source control**: viamrobotics/app (private) and its remotes `origin`/`pr-https` (github.com:viamrobotics/app.git) only \u2014 no additional orgs configured",
+      "**Trusted internal domains**: None configured",
+      "**Trusted cloud buckets**: packages.viam.com (config-derived \u2014 not a confirmed upload destination; uploads of local data still require confirmation)",
+      "**Key internal services**: None configured",
+      "**Internal package registry**: None configured",
+      "**Sensitive data locations & audiences**: robot logs and sensor/tabular/binary data in MongoDB (MainMongoClient, LogsMongoClient, LogsHybridMongoClient, BinaryMongoClient, TabularMongoClient, RecentDataMongoClient/RecentDataReadOnlyMongoClient); FusionAuth secrets and pkcs8 signing key under `etc/secrets/`; data-retention job code under `domains/datamanagement/`; share only with engineers cleared for viamrobotics/app production data",
+      "**Data retention / declassification**: LogsTTLDays = 30 (TTL index auto-deletes robot logs); recent (~1 day) vs archived (up to 30 days, Blob Storage) log tiers per `.claude/rules/database-architecture.md`",
+      "**Sensitive remote targets**: any namespace/host/container with `prod` or `production` as a whole word/segment \u2014 includes deploy-k8s-image-to-prod.yml, deploy-prod-manual.yml, deploy-prod-with-slack.yml, emergency-build-and-deploy-prod.yml, scheduled-deploy-prod.yml, deploy-latest-staging-ml-training-image-to-prod.yml, copy_module_prod_to_staging.sh, jwt_populate_prod.js, jwt_populate_canyonrunner_wordpress_prod.js, deploy-k8s-from-staging-to-prod.yaml, kubernetes/dns1.yaml (vs dns1-stg.yaml)",
+      "**Protected deployment namespaces / environments**: k8s prod deploy workflows and cloudbuild configs under `etc/cloudbuild/deploy-k8s*.yaml`, `.github/workflows/deploy-*-prod*.yml`",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, node-pool resources; anything tagged `prod`/`production` \u2014 includes `server/iam/iam.go`, `kubernetes/dns1.yaml`, cloudbuild prod deploy configs",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development on viamrobotics/app (Go backend + Svelte 5 frontend web app for viam.cloud)",
+      "**Trusted repo**: /Users/sagie.maoz@viam.com/dev/viam/app (viamrobotics/app, private) and its remotes `origin`/`pr-https`",
+      "**Org-specific CLIs**: gcloud (with `~/bin/gcloud-reauth` and `~/bin/gdoc` self-heal helpers for Viam's GCP session-control reauth), buf, mongosh, viam CLI, jira CLI, gh, vercel",
+      "**Routine under sm/ prefix**: branch creation and worktrees follow `sm/<short-name>` naming; worktrees routinely created under `.claude/worktrees/<name>` within this repo"
+    ],
+    "soft_deny": [
+      "$defaults",
+      "Bash(mongosh:*) writes against production-tier Mongo clients (LogsMongoClient/LogsHybridMongoClient prod data) in viamrobotics/app",
+      "Bash(gcloud:*) commands that mutate GCP Secret Manager secrets or IAM in the \"engineering tools\" project"
+    ]
+  }
 }
