@@ -20,9 +20,16 @@ SESSIONS="$HOME/.claude/preview/sessions"
 
   # How you actually refer to a session: the name you gave it, else the one
   # Claude generated, else its opening line.
-  # Must come from the structured record, not a text grep: the transcript also
-  # contains shell commands and prose that mention renaming.
-  NAME=$(jq -r 'select(.type == "user" and .isMeta == true)
+  #
+  # custom-title is the authoritative record and carries its own sessionId,
+  # which matters for forks: a forked session inherits the parent's
+  # system-reminder announcing the parent's name, so reading that instead
+  # labels the fork with the name of the session it came from.
+  NAME=$(jq -r --arg id "$ID" \
+           'select(.type == "custom-title" and .sessionId == $id) | .customTitle' \
+           "$TRANSCRIPT" 2>/dev/null | tail -1)
+  # Older sessions predate custom-title; fall back to the reminder.
+  [[ -n "$NAME" ]] || NAME=$(jq -r 'select(.type == "user" and .isMeta == true)
                 | select(.message.content | type == "string")
                 | .message.content
                 | capture("The user named this session \"(?<n>[^\"]+)\"").n' \
@@ -40,9 +47,11 @@ SESSIONS="$HOME/.claude/preview/sessions"
   # A fresh separator each write. A conversation about this code quotes the
   # separator in its own text, and a fixed one would then split that message in
   # half when the page reads the file back.
-  SEP="<!--turn-$(od -An -N4 -tx1 /dev/urandom | tr -d ' \n')-->"
+  NONCE=$(od -An -N4 -tx1 /dev/urandom | tr -d ' \n')
+  SEP="<!--turn-${NONCE}-->"
+  PSEP="<!--prompt-${NONCE}-->"
 
-  BODY=$("${0:A:h}/claude-turn" -p --all --sep "$SEP" "$TRANSCRIPT" 10 2>/dev/null) || exit 0
+  BODY=$("${0:A:h}/claude-turn" -p --all --sep "$SEP" --psep "$PSEP" "$TRANSCRIPT" 10 2>/dev/null) || exit 0
   [[ -n "$BODY" ]] || exit 0
 
   # When the session last spoke, not when this hook ran — otherwise a rebuild
@@ -57,6 +66,7 @@ SESSIONS="$HOME/.claude/preview/sessions"
     print -rn -- "project: "; print -rn -- "${PROJECT//$'\n'/ }" | jq -Rs .
     print -rn -- "updated: "; print -rn -- "$UPDATED" | jq -Rs .
     print -rn -- "sep: ";     print -rn -- "$SEP" | jq -Rs .
+    print -rn -- "psep: ";    print -rn -- "$PSEP" | jq -Rs .
     print -r -- "---"
     print -r -- ""
     print -r -- "$BODY"

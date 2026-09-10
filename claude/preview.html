@@ -89,6 +89,14 @@
     margin: 1.2em 0; padding: .1em 0 .1em 1rem;
     border-left: 3px solid var(--rule); color: var(--muted);
   }
+  blockquote.prompt {
+    margin: 0 0 2em; padding: .9rem 1.1rem; border-left: 3px solid var(--accent);
+    background: var(--panel); border-radius: 0 6px 6px 0; color: var(--fg);
+    font-size: 15px;
+  }
+  blockquote.prompt > :first-child { margin-top: 0; }
+  blockquote.prompt > :last-child { margin-bottom: 0; }
+  blockquote.prompt blockquote { color: var(--muted); font-size: 14.5px; }
   table {
     border-collapse: collapse; width: 100%; margin: 1.3em 0;
     font-size: 14.5px; display: block; overflow-x: auto;
@@ -158,8 +166,9 @@
       name: meta.name || null,
       project: meta.project || '',
       updated: meta.updated ? new Date(meta.updated) : null,
-      // The separator is declared per file, not fixed: a message that quotes a
-      // fixed one would split itself in half here.
+      // The separators are declared per file, not fixed: a message that quotes
+      // a fixed one would split itself in half here.
+      psep: meta.psep || '<!--prompt-->',
       turns: body.split(meta.sep || '<!--turn-->').map(t => t.trim()).filter(Boolean),
     };
   }
@@ -252,14 +261,22 @@
     const text = sessions.get(cur).turns[index(cur)] ?? '';
     if (!force && shown.file === cur && shown.text === text) return;
 
-    const switched = shown.file !== cur;
     shown = { file: cur, text };
-    outEl.innerHTML = marked.parse(text);
+
+    // Your message renders into its own container rather than as quoted
+    // markdown: it often contains blockquotes of its own, and re-quoting it
+    // collapses the whole thing into one paragraph.
+    const i = text.indexOf(sessions.get(cur).psep);
+    const prompt = i < 0 ? '' : text.slice(0, i).trim();
+    const answer = i < 0 ? text : text.slice(i + sessions.get(cur).psep.length).trim();
+    outEl.innerHTML =
+      (prompt ? `<blockquote class="prompt">${marked.parse(prompt)}</blockquote>` : '') +
+      marked.parse(answer);
     sessions.get(cur).unread = false;
 
-    // A new response is meant to be read from the top — but not while you are
-    // partway through the one you were reading.
-    if (force || switched || wrap.scrollTop < 120) wrap.scrollTo({ top: 0 });
+    // Reaching here means the rendered text changed, so go to the top: a
+    // response you have not read starts at its beginning.
+    wrap.scrollTo({ top: 0 });
   }
 
   async function poll() {

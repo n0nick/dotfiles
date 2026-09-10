@@ -11,7 +11,11 @@
 #   - system-reminders are also `user` entries with plain string content, but
 #     marked isMeta, and they'd split a turn just as wrongly.
 #
-# -p prefixes each turn with your message as a blockquote.
+# -p prefixes each turn with your message, separated from the response by
+# --psep. It is emitted verbatim rather than quoted with "> ": your messages
+# contain their own blockquotes, and prefixing turns those into nested quotes
+# that markdown then flattens into one run-on paragraph. The reader renders
+# this half into its own quoted container instead.
 #
 # Turns are separated by an HTML comment: invisible when rendered, trivial to
 # split on, harmless if the file is opened in a plain markdown app. --sep takes
@@ -22,7 +26,7 @@
 emulate -L zsh
 
 SEP='<!--turn-->'
-MAX_PROMPT=1200
+PSEP='<!--prompt-->'
 PROMPT=false
 ALL=false
 
@@ -31,6 +35,7 @@ while [[ "$1" == -* ]]; do
     -p|--prompt) PROMPT=true; shift ;;
     --all)       ALL=true; shift ;;
     --sep)       SEP="$2"; shift 2 ;;
+    --psep)      PSEP="$2"; shift 2 ;;
     *) echo "unknown flag: $1" >&2; exit 1 ;;
   esac
 done
@@ -88,9 +93,10 @@ emit() {
     p=$(print -r -- "$prompts[idx]" \
         | jq -r '.u // ""' \
         | perl -0pe 's{<system-reminder>.*?</system-reminder>}{}gs; s/\A\s+//; s/\s+\z//')
-    (( ${#p} > MAX_PROMPT )) && p="${p[1,$MAX_PROMPT]}…"
     if [[ -n "$p" ]]; then
-      print -r -- "${(F)${(f)p}/#/> }"
+      print -r -- "$p"
+      print -r -- ""
+      print -r -- "$PSEP"
       print -r -- ""
     fi
   fi
