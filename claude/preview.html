@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Claude — latest responses</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<style>
+  :root {
+    --bg: #fbfaf8; --panel: #f4f1ec; --fg: #1c1b19; --muted: #6b6862;
+    --rule: #e3e0da; --code-bg: #f2efe9; --accent: #b4551d; --sel: #e9e4db;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #191817; --panel: #201f1d; --fg: #e8e5df; --muted: #9a958c;
+      --rule: #2f2d2a; --code-bg: #232120; --accent: #e0803f; --sel: #2b2926;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; display: flex; background: var(--bg); color: var(--fg);
+    font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #side {
+    width: 248px; flex: none; background: var(--panel);
+    border-right: 1px solid var(--rule); overflow-y: auto;
+  }
+  #side h1 {
+    font-size: 11px; letter-spacing: .09em; text-transform: uppercase;
+    color: var(--muted); font-weight: 600; margin: 0; padding: 1rem 1rem .5rem;
+  }
+  .s {
+    display: block; width: 100%; text-align: left; background: none;
+    border: 0; border-bottom: 1px solid var(--rule); padding: .6rem 1rem;
+    font: inherit; color: inherit; cursor: pointer; position: relative;
+  }
+  .s:hover { background: var(--sel); }
+  .s.on { background: var(--sel); box-shadow: inset 3px 0 0 var(--accent); }
+  .s .nm { font-size: 13.5px; font-weight: 600; padding-right: .8rem; }
+  .s .meta { font-size: 11.5px; color: var(--muted); margin-top: .1rem; }
+  .s .unread {
+    position: absolute; right: .8rem; top: 50%; transform: translateY(-50%);
+    width: 7px; height: 7px; border-radius: 50%; background: var(--accent);
+  }
+  #empty { padding: 1rem; font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  #wrap { flex: 1; overflow-y: auto; }
+  #bar {
+    position: sticky; top: 0; z-index: 5; display: flex; align-items: baseline;
+    gap: .6rem; padding: .55rem 1.4rem; background: var(--bg);
+    border-bottom: 1px solid var(--rule); font-size: 12.5px; color: var(--muted);
+  }
+  #bar b { color: var(--fg); font-weight: 600; font-size: 13.5px; }
+  #new {
+    margin-left: auto; align-self: center; background: var(--fg); color: var(--bg);
+    border: 0; border-radius: 999px; padding: .25rem .7rem;
+    font: inherit; font-size: 11.5px; cursor: pointer; visibility: hidden;
+  }
+  main { max-width: 74ch; margin: 0 auto; padding: 2.2rem 1.6rem 6rem; }
+  main > :first-child { margin-top: 0; }
+  h1, h2, h3 { line-height: 1.25; margin: 1.9em 0 .6em; }
+  main h1 { font-size: 1.6rem; } h2 { font-size: 1.3rem; } h3 { font-size: 1.08rem; }
+  p, li { overflow-wrap: break-word; }
+  a { color: var(--accent); }
+  code {
+    background: var(--code-bg); padding: .12em .35em; border-radius: 4px;
+    font: 13.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  pre {
+    background: var(--code-bg); padding: .9rem 1rem; border-radius: 8px;
+    overflow-x: auto; border: 1px solid var(--rule);
+  }
+  pre code { background: none; padding: 0; }
+  blockquote {
+    margin: 1.2em 0; padding: .1em 0 .1em 1rem;
+    border-left: 3px solid var(--rule); color: var(--muted);
+  }
+  table {
+    border-collapse: collapse; width: 100%; margin: 1.3em 0;
+    font-size: 14.5px; display: block; overflow-x: auto;
+  }
+  th, td { border: 1px solid var(--rule); padding: .45rem .7rem; text-align: left; }
+  th { background: var(--code-bg); }
+  hr { border: 0; border-top: 1px solid var(--rule); margin: 2em 0; }
+
+  @media (max-width: 700px) {
+    body { flex-direction: column; }
+    #side { width: 100%; max-height: 34vh; border-right: 0; border-bottom: 1px solid var(--rule); }
+  }
+</style>
+</head>
+<body>
+  <nav id="side">
+    <h1>Sessions</h1>
+    <div id="list"></div>
+    <div id="empty" hidden>Nothing yet. A session appears here once it finishes a response.</div>
+  </nav>
+
+  <div id="wrap">
+    <div id="bar">
+      <b id="title">—</b><span id="sub"></span>
+      <button id="new">new response ↑</button>
+    </div>
+    <main id="out"></main>
+  </div>
+
+<script>
+  const listEl  = document.getElementById('list');
+  const emptyEl = document.getElementById('empty');
+  const outEl   = document.getElementById('out');
+  const titleEl = document.getElementById('title');
+  const subEl   = document.getElementById('sub');
+  const pill    = document.getElementById('new');
+  const wrap    = document.getElementById('wrap');
+
+  const sessions = new Map();   // file -> {name, project, updated, body, unread}
+  let pinned = null;            // a session you clicked; null follows the newest
+
+  pill.onclick = () => {
+    wrap.scrollTo({ top: 0, behavior: 'smooth' });
+    pill.style.visibility = 'hidden';
+  };
+
+  // Front matter values are JSON-encoded by the hook, so names containing
+  // quotes or colons survive intact.
+  function parse(text) {
+    const m = text.match(/^---\n([\s\S]*?)\n---\n?/);
+    if (!m) return { name: null, project: '', updated: null, body: text };
+    const meta = {};
+    for (const line of m[1].split('\n')) {
+      const i = line.indexOf(': ');
+      if (i < 0) continue;
+      try { meta[line.slice(0, i)] = JSON.parse(line.slice(i + 2)); } catch {}
+    }
+    return {
+      name: meta.name || null,
+      project: meta.project || '',
+      updated: meta.updated ? new Date(meta.updated) : null,
+      body: text.slice(m[0].length),
+    };
+  }
+
+  const ago = d => {
+    if (!d) return '';
+    const s = Math.round((Date.now() - d) / 1000);
+    if (s < 45) return 'just now';
+    if (s < 3600) return Math.round(s / 60) + 'm ago';
+    const h = Math.round(s / 3600);
+    return h < 24 ? h + 'h ago' : Math.round(h / 24) + 'd ago';
+  };
+
+  const shortPath = p => p ? p.split('/').filter(Boolean).slice(-2).join('/') : '';
+  const ordered = () => [...sessions.entries()].sort((a, b) => b[1].updated - a[1].updated);
+  const active  = () => (pinned && sessions.has(pinned)) ? pinned
+                      : (ordered()[0] || [null])[0];
+
+  let shown = { file: null, body: null };
+
+  function draw() {
+    const cur = active(), rows = ordered();
+    emptyEl.hidden = rows.length > 0;
+
+    listEl.textContent = '';
+    for (const [file, s] of rows) {
+      const b = document.createElement('button');
+      b.className = 's' + (file === cur ? ' on' : '');
+      const nm = document.createElement('div');
+      nm.className = 'nm';
+      nm.textContent = s.name || file.replace(/\.md$/, '').slice(0, 8);
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      meta.textContent = [shortPath(s.project), ago(s.updated)].filter(Boolean).join(' · ');
+      b.append(nm, meta);
+      if (s.unread && file !== cur) {
+        const d = document.createElement('span');
+        d.className = 'unread';
+        b.append(d);
+      }
+      b.onclick = () => { pinned = file; s.unread = false; render(true); };
+      listEl.append(b);
+    }
+
+    if (!cur) { titleEl.textContent = '—'; subEl.textContent = ''; return; }
+    const s = sessions.get(cur);
+    titleEl.textContent = s.name || cur.slice(0, 8);
+    subEl.textContent = [s.project, ago(s.updated)].filter(Boolean).join(' · ');
+  }
+
+  function render(force) {
+    const cur = active();
+    draw();
+    if (!cur) { outEl.textContent = ''; shown = { file: null, body: null }; return; }
+
+    const s = sessions.get(cur);
+    if (!force && shown.file === cur && shown.body === s.body) return;
+
+    const switched = shown.file !== cur;
+    shown = { file: cur, body: s.body };
+    outEl.innerHTML = marked.parse(s.body);
+    s.unread = false;
+
+    // A new response is meant to be read from the top — but not while you're
+    // mid-way through the last one.
+    if (force || switched || wrap.scrollTop < 120) {
+      wrap.scrollTo({ top: 0 });
+      pill.style.visibility = 'hidden';
+    } else {
+      pill.style.visibility = 'visible';
+    }
+  }
+
+  async function poll() {
+    try {
+      const idx  = await fetch('sessions/', { cache: 'no-store' });
+      const doc  = new DOMParser().parseFromString(await idx.text(), 'text/html');
+      const files = [...doc.querySelectorAll('a[href]')]
+        .map(a => a.getAttribute('href'))
+        .filter(h => h.endsWith('.md'));
+
+      for (const f of files) {
+        const r = await fetch('sessions/' + f, { cache: 'no-store' });
+        if (!r.ok) continue;
+        const next = parse(await r.text());
+        const prev = sessions.get(f);
+        if (!prev) sessions.set(f, { ...next, unread: false });
+        else if (prev.body !== next.body) Object.assign(prev, next, { unread: true });
+        else Object.assign(prev, next, { unread: prev.unread });
+      }
+      for (const f of [...sessions.keys()]) if (!files.includes(f)) sessions.delete(f);
+    } catch { /* server down — keep showing what we have */ }
+    render(false);
+  }
+
+  poll();
+  setInterval(poll, 1000);
+</script>
+</body>
+</html>

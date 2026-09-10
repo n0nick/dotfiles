@@ -1,16 +1,13 @@
 #!/usr/bin/env zsh
-# Open a Claude response from this pane's session in the default markdown app.
+# Open one of this pane's Claude responses in the default markdown app.
 # Run it from the Claude prompt as `!preview` — the shell claude spawns inherits
 # TMUX_PANE, which is the same key the Stop hook writes under.
 #
 # Usage: preview [N]   N=1 (default) is the last response, 2 the one before it.
-
-N="${1:-1}"
-
-if [[ ! "$N" =~ ^[0-9]+$ ]] || (( N < 1 )); then
-  echo "Usage: ${0:t} [N]   — N is a positive integer, 1 = most recent response." >&2
-  exit 1
-fi
+#
+# For reading the latest response as it lands, the live page at
+# ~/.claude/preview is usually the better tool; this is for pinning one
+# response to a file you can keep, share, or diff.
 
 if [[ -z "$TMUX_PANE" ]]; then
   echo "No TMUX_PANE — run this inside tmux." >&2
@@ -25,33 +22,12 @@ if [[ ! -f "$POINTER" ]]; then
 fi
 
 TRANSCRIPT=$(<"$POINTER")
-
-if [[ ! -f "$TRANSCRIPT" ]]; then
-  echo "Transcript file not found: $TRANSCRIPT" >&2
-  exit 1
-fi
-
-# Stream, don't slurp — transcripts reach tens of megabytes. Each assistant
-# message's text blocks collapse to one JSON string per line, so the last N
-# lines are the last N responses, oldest first.
-RESPONSES=$(jq -c 'select(.type == "assistant")
-                   | ((.message.content? // []) | map(select(.type == "text").text) | join(""))
-                   | select(. != "")' "$TRANSCRIPT" | tail -n "$N")
-
-if [[ -z "$RESPONSES" ]]; then
-  echo "No assistant text found in $TRANSCRIPT" >&2
-  exit 1
-fi
-
-FOUND=$(print -r -- "$RESPONSES" | wc -l | tr -d ' ')
-
-if (( FOUND < N )); then
-  echo "Only $FOUND response(s) in this transcript — cannot go back $N." >&2
-  exit 1
-fi
-
 OUT="/tmp/claude-$(date +%Y%m%d-%H%M%S).md"
-print -r -- "$RESPONSES" | head -1 | jq -r . > "$OUT"
+
+if ! "${0:A:h}/claude-turn" "$TRANSCRIPT" "${1:-1}" > "$OUT"; then
+  rm -f "$OUT"
+  exit 1
+fi
 
 open "$OUT"
 echo "$OUT"

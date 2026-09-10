@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Serves ~/.claude/preview on 127.0.0.1:8787 — the live reader for the latest
+  response in each Claude session.
+
+  Template: install.sh substitutes __HOME__ and installs the result into
+  ~/Library/LaunchAgents. Kept as a template so no absolute home path lands in
+  a public repo.
+
+  Loopback only, deliberately: the directory holds the text of every recent
+  response, so binding to all interfaces would publish it to the network.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.n0nick.claude-preview</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/usr/bin/python3</string>
+    <string>-m</string>
+    <string>http.server</string>
+    <string>8787</string>
+    <string>--bind</string>
+    <string>127.0.0.1</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>__HOME__/.claude/preview</string>
+
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+
+  <key>StandardOutPath</key>
+  <string>/tmp/claude-preview.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/claude-preview.log</string>
+</dict>
+</plist>
