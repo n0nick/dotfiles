@@ -279,7 +279,22 @@
     wrap.scrollTo({ top: 0 });
   }
 
+  // The static server sends no Cache-Control, so a browser is free to keep
+  // serving a stale copy of this page against freshly written files — which
+  // renders as subtly wrong output rather than an error. Reload when the page
+  // itself changes.
+  let pageLm = null;
+  async function watchSelf() {
+    try {
+      const h = await fetch('index.html', { method: 'HEAD', cache: 'no-store' });
+      const lm = h.headers.get('Last-Modified');
+      if (pageLm && lm && lm !== pageLm) location.reload();
+      pageLm = lm;
+    } catch { /* ignore */ }
+  }
+
   async function poll() {
+    watchSelf();
     try {
       const idx  = await fetch('sessions/', { cache: 'no-store' });
       const doc  = new DOMParser().parseFromString(await idx.text(), 'text/html');
