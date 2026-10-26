@@ -50,12 +50,42 @@ fallback_name() {
     esac
 }
 
+resolve_parked_name() {
+    # → "name\tsource" for the bg session owning this job, or nothing.
+    local -a files
+    files=("$HOME"/.claude/sessions/*.json(N))
+    (( ${#files} )) || return
+    # One slurped pass: the job's owner is whichever record claims the jobId.
+    jq -rs --arg job "$1" '
+          (map(select(.jobId == $job)) | first) as $bg
+        | if $bg then [$bg.name // "", $bg.nameSource // ""] else ["", ""] end
+        | @tsv' "${files[@]}" 2>/dev/null
+}
+
 get_claude_session() {
-    # → "cwd\tname", or non-zero when this pid has no session file
+    # → "cwd\tname", or non-zero when this pid has no session file.
+    # The claude under the pane may only be *hosting* a parked job: the
+    # conversation on screen, and the name you gave it, live in a separate
+    # kind=bg record linked by parkedJobId → jobId. The host's own record keeps
+    # whatever placeholder it was stamped with at launch, so prefer the job's.
     local session_file="$HOME/.claude/sessions/${1}.json"
     [[ ! -f "$session_file" ]] && return 1
+    local cwd name source parked bg_name bg_source
     # cwd first (always populated) so a missing .name doesn't shift fields
-    jq -r '[.cwd // "", .name // ""] | @tsv' "$session_file" 2>/dev/null
+    IFS=$'\t' read -r cwd name source parked < <(
+        jq -r '[.cwd // "", .name // "", .nameSource // "", .parkedJobId // ""] | @tsv' \
+            "$session_file" 2>/dev/null)
+    [[ -z "$cwd" ]] && return 1
+    if [[ -n "$parked" ]]; then
+        IFS=$'\t' read -r bg_name bg_source < <(resolve_parked_name "$parked")
+        [[ -n "$bg_name" ]] && { name=$bg_name; source=$bg_source }
+    fi
+    # "<project>-<2 hex>" is what Claude stamps at launch, before there is any
+    # conversation to summarize — it says nothing the cwd doesn't. Blank it so
+    # fallback_name's branch shortname wins. Only when Claude derived it: the
+    # same string typed by hand is a real choice.
+    [[ "$source" == "derived" && "$name" == "${cwd:t}-"[0-9a-f][0-9a-f] ]] && name=""
+    printf '%s\t%s\n' "$cwd" "$name"
 }
 
 get_omp_session() {
