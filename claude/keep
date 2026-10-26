@@ -1,9 +1,12 @@
 #!/usr/bin/env zsh
 # keep [-n N] <name> — save a response from this pane's session into the vault.
 #
-# Same extraction as `preview`, but the file lands in ~/vault/notes with
-# frontmatter and an INDEX entry instead of dying in /tmp. Your message is
-# included as a blockquote, so the note says what it was answering.
+# Same extraction as `preview`, but the file lands in the vault with frontmatter
+# and an INDEX entry instead of dying in /tmp. Your message is included as a
+# blockquote, so the note says what it was answering.
+#
+# Defaults to ~/vault/work; -p writes to ~/vault/personal. The split is by
+# whose remote could hold the note, not by topic — see ~/vault/CONVENTIONS.md.
 #
 # Deliberately does not commit: you decide what the vault records.
 
@@ -13,20 +16,22 @@ VAULT="${CLAUDE_VAULT:-$HOME/vault}"
 N=1
 FORCE=false
 DESC=
+DIR=work        # company artifacts by default; -p for personal
 
 while [[ "$1" == -* ]]; do
   case "$1" in
     -n|--turn) N="$2"; shift 2 ;;
     -d|--description) DESC="$2"; shift 2 ;;
     -f|--force) FORCE=true; shift ;;
-    *) echo "usage: ${0:t} [-n N] [-f] <name>" >&2; exit 1 ;;
+    -p|--personal) DIR=personal; shift ;;
+    *) echo "usage: ${0:t} [-n N] [-d desc] [-p] [-f] <name>" >&2; exit 1 ;;
   esac
 done
 
 NAME="${1:-}"
 [[ -n "$NAME" ]] || { echo "usage: ${0:t} [-n N] [-f] <name>" >&2; exit 1 }
 
-[[ -d "$VAULT/notes" ]] || { echo "No vault at $VAULT/notes" >&2; exit 1 }
+[[ -d "$VAULT/$DIR" ]] || { echo "No vault directory at $VAULT/$DIR" >&2; exit 1 }
 [[ -n "$TMUX_PANE" ]] || { echo "No TMUX_PANE — run this inside tmux." >&2; exit 1 }
 
 POINTER="/tmp/claude-transcript-${TMUX_PANE}"
@@ -36,7 +41,7 @@ TRANSCRIPT=$(<"$POINTER")
 SLUG=$(print -r -- "$NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]\{1,\}/-/g; s/^-//; s/-$//')
 [[ -n "$SLUG" ]] || { echo "Name has no usable characters: $NAME" >&2; exit 1 }
 
-OUT="$VAULT/notes/${SLUG}.md"
+OUT="$VAULT/$DIR/${SLUG}.md"
 if [[ -e "$OUT" ]] && ! $FORCE; then
   echo "Already exists: $OUT (use -f to overwrite)" >&2
   exit 1
@@ -68,8 +73,8 @@ SESSION=$(jq -r 'select(.type == "custom-title") | .customTitle' "$TRANSCRIPT" 2
 } > "$OUT.tmp" && mv -f "$OUT.tmp" "$OUT"
 
 # Index entry, unless one already points here.
-if ! grep -q "](notes/${SLUG}.md)" "$VAULT/INDEX.md" 2>/dev/null; then
-  print -r -- "- [${NAME}](notes/${SLUG}.md) — ${DESC}" >> "$VAULT/INDEX.md"
+if ! grep -q "](${SLUG}.md)" "$VAULT/$DIR/INDEX.md" 2>/dev/null; then
+  print -r -- "- [${NAME}](${SLUG}.md) — ${DESC}" >> "$VAULT/$DIR/INDEX.md"
 fi
 
 echo "$OUT"

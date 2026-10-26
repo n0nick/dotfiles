@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+# vault-index — rebuild INDEX.md in each vault area from note frontmatter.
+#
+# The index is one line per note (title, link, description), newest first, so
+# it can be scanned instead of opening files. Regenerate after adding or
+# deleting notes; it is derived data, never edited by hand.
+
+VAULT="${CLAUDE_VAULT:-$HOME/vault}"
+[[ -d "$VAULT" ]] || { echo "No vault at $VAULT" >&2; exit 1 }
+
+python3 - "$VAULT" <<'PY'
+import pathlib, re, sys
+V = pathlib.Path(sys.argv[1])
+HDR = {
+ "work": "# Work index\n\nOne line per note — title, link, description. Scan this before opening files.\nCompany artifacts: anything that could live on a work remote.\n",
+ "personal": "# Personal index\n\nOne line per note — title, link, description. Scan this before opening files.\nYours, including opinions about work: anything that should never reach a work remote.\n",
+}
+for area, hdr in HDR.items():
+    d = V/area
+    if not d.is_dir(): continue
+    rows = []
+    for f in sorted(d.glob("*.md")):
+        if f.name == "INDEX.md": continue
+        m = re.match(r"^---\n(.*?)\n---", f.read_text(errors="replace"), re.S)
+        fm = m.group(1) if m else ""
+        g = lambda k: (re.search(rf"^{k}:\s*(.*)$", fm, re.M).group(1).strip().strip('"')
+                       if re.search(rf"^{k}:\s*(.*)$", fm, re.M) else "")
+        rows.append((g("created") or "0000", g("title") or f.stem, f.name, g("description")))
+    rows.sort(reverse=True)
+    (d/"INDEX.md").write_text(hdr + "\n" + "\n".join(
+        f"- [{t}]({n}) — {desc}" for _, t, n, desc in rows) + "\n")
+    print(f"{area}/INDEX.md — {len(rows)} entries")
+PY
