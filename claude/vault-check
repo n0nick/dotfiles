@@ -1,0 +1,88 @@
+#!/usr/bin/env zsh
+# vault-check [dir] — refuse to let a notes repo accumulate secrets or dead links.
+#
+# Two checks, both cheap enough to run on every commit:
+#
+#   secrets   Notes are written by pasting terminal output, so credentials
+#             arrive by accident. The Apple Notes import carried live Azure
+#             service principal secrets; a wifi password and a Mongo URI turned
+#             up elsewhere. Git history is permanent, so this runs before the
+#             commit, not after.
+#
+#   links     Relative markdown links break whenever a file moves and something
+#             other than Obsidian did the moving. Wikilinks are also accepted:
+#             Obsidian is on defaults here, so links made in its UI come out as
+#             [[name]], and resolve by filename anywhere under the vault.
+#
+#             Code is stripped first. Notes contain shell, and bash spells its
+#             conditional [[ ... ]] — without this every note with a script in
+#             it fails. Fenced blocks and inline spans both go.
+#
+# Exits non-zero on any finding. Used as a pre-commit hook; run by hand too.
+
+emulate -L zsh
+setopt null_glob
+
+ROOT="${1:-$(git rev-parse --show-toplevel 2>/dev/null || print -r -- .)}"
+VAULT="${CLAUDE_VAULT:-$HOME/vault}"   # wikilinks may point outside this repo
+cd "$ROOT" || exit 2
+
+typeset -a notes
+notes=(**/*.md)
+(( ${#notes} )) || { print -r -- "vault-check: no notes under $ROOT"; exit 0 }
+
+fail=0
+
+# ── secrets ──────────────────────────────────────────────────────────────
+# Each pattern is a thing that has actually shown up in notes, not a theory.
+typeset -a patterns
+patterns=(
+  '-----BEGIN [A-Z ]*PRIVATE KEY'                  # key material
+  'AKIA[0-9A-Z]{16}'                               # AWS access key id
+  'ghp_[A-Za-z0-9]{20,}'                           # GitHub PAT
+  'github_pat_[A-Za-z0-9_]{20,}'
+  'xox[baprs]-[A-Za-z0-9-]{10,}'                   # Slack
+  'AZURE_CLIENT_SECRET[[:space:]]*='
+  '"password"[[:space:]]*:'                        # az ad sp create-for-rbac output
+  '[a-z]+://[^/[:space:]]+:[^@[:space:]]{6,}@'     # creds in a URL (mongo, rtsp, http)
+  'api[_-]?key["'"'"']?[[:space:]]*[:=][[:space:]]*["'"'"'][A-Za-z0-9_-]{16,}'
+)
+for p in $patterns; do
+  if hits=$(grep -rniE --include='*.md' -- "$p" . 2>/dev/null); then
+    print -r -- "✗ possible secret:"
+    print -r -- "$hits" | head -8 | sed 's/^/    /' | cut -c1-120
+    fail=1
+  fi
+done
+
+# ── links ────────────────────────────────────────────────────────────────
+broken=()
+for f in $notes; do
+  dir="${f:h}"
+  prose=$(perl -0777 -pe 's/^```.*?^```//gms; s/`[^`\n]*`//g' "$f" 2>/dev/null)
+
+  # [text](target.md), ignoring URLs and in-page anchors
+  for target in ${(f)"$(print -r -- "$prose" | grep -oE '\]\([^)]+\.md(#[^)]*)?\)' 2>/dev/null | sed 's/](//; s/)$//; s/#.*//')"}; do
+    [[ "$target" == (http|https|mailto):* ]] && continue
+    decoded="${target//\%20/ }"
+    [[ -e "$dir/$decoded" ]] || broken+=("$f -> $decoded")
+  done
+
+  # [[name]] — resolve by filename anywhere under the vault, like Obsidian does
+  for name in ${(f)"$(print -r -- "$prose" | grep -oE '\[\[[^]|#]+' 2>/dev/null | sed 's/^\[\[//')"}; do
+    [[ -n "$name" ]] || continue
+    base="${name:t}"
+    [[ "$base" == *.* ]] || base="$base.md"
+    found=("$VAULT"/**/"$base")
+    (( ${#found} )) || broken+=("$f -> [[$name]]")
+  done
+done
+
+if (( ${#broken} )); then
+  print -r -- "✗ broken links:"
+  print -rl -- $broken | sort -u | head -20 | sed 's/^/    /'
+  fail=1
+fi
+
+(( fail )) && { print -r -- "vault-check: failed"; exit 1 }
+print -r -- "vault-check: ${#notes} notes, no secrets, no broken links"
