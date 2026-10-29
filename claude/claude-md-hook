@@ -112,4 +112,15 @@ rm -f "$SESSIONS/${TRANSCRIPT:t:r}.busy" "$SESSIONS/${TRANSCRIPT:t:r}.needs"
   find "$SESSIONS" -name '*.busy' -mmin +60 -delete 2>/dev/null
   # needs-you is a real state that can last hours, so it expires far later.
   find "$SESSIONS" -name '*.needs' -mmin +720 -delete 2>/dev/null
+
+  # Rotate the reader's access log. The page polls once a second and issues a
+  # request per session file, so this grows about a megabyte a day with nothing
+  # to stop it. launchd opens the file O_APPEND, which makes truncating it in
+  # place safe: the server keeps writing and resumes at offset 0, no sparse
+  # hole. One generation of history is kept, capping the pair at ~6MB.
+  LOG="$HOME/.claude/preview/server.log"
+  if [[ -f "$LOG" ]] && (( $(stat -f%z "$LOG" 2>/dev/null || print 0) > 5242880 )); then
+    tail -c 1048576 "$LOG" >| "$LOG.1" 2>/dev/null
+    : >| "$LOG"
+  fi
 } &!
