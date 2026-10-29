@@ -291,6 +291,17 @@ install_claude() {
   symlink "$DOTF/claude/claude-turn" "$HOME/bin/claude-turn"
   symlink "$DOTF/claude/keep" "$HOME/bin/keep"
   symlink "$DOTF/claude/vault-index" "$HOME/bin/vault-index"
+  symlink "$DOTF/claude/vault-check" "$HOME/bin/vault-check"
+
+  # Pre-commit hygiene in each vault repo. Hooks are not tracked by git, so
+  # they have to be installed rather than cloned.
+  for repo in "$HOME/vault" "$HOME/vault/work"; do
+    if [[ -d "$repo/.git" ]]; then
+      printf '#!/usr/bin/env zsh\nexec "$HOME/bin/vault-check" "$(git rev-parse --show-toplevel)"\n' \
+        > "$repo/.git/hooks/pre-commit"
+      chmod +x "$repo/.git/hooks/pre-commit"
+    fi
+  done
   symlink "$DOTF/claude/claude-md-hook" "$HOME/bin/claude-md-hook"
   rm -f "$HOME/.claude/commands/preview.md"  # superseded by !preview
 
