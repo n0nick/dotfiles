@@ -33,9 +33,12 @@
   <key>KeepAlive</key>
   <true/>
 
+  <!-- Not /tmp: macOS purges it, and a long-running server then writes into a
+       deleted inode — the log becomes unreadable and its disk is never freed.
+       The first version of this leaked 35MB that way over six weeks. -->
   <key>StandardOutPath</key>
-  <string>/tmp/claude-preview.log</string>
+  <string>__HOME__/.claude/preview/server.log</string>
   <key>StandardErrorPath</key>
-  <string>/tmp/claude-preview.log</string>
+  <string>__HOME__/.claude/preview/server.log</string>
 </dict>
 </plist>
