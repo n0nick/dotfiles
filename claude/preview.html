@@ -213,14 +213,14 @@
   const ordered = () => [...sessions.entries()].sort((a, b) => b[1].updated - a[1].updated);
   const active  = () => (pinned && sessions.has(pinned)) ? pinned
                       : (ordered()[0] || [null])[0];
-  const index   = f => Math.min(at.get(f) ?? 0, Math.max(0, (sessions.get(f)?.turns.length ?? 1) - 1));
+  const index   = f => Math.min(at.get(f) ?? 0, Math.max(0, (sessions.get(f)?.turns?.length ?? 1) - 1));
 
   // Older is a higher index, since turns are stored newest-first.
   function step(delta) {
     const cur = active();
     if (!cur) return;
     const s = sessions.get(cur);
-    const next = Math.min(Math.max(index(cur) + delta, 0), s.turns.length - 1);
+    const next = Math.min(Math.max(index(cur) + delta, 0), (s.turns?.length ?? 0) - 1);
     if (next === index(cur)) return;
     at.set(cur, next);
     if (next === 0) pill.style.visibility = 'hidden';
@@ -324,7 +324,11 @@
         d.className = 'unread';
         b.append(d);
       }
-      b.onclick = () => { pinned = file; s.unread = false; render(true); };
+      b.onclick = async () => {
+        pinned = file; s.unread = false;
+        await ensureContent(file);
+        render(true);
+      };
       listEl.append(b);
     }
 
@@ -336,9 +340,9 @@
     const w = document.getElementById('working');
     w.hidden = !(busy.has(cur) || needs.has(cur));
     w.textContent = needs.has(cur) ? '· needs you' : '· working…';
-    navEl.hidden = s.turns.length < 2;
-    posEl.textContent = `${i + 1} / ${s.turns.length}`;
-    prevEl.disabled = i >= s.turns.length - 1;
+    navEl.hidden = (s.turns?.length ?? 0) < 2;
+    posEl.textContent = `${i + 1} / ${(s.turns?.length ?? 0)}`;
+    prevEl.disabled = i >= (s.turns?.length ?? 0) - 1;
     nextEl.disabled = i <= 0;
   }
 
@@ -347,7 +351,9 @@
     draw();
     if (!cur) { outEl.textContent = ''; shown = { file: null, text: null }; return; }
 
-    const text = sessions.get(cur).turns[index(cur)] ?? '';
+    const loaded = sessions.get(cur).turns;
+    if (!loaded) return;                       // content still in flight
+    const text = loaded[index(cur)] ?? '';
     if (!force && shown.file === cur && shown.text === text) return;
 
     shown = { file: cur, text };
@@ -390,55 +396,72 @@
     } catch { /* ignore */ }
   }
 
-  async function poll() {
-    watchSelf();
+  // One manifest describes every session: name, project, when it last spoke,
+  // and whether it is busy or waiting on you. Before this the page polled a
+  // directory listing and then issued a request per session to discover which
+  // had changed — about seventeen a second with sixteen sessions open, and a
+  // megabyte a day of access log. A session's text is now fetched only when it
+  // is the one being read.
+  const content = new Map();   // file -> { updated, turns }
+
+  async function ensureContent(file) {
+    const meta = file && sessions.get(file);
+    if (!meta) return;
+    const have = content.get(file);
+    if (have && have.updated === meta.updatedRaw) { meta.turns = have.turns; return; }
     try {
-      const idx  = await fetch('sessions/', { cache: 'no-store' });
-      const doc  = new DOMParser().parseFromString(await idx.text(), 'text/html');
-      const hrefs = [...doc.querySelectorAll('a[href]')].map(a => a.getAttribute('href'));
-      const files = hrefs.filter(h => h.endsWith('.md'));
+      const r = await fetch('sessions/' + file, { cache: 'no-store' });
+      if (!r.ok) return;
+      const parsed = parse(await r.text());
+      content.set(file, { updated: meta.updatedRaw, turns: parsed.turns });
+      meta.turns = parsed.turns;
+      meta.psep = parsed.psep;
+    } catch { /* ignore */ }
+  }
 
-      // A marker is dropped on UserPromptSubmit and removed on Stop. An
-      // interrupted session leaves one behind, so ignore stale ones rather
-      // than showing a spinner that never stops.
-      busy.clear();
-      needs.clear();
-      for (const [ext, set, maxAge] of [['.busy', busy, 15 * 60e3], ['.needs', needs, 12 * 3600e3]]) {
-        for (const b of hrefs.filter(h => h.endsWith(ext))) {
-          try {
-            const h = await fetch('sessions/' + b, { method: 'HEAD', cache: 'no-store' });
-            const age = Date.now() - new Date(h.headers.get('Last-Modified') || 0);
-            if (age < maxAge) set.add(b.slice(0, -ext.length) + '.md');
-          } catch { /* ignore */ }
+  // The page itself changes rarely; checking every tick doubled the request
+  // rate for no benefit.
+  let tick = 0;
+  async function poll() {
+    if (tick++ % 10 === 0) watchSelf();
+    try {
+      const r = await fetch('manifest.json', { cache: 'no-store' });
+      if (r.ok) {
+        const seen = new Set();
+        busy.clear();
+        needs.clear();
+        for (const s of (await r.json()).sessions) {
+          seen.add(s.file);
+
+          // A marker is dropped on UserPromptSubmit and cleared on Stop. An
+          // interrupted session leaves one behind, so ignore stale ones rather
+          // than showing a spinner that never stops.
+          const age = s.stateAt ? Date.now() - new Date(s.stateAt) : Infinity;
+          if (s.state === 'needs' && age < 12 * 3600e3) needs.add(s.file);
+          else if (s.state === 'busy' && age < 15 * 60e3) busy.add(s.file);
+
+          const prev = sessions.get(s.file);
+          const meta = {
+            name: s.name, project: s.project, psep: s.psep,
+            updated: new Date(s.updated), updatedRaw: s.updated,
+            turns: prev?.turns, unread: prev?.unread ?? false,
+          };
+          if (prev && prev.updatedRaw !== s.updated) {
+            const wasNewest = index(s.file) === 0;
+            // Reading an older turn when a new one lands: hold your place and
+            // offer the jump instead of taking it.
+            if (s.file === active()) { if (!wasNewest) pill.style.visibility = 'visible'; }
+            else meta.unread = true;
+            if (wasNewest) at.set(s.file, 0);
+            meta.turns = undefined;   // stale; ensureContent refetches on demand
+          }
+          sessions.set(s.file, meta);
+        }
+        for (const f of [...sessions.keys()]) {
+          if (!seen.has(f)) { sessions.delete(f); at.delete(f); content.delete(f); }
         }
       }
-
-      for (const f of files) {
-        // HEAD first: bodies carry ten turns each, and almost every tick is a
-        // no-op.
-        const h = await fetch('sessions/' + f, { method: 'HEAD', cache: 'no-store' });
-        if (!h.ok) continue;
-        const lm = h.headers.get('Last-Modified');
-        const prev = sessions.get(f);
-        if (prev && prev.lm === lm) continue;
-
-        const r = await fetch('sessions/' + f, { cache: 'no-store' });
-        if (!r.ok) continue;
-        const next = { ...parse(await r.text()), lm };
-
-        if (!prev) {
-          sessions.set(f, { ...next, unread: false });
-        } else {
-          const wasNewest = index(f) === 0;
-          const changed = prev.turns[0] !== next.turns[0];
-          Object.assign(prev, next, { unread: prev.unread || (changed && f !== active()) });
-          // Reading an older turn when a new one lands: hold your place and
-          // offer the jump instead of taking it.
-          if (changed && f === active() && !wasNewest) pill.style.visibility = 'visible';
-          if (wasNewest) at.set(f, 0);
-        }
-      }
-      for (const f of [...sessions.keys()]) if (!files.includes(f)) { sessions.delete(f); at.delete(f); }
+      await ensureContent(active());
     } catch { /* server down — keep showing what we have */ }
     render(false);
   }

@@ -34,6 +34,9 @@ if [[ "$EVENT" == (UserPromptSubmit|Notification|SessionEnd) ]]; then
     Notification)     rm -f "$SESSIONS/${ID}.busy";  : > "$SESSIONS/${ID}.needs" ;;
     SessionEnd)       rm -f "$SESSIONS/${ID}.busy" "$SESSIONS/${ID}.needs" ;;
   esac
+  # Backgrounded: UserPromptSubmit runs before the turn starts, so nothing here
+  # should sit in front of it.
+  ( "${0:A:h}/preview-manifest" >/dev/null 2>&1 & ) 
   exit 0
 fi
 
@@ -105,6 +108,11 @@ rm -f "$SESSIONS/${TRANSCRIPT:t:r}.busy" "$SESSIONS/${TRANSCRIPT:t:r}.needs"
   # Age the file to match the session, so the 7-day prune below measures real
   # inactivity rather than time since the last rebuild.
   touch -r "$TRANSCRIPT" "$OUT" 2>/dev/null
+
+  # The reader polls this one file instead of the directory plus a request per
+  # session. Regenerated from the directory rather than mutated, so concurrent
+  # sessions converge instead of racing.
+  "${0:A:h}/preview-manifest" >/dev/null 2>&1
 
   # Sessions you haven't touched in a week stop being "live". Markers outlive
   # their turn only when a session is interrupted or killed, so they go sooner.

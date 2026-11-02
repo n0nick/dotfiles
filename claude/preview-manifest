@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+"""preview-manifest — describe every session in one file the reader can poll.
+
+Without this the page polls the directory listing and then issues a request per
+session to find out which changed: about seventeen a second with sixteen
+sessions open, which is both pointless load and a megabyte a day of access log.
+One manifest answers the same question in one request, and lets the page fetch
+a session's text only when it is actually being read.
+
+Regenerated from the directory on every hook event rather than mutated, so
+concurrent sessions converge instead of racing: the last writer wins and every
+writer computes the same thing. The write is atomic (tmp then rename) so the
+page never reads a half-written file.
+"""
+
+import json
+import os
+import pathlib
+import re
+import sys
+import tempfile
+from datetime import datetime, timezone
+
+PREVIEW = pathlib.Path(os.environ.get("CLAUDE_PREVIEW", pathlib.Path.home() / ".claude/preview"))
+SESSIONS = PREVIEW / "sessions"
+
+
+def frontmatter(path):
+    """Read the leading --- block without parsing the whole note."""
+    out, started = {}, False
+    with path.open(errors="replace") as fh:
+        for line in fh:
+            line = line.rstrip("\n")
+            if line == "---":
+                if started:
+                    break
+                started = True
+                continue
+            if not started:
+                break
+            m = re.match(r'^([A-Za-z_][\w-]*):\s*(.*)$', line)
+            if m:
+                value = m.group(2).strip()
+                if value.startswith('"'):
+                    try:
+                        value = json.loads(value)
+                    except ValueError:
+                        value = value.strip('"')
+                out[m.group(1)] = value
+    return out
+
+
+def iso(ts):
+    return datetime.fromtimestamp(ts, timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+
+
+def main():
+    if not SESSIONS.is_dir():
+        return 0
+
+    sessions = []
+    for md in sorted(SESSIONS.glob("*.md")):
+        fm = frontmatter(md)
+        stem = md.stem
+        state, state_at = "idle", None
+        for name, marker in (("needs", SESSIONS / f"{stem}.needs"), ("busy", SESSIONS / f"{stem}.busy")):
+            if marker.exists():
+                state, state_at = name, iso(marker.stat().st_mtime)
+                break
+        sessions.append({
+            "file": md.name,
+            "name": fm.get("name") or stem[:8],
+            "project": fm.get("project", ""),
+            "updated": fm.get("updated") or iso(md.stat().st_mtime),
+            "sep": fm.get("sep", "<!--turn-->"),
+            "psep": fm.get("psep", "<!--prompt-->"),
+            "state": state,
+            "stateAt": state_at,
+        })
+
+    sessions.sort(key=lambda s: s["updated"], reverse=True)
+    payload = {"generated": iso(datetime.now(timezone.utc).timestamp()), "sessions": sessions}
+
+    fd, tmp = tempfile.mkstemp(dir=str(PREVIEW), prefix=".manifest-")
+    with os.fdopen(fd, "w") as fh:
+        json.dump(payload, fh, ensure_ascii=False)
+    os.replace(tmp, PREVIEW / "manifest.json")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
