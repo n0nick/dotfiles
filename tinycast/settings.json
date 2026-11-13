@@ -3,9 +3,9 @@
     "launcherShortcut": "ctrl+space",
     "showInMenuBar": true,
     "automaticallyCheckForUpdates": true,
-    "popToRootSeconds": 30,
+    "popToRootSeconds": 5,
     "escapeKeyBehavior": "navigateBackOrClose",
-    "autoSwitchInputSource": null,
+    "autoSwitchInputSource": "com.apple.keylayout.US",
     "supportReminders": true,
     "language": "en"
   },
