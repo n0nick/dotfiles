@@ -208,6 +208,11 @@
         "shortcut": "shift+cmd+c",
         "alias": null,
         "showInLauncher": true
+      },
+      "paste-sequentially": {
+        "shortcut": "hyper+v",
+        "alias": null,
+        "showInLauncher": true
       }
     }
   },
