@@ -289,6 +289,8 @@ install_claude() {
   run "mkdir -p $HOME/.claude"
   symlink "$DOTF/claude/settings.json" "$HOME/.claude/settings.json"
   symlink "$DOTF/claude/claude-icon.png" "$HOME/.claude/claude-icon.png"
+  run "mkdir -p $HOME/.claude/agents"
+  symlink "$DOTF/claude/agents/code-reviewer.md" "$HOME/.claude/agents/code-reviewer.md"
   run "mkdir -p $HOME/bin"
   symlink "$DOTF/claude/claude-md" "$HOME/bin/claude-md"
   symlink "$DOTF/claude/claude-md" "$HOME/bin/preview"
