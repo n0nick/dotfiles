@@ -22,6 +22,7 @@ usage() {
   echo "  --claude      Link Claude Code settings and scripts"
   echo "  --omp         Link oh-my-pi (omp) configuration"
   echo "  --raycast     Link Raycast scripts (macOS)"
+  echo "  --tinycast    Link Tinycast settings (macOS)"
   echo "  --i3          Set up i3 configuration"
   echo "  --help        Show this help message"
 }
@@ -38,6 +39,7 @@ main() {
   local do_claude=false
   local do_omp=false
   local do_raycast=false
+  local do_tinycast=false
   local do_i3=false
 
   for arg in "$@"; do
@@ -52,6 +54,7 @@ main() {
       --claude)   do_claude=true; run_all=false ;;
       --omp)      do_omp=true; run_all=false ;;
       --raycast)  do_raycast=true; run_all=false ;;
+      --tinycast) do_tinycast=true; run_all=false ;;
       --i3)       do_i3=true; run_all=false ;;
       --help)     usage; return 0 ;;
       *) echo "Unknown flag: $arg"; usage; return 1 ;;
@@ -69,6 +72,7 @@ main() {
   [[ $run_all == true || $do_claude == true ]]   && install_claude
   [[ $run_all == true || $do_omp == true ]]      && install_omp
   [[ $run_all == true || $do_raycast == true ]]  && install_raycast
+  [[ $run_all == true || $do_tinycast == true ]] && install_tinycast
   [[ $run_all == true || $do_git == true ]]      && setup_git
   [[ $run_all == true || $do_i3 == true ]]       && setup_i3
   echo -n "\n\n"
@@ -373,8 +377,38 @@ install_raycast() {
   run "mkdir -p $HOME/bin"
   symlink "$DOTF/raycast/raycast-sync" "$HOME/bin/raycast-sync"
   greendot
-  notice "Raycast config is a manual snapshot: export from Raycast, run" \
-    "raycast-sync, then commit. Import on new machines is GUI-only."
+  notice "Raycast config is a manual snapshot and is NOT tracked: the export" \
+    "is all-or-nothing and always carries clipboard history, which doesn't" \
+    "belong in a public repo. raycast-sync leaves it in ~/.raycast only."
+}
+
+install_tinycast() {
+  if [[ "$(uname)" != "Darwin" ]]; then
+    return
+  fi
+  chapter "Installing and linking Tinycast"
+  # Tinycast is a GUI cask, so check for the app bundle rather than
+  # ensure_installed (which relies on `command -v`).
+  if [[ -d "/Applications/Tinycast.app" ]]; then
+    echo "${GREEN}Tinycast already installed :)"
+  elif command -v brew &>/dev/null; then
+    run "brew install --cask tinycast"
+    greendot
+  else
+    notice "Tinycast not found — install it from https://tinycast.dev"
+  fi
+
+  # Unlike Raycast's encrypted blob, Tinycast keeps settings in plaintext
+  # JSON and syncs both ways: a change in the app writes the file, an edit
+  # to the file applies in the app. Symlinks are preserved, so the repo can
+  # own it. Holds shortcuts, aliases and all of window management — never
+  # snippets, notes, quicklinks, clipboard history, AI keys or MCP config.
+  run "mkdir -p $HOME/.config/tinycast"
+  symlink "$DOTF/tinycast/settings.json" "$HOME/.config/tinycast/settings.json"
+  greendot
+  notice "Switch sync on once per machine: Tinycast → Settings → Backup →" \
+    "Sync settings file. Features stay off until enabled by hand — a settings" \
+    "file can't grant clipboard, extension, calendar or dictation access."
 }
 
 setup_i3() {
