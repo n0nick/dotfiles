@@ -14,3 +14,7 @@ nvim/.netrwhist
 git/gitconfig.user
 
 omp/agent/config.yml.lock
+
+# Raycast export: all-or-nothing, always contains clipboard history.
+# Public repo — keep local only.
+raycast/Raycast.rayconfig
