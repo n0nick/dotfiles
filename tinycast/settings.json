@@ -60,7 +60,13 @@
   },
   "commands": {
     "builtInEnabled": true,
-    "builtIn": {},
+    "builtIn": {
+      "define": {
+        "shortcut": null,
+        "alias": "define",
+        "showInLauncher": true
+      }
+    },
     "enabled": true,
     "showInLauncher": true
   },
@@ -109,7 +115,14 @@
     "scopes": [
       "~"
     ],
-    "ignorePatterns": [],
+    "ignorePatterns": [
+      "~/dev/go/pkg/mod",
+      "~/go/pkg/mod",
+      "~/Library/pnpm",
+      "~/.rustup",
+      "~/.cargo/registry",
+      "~/.bun/install/cache"
+    ],
     "removedDefaultPatterns": [],
     "showInLauncher": true,
     "commands": {}
