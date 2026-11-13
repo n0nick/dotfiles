@@ -408,6 +408,12 @@ install_tinycast() {
   run "mkdir -p $HOME/.config/tinycast"
   symlink "$DOTF/tinycast/settings.json" "$HOME/.config/tinycast/settings.json"
   greendot
+
+  # Quicklinks, snippets and custom commands are not in settings.json, so a
+  # command's script is tracked here and wired up by hand in Settings.
+  run "mkdir -p $HOME/bin"
+  symlink "$DOTF/tinycast/slack-search" "$HOME/bin/slack-search"
+  greendot
   notice "Switch sync on once per machine: Tinycast → Settings → Backup →" \
     "Sync settings file. Features stay off until enabled by hand — a settings" \
     "file can't grant clipboard, extension, calendar or dictation access."

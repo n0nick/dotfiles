@@ -1,0 +1,48 @@
+#!/bin/zsh
+#
+# Hand a query to Slack's own search box.
+#
+# Slack's URL scheme has open/channel/user but no search action, so a quicklink
+# can only dump the query into a browser tab — useless when you're not signed
+# in to Slack there. Driving the desktop app's search UI needs no credential at
+# all, unlike the Slack extension, which wants an xoxp- token that Tinycast
+# would store in cleartext.
+#
+# Wire it up as a Tinycast custom command with one argument:
+#   Command:   ~/bin/slack-search "$1"
+#   Arguments: Query
+#
+# Needs Accessibility. The grant is checked against the app that spawns this,
+# so approve the prompt naming Tinycast — don't add /usr/bin/osascript to
+# Accessibility, which would let any script on the machine send keystrokes.
+#
+# Fragile by nature: it depends on ⌘G still being Slack's Search shortcut, and
+# on Slack activating within the delay below. Both are easy to adjust.
+
+set -e
+
+if [[ -z "$1" ]]; then
+  echo "usage: ${0:t} <query>" >&2
+  exit 1
+fi
+
+# The query goes through argv rather than into the script text, so quotes or
+# backslashes in a search term can't break out of the AppleScript.
+osascript - "$1" <<'EOF'
+on run argv
+  set q to item 1 of argv
+  tell application "Slack" to activate
+  -- Slack needs a moment to come forward before it will take keystrokes.
+  delay 0.4
+  tell application "System Events"
+    if not (exists process "Slack") then error "Slack isn't running"
+    keystroke "g" using {command down}
+    delay 0.3
+    keystroke q
+    -- No Return on purpose. Slack's dropdown highlights a channel or DM when
+    -- the text matches one, and "Search for …" otherwise, so pressing Return
+    -- here would sometimes jump somewhere instead of searching. The last
+    -- keystroke is yours: Return to search, or arrow down to pick.
+  end tell
+end run
+EOF
