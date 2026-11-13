@@ -18,9 +18,3 @@ omp/agent/config.yml.lock
 # Raycast export: all-or-nothing, always contains clipboard history.
 # Public repo — keep local only.
 raycast/Raycast.rayconfig
-
-# Tinycast: whitelist, not blacklist. settings.json is plaintext and safe;
-# anything else the app might put here (clipboard.sqlite3, notes, snippets)
-# is not. Public repo — opt in per file.
-tinycast/*
-!tinycast/settings.json
