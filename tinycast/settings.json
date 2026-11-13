@@ -105,13 +105,13 @@
     "language": null
   },
   "fileSearch": {
-    "enabled": false,
+    "enabled": true,
     "scopes": [
       "~"
     ],
     "ignorePatterns": [],
     "removedDefaultPatterns": [],
-    "showInLauncher": false,
+    "showInLauncher": true,
     "commands": {}
   },
   "notes": {
@@ -198,7 +198,7 @@
   "clipboard": {
     "enabled": true,
     "retentionDays": 90,
-    "defaultAction": "paste",
+    "defaultAction": "copy",
     "disabledApps": [
       "com.apple.keychainaccess",
       "com.apple.Passwords"
