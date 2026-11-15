@@ -82,7 +82,7 @@
     "enabled": false
   },
   "ai": {
-    "enabled": false,
+    "enabled": true,
     "webSearch": false,
     "choices": true,
     "expandsReasoning": false,
@@ -92,7 +92,13 @@
     "opensTo": "recent",
     "newChatAfterMinutes": 5,
     "toolRounds": 25,
-    "commands": {}
+    "commands": {
+      "ai-chat": {
+        "shortcut": null,
+        "alias": "ai",
+        "showInLauncher": true
+      }
+    }
   },
   "quickActions": {
     "targetLanguage": "",
