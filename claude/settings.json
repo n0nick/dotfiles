@@ -1,5 +1,26 @@
 {
   "cleanupPeriodDays": 365,
+  "permissions": {
+    "deny": [
+      "Bash(gcloud secrets versions access*)"
+    ],
+    "ask": [
+      "mcp__plugin_viam-agentic-kit_viam__set_*",
+      "mcp__plugin_viam-agentic-kit_viam__create_*",
+      "mcp__plugin_viam-agentic-kit_viam__delete_*",
+      "mcp__plugin_viam-agentic-kit_viam__update_*",
+      "mcp__plugin_viam-agentic-kit_viam__add_*",
+      "mcp__plugin_viam-agentic-kit_viam__remove_*",
+      "mcp__plugin_viam-agentic-kit_viam__start_*",
+      "mcp__plugin_viam-agentic-kit_viam__stop_*",
+      "mcp__plugin_viam-agentic-kit_viam__submit_*",
+      "mcp__plugin_viam-agentic-kit_viam__cancel_*",
+      "mcp__plugin_viam-agentic-kit_viam__run_*",
+      "mcp__plugin_viam-agentic-kit_viam__call_*",
+      "Bash(git push *)",
+      "Bash(git push)"
+    ]
+  },
   "hooks": {
     "Stop": [
       {
